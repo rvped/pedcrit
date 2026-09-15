@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Cartaz · Analgossedação UTIP</title>
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#17212b;background:#e9eef2}
+.page{width:210mm;height:297mm;margin:0 auto;background:#fff;display:flex;flex-direction:column}
+.top{background:#0e5f78;color:#fff;padding:14mm 16mm 10mm}
+.top small{font-size:11pt;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.top h1{font-size:34pt;margin:3mm 0 2mm;line-height:1.05}
+.top p{font-size:13pt;margin:0;opacity:.92}
+.mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8mm 16mm 4mm}
+.qr{width:118mm;height:118mm;border:3mm solid #0e5f78;border-radius:6mm;padding:3mm;background:#fff}
+.qr img{width:100%;height:100%;display:block}
+.aponte{font-size:17pt;font-weight:700;margin:6mm 0 1mm}
+.url{font-size:21pt;font-weight:800;color:#0e5f78;letter-spacing:.01em;margin:0}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;padding:0 12mm 8mm}
+.col{border:1.2pt solid #d9e0e7;border-radius:4mm;padding:4mm 4.5mm}
+.col h2{font-size:13pt;margin:0 0 2mm;color:#0e5f78}
+.col ol{margin:0;padding-left:4.5mm;font-size:10.5pt;line-height:1.35}
+.foot{border-top:1pt solid #d9e0e7;padding:4mm 16mm 7mm;font-size:9pt;color:#566271;display:flex;justify-content:space-between;gap:8mm}
+@media print{body{background:#fff}.page{margin:0}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <small>UTI Pediátrica · HGVC</small>
+    <h1>Analgossedação<br>na UTI Pediátrica</h1>
+    <p>Escores, escada, doses, calculadora de infusão e desmame — no bolso, também sem internet.</p>
+  </div>
+  <div class="mid">
+    <div class="qr"><img src="qr.svg" alt="QR code para rvped.github.io/analgossedacao"></div>
+    <p class="aponte">Aponte a câmera do celular</p>
+    <p class="url">rvped.github.io/analgossedacao</p>
+  </div>
+  <div class="cols">
+    <div class="col"><h2>Android</h2><ol><li>Abra a câmera e toque no link</li><li>No Chrome, menu <b>⋮</b></li><li><b>Instalar app</b> ou <b>Adicionar à tela inicial</b></li></ol></div>
+    <div class="col"><h2>iPhone</h2><ol><li>Abra a câmera e toque no link</li><li>No <b>Safari</b>, botão <b>Compartilhar</b></li><li><b>Adicionar à Tela de Início</b></li></ol></div>
+    <div class="col"><h2>Windows</h2><ol><li>Digite <b>rvped.github.io/analgossedacao</b></li><li>No Edge ou Chrome, ícone <b>Instalar</b> na barra de endereço</li><li>Ou salve o atalho na área de trabalho</li></ol></div>
+  </div>
+  <div class="foot">
+    <span>Protocolo v2.0 (set/2026) · edição web. Apoio à decisão: não substitui o julgamento clínico nem a conferência de doses.</span>
+    <span>Próxima revisão: set/2027</span>
+  </div>
+</div>
+</body>
+</html>

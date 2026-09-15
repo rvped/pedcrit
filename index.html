@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e5f78">
+<meta name="description" content="Protocolo de analgossedação da UTI Pediátrica do HGVC — versão de bolso para beira-leito">
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Analgossedação">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Analgossedação UTIP · HGVC</title>
+<style>
+:root{
+  --bg:#f5f7fa; --surface:#fff; --surface2:#eef2f6; --ink:#17212b; --muted:#566271; --line:#d9e0e7;
+  --brand:#0e5f78; --brand-soft:#e1f0f5;
+  --ok:#1d7045; --ok-soft:#e3f3ea;
+  --warn:#8a5a00; --warn-soft:#fdf1d6;
+  --danger:#b3261e; --danger-soft:#fbe6e4;
+  --z-hiper:#5f3dc4; --z-hiper-soft:#ece6fb;
+  --z-mod:#1864ab; --z-mod-soft:#e2eefa;
+  --z-leve:#2b7a3b; --z-leve-soft:#e4f3e6;
+  --z-insuf:#b3261e; --z-insuf-soft:#fbe6e4;
+  --prop:#6b4f9e; --prop-soft:#f0ebf8;
+  --radius:14px; --shadow:0 1px 2px rgba(16,30,45,.06),0 2px 8px rgba(16,30,45,.05);
+  --nav-h:62px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0f151b; --surface:#172029; --surface2:#1e2934; --ink:#e6edf3; --muted:#9aa8b6; --line:#2c3a47;
+    --brand:#5cc0dc; --brand-soft:#16323c;
+    --ok:#6fcf97; --ok-soft:#173226;
+    --warn:#f2c14e; --warn-soft:#3a2f12;
+    --danger:#ff8a80; --danger-soft:#3d1c1a;
+    --z-hiper:#b39dff; --z-hiper-soft:#2a2244;
+    --z-mod:#74b4f5; --z-mod-soft:#17293d;
+    --z-leve:#7ed492; --z-leve-soft:#193222;
+    --z-insuf:#ff8a80; --z-insuf-soft:#3d1c1a;
+    --prop:#c4a8f0; --prop-soft:#2b2340;
+    --shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px)}
+a{color:var(--brand)}
+h1,h2,h3,h4{line-height:1.2;margin:0}
+p{margin:.5em 0}
+ul,ol{margin:.4em 0;padding-left:1.25em}
+li{margin:.2em 0}
+small,.small{font-size:.86rem}
+.muted{color:var(--muted)}
+b,strong{font-weight:650}
+code,.mono{font-variant-numeric:tabular-nums}
+
+/* ---------- topo ---------- */
+.topbar{position:sticky;top:0;z-index:30;background:var(--brand);color:#fff;padding:10px 16px calc(10px);padding-top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;gap:12px}
+@media (prefers-color-scheme:dark){.topbar{background:#0b3b4a}}
+.topbar h1{font-size:1.02rem;font-weight:700;letter-spacing:.01em}
+.topbar .sub{font-size:.74rem;opacity:.85}
+.topbar .grow{flex:1;min-width:0}
+.topbar .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){.topbar{padding-top:calc(7px + env(safe-area-inset-top));padding-bottom:7px}.topbar h1{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pill-top{display:none}}
+.pill-top{font-size:.7rem;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:3px 9px;white-space:nowrap}
+
+.topbtn{all:unset;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:rgba(255,255,255,.14);flex:none}
+.topbtn svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.updbar{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--warn-soft);color:var(--ink);border-bottom:1px solid var(--line);padding:8px 14px;font-size:.9rem;font-weight:600}
+.updbar[hidden]{display:none}
+.tocalc{margin-top:8px}
+.cite{font-size:.72em;vertical-align:super;text-decoration:none;font-weight:700;margin-left:2px;line-height:0}
+.refs .rl{white-space:nowrap}
+.case .q{font-weight:650;margin:0 0 4px}
+.qrbox{display:grid;gap:14px;align-items:center}
+@media (min-width:640px){.qrbox{grid-template-columns:200px 1fr}}
+.qrbox img{width:200px;height:200px;background:#fff;border-radius:12px;padding:8px;border:1px solid var(--line)}
+.urlbig{font-size:1.15rem;font-weight:800;color:var(--brand);word-break:break-all;margin:.2em 0}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 20px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;font-size:.9rem;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:0}
+main{padding:12px 14px 40px;min-width:0}
+.side{display:none}
+@media (min-width:1000px){
+  body{padding-bottom:0}
+  .wrap{grid-template-columns:230px 1fr;gap:24px;padding:0 20px}
+  .side{display:block;position:sticky;top:64px;align-self:start;max-height:calc(100vh - 72px);overflow:auto;padding:18px 0}
+  .side a{display:block;padding:7px 12px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:.92rem}
+  .side a:hover{background:var(--surface2)}
+  .side a.on{background:var(--brand-soft);color:var(--brand);font-weight:650}
+  .side .grp{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 12px 4px}
+  .bottomnav{display:none!important}
+  main{padding:20px 0 60px}
+}
+
+/* ---------- seções ---------- */
+section.sec{margin:0 0 30px}
+.sec-head{display:flex;align-items:baseline;gap:10px;margin:8px 2px 12px}
+.sec-head .n{font-size:.72rem;font-weight:700;color:var(--brand);background:var(--brand-soft);border-radius:7px;padding:2px 7px;letter-spacing:.04em}
+.sec-head h2{font-size:1.35rem}
+.sec-lead{color:var(--muted);margin:-4px 2px 14px;font-size:.95rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px;box-shadow:var(--shadow);margin-bottom:12px}
+.card h3{font-size:1.05rem;margin-bottom:6px}
+.grid{display:grid;gap:10px}
+@media (min-width:640px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:880px){.g4{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:640px) and (max-width:879px){.g4{grid-template-columns:1fr 1fr}}
+
+/* chips / tags */
+.tag{display:inline-block;font-size:.72rem;font-weight:650;border-radius:99px;padding:2px 8px;vertical-align:middle;white-space:nowrap}
+.t-ok{background:var(--ok-soft);color:var(--ok)}
+.t-warn{background:var(--warn-soft);color:var(--warn)}
+.t-danger{background:var(--danger-soft);color:var(--danger)}
+.t-brand{background:var(--brand-soft);color:var(--brand)}
+.t-prop{background:var(--prop-soft);color:var(--prop);border:1px dashed currentColor}
+.prop-note{font-size:.8rem;color:var(--prop)}
+
+/* callouts */
+.call{border-radius:12px;padding:11px 13px;margin:10px 0;border-left:5px solid;font-size:.95rem}
+.call b:first-child{display:block;margin-bottom:2px}
+.c-danger{background:var(--danger-soft);border-color:var(--danger)}
+.c-warn{background:var(--warn-soft);border-color:var(--warn)}
+.c-ok{background:var(--ok-soft);border-color:var(--ok)}
+.c-info{background:var(--brand-soft);border-color:var(--brand)}
+.c-prop{background:var(--prop-soft);border-color:var(--prop)}
+
+/* regras de ouro */
+.rules{counter-reset:r;display:grid;gap:10px}
+@media (min-width:640px){.rules{grid-template-columns:1fr 1fr}}
+@media (min-width:1000px){.rules{grid-template-columns:1fr 1fr 1fr}}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px 12px 52px;position:relative;box-shadow:var(--shadow)}
+.rule::before{counter-increment:r;content:counter(r);position:absolute;left:12px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;display:grid;place-items:center;font-size:.9rem}
+@media (prefers-color-scheme:dark){.rule::before{color:#0f151b}}
+.rule h3{font-size:.98rem;margin-bottom:3px}
+.rule p{margin:0;font-size:.9rem;color:var(--muted)}
+
+/* fluxo */
+.flow{display:grid;gap:0}
+.fstep{display:grid;grid-template-columns:36px 1fr;gap:12px;position:relative;padding-bottom:14px}
+.fstep:not(:last-child)::after{content:"";position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--line)}
+.fdot{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:750;color:#fff;background:var(--brand);z-index:1}
+@media (prefers-color-scheme:dark){.fdot{color:#0f151b}}
+.fbody{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.fbody h4{font-size:.98rem;margin-bottom:3px}
+.fbody p,.fbody ul{font-size:.92rem;margin:.2em 0}
+.yesno{display:grid;gap:8px;margin-top:6px}
+@media (min-width:560px){.yesno{grid-template-columns:1fr 1fr}}
+.yn{border-radius:9px;padding:7px 10px;font-size:.9rem}
+.yn.y{background:var(--danger-soft)} .yn.n{background:var(--surface2)}
+
+/* COMFORT-B barra */
+.cbar{display:flex;height:44px;border-radius:10px;overflow:hidden;border:1px solid var(--line);font-size:.78rem;font-weight:700}
+.cbar div{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;line-height:1.1;padding:0 2px}
+.cbar .hiper{background:var(--z-hiper);flex:5}
+.cbar .mod{background:var(--z-mod);flex:6}
+.cbar .leve{background:var(--z-leve);flex:6}
+.cbar .insuf{background:var(--z-insuf);flex:8}
+@media (prefers-color-scheme:dark){.cbar div{color:#0f151b}}
+.cbar span{font-weight:500;font-size:.68rem;opacity:.95}
+.clegend{display:grid;grid-template-columns:5fr 6fr 6fr 8fr;font-size:.72rem;color:var(--muted);margin-top:4px;text-align:center}
+.gray-brace{margin:6px 0 0 calc(5/25*100%);width:calc(12/25*100%);border-top:2px dashed var(--warn);text-align:center;font-size:.74rem;color:var(--warn);padding-top:2px}
+
+.interp{display:grid;gap:12px}
+@media (min-width:760px){.interp{grid-template-columns:300px 1fr}}
+.field{display:block;margin:8px 0}
+.field>span{display:block;font-size:.8rem;color:var(--muted);margin-bottom:3px;font-weight:600}
+input[type=number],select{font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;min-height:44px}
+input[type=number]:focus,select:focus{outline:3px solid var(--brand-soft);border-color:var(--brand)}
+input[type=range]{width:100%;accent-color:var(--brand);min-height:32px}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.seg label{flex:1;text-align:center;padding:9px 4px;font-size:.84rem;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--line)}
+.seg label:last-child{border-right:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--brand);color:#fff;font-weight:650}
+@media (prefers-color-scheme:dark){.seg label:has(input:checked){color:#0f151b}}
+.chk{display:flex;align-items:center;gap:9px;min-height:44px;cursor:pointer;font-size:.93rem}
+.chk input{width:22px;height:22px;accent-color:var(--brand);flex:none}
+.out{border-radius:12px;padding:13px 15px;border:2px solid var(--line);background:var(--surface2)}
+.out .zone{font-size:1.15rem;font-weight:750;margin-bottom:4px}
+.out.hiper{border-color:var(--z-hiper);background:var(--z-hiper-soft)} .out.hiper .zone{color:var(--z-hiper)}
+.out.mod{border-color:var(--z-mod);background:var(--z-mod-soft)} .out.mod .zone{color:var(--z-mod)}
+.out.leve{border-color:var(--z-leve);background:var(--z-leve-soft)} .out.leve .zone{color:var(--z-leve)}
+.out.insuf{border-color:var(--z-insuf);background:var(--z-insuf-soft)} .out.insuf .zone{color:var(--z-insuf)}
+.out.bnm{border-color:var(--danger);background:var(--danger-soft)} .out.bnm .zone{color:var(--danger)}
+.out ol,.out ul{margin:.3em 0}
+
+/* tabelas */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:9px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--surface2);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.c{text-align:center}
+
+/* escalas como cartões */
+.scale{display:grid;grid-template-columns:1fr;gap:4px;border-left:5px solid var(--brand)}
+.scale .dom{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.scale .ins{font-size:1.05rem;font-weight:700}
+.scale .kv{font-size:.88rem}
+.scale .kv b{color:var(--muted);font-weight:600}
+.phases{display:grid;gap:8px}
+@media (min-width:640px){.phases{grid-template-columns:repeat(3,1fr)}}
+.phase{border-radius:12px;padding:10px 12px;border:1px solid var(--line);background:var(--surface)}
+.phase .ph{font-size:.78rem;color:var(--muted);font-weight:650}
+.phase .tg{font-size:1.4rem;font-weight:800;margin:2px 0}
+.phase.a .tg{color:var(--z-mod)} .phase.b .tg,.phase.c .tg{color:var(--z-leve)}
+
+/* escada */
+.stairs{display:grid;gap:8px}
+.stair{display:grid;grid-template-columns:52px 1fr;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.stair .lvl{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.3rem}
+.stair .lvl small{font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.9}
+@media (prefers-color-scheme:dark){.stair .lvl{color:#0f151b}}
+.stair .bd{padding:10px 12px}
+.stair h4{font-size:1rem;margin-bottom:3px}
+.stair p,.stair ul{font-size:.92rem;margin:.2em 0}
+.l0{background:#5d6b78}.l1{background:#1b7f96}.l2{background:#1a6d8a}.l3{background:#265a9c}.l4{background:#4b3f9e}.l5{background:#a02b25}
+@media (prefers-color-scheme:dark){.l0{background:#9aa8b6}.l1{background:#5cc0dc}.l2{background:#63b1d6}.l3{background:#74a4f0}.l4{background:#b39dff}.l5{background:#ff8a80}}
+@media (min-width:760px){
+  .stair:nth-child(2){margin-left:3%}.stair:nth-child(3){margin-left:6%}.stair:nth-child(4){margin-left:9%}.stair:nth-child(5){margin-left:12%}.stair:nth-child(6){margin-left:15%}
+}
+.dose{display:inline-block;font-weight:700;background:var(--surface2);border-radius:6px;padding:0 6px;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* fármacos */
+.drugnav{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 8px;margin-bottom:6px;-webkit-overflow-scrolling:touch}
+.drugnav a{flex:none;text-decoration:none;font-size:.85rem;font-weight:650;padding:7px 12px;border-radius:99px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.drug{padding:0;overflow:hidden}
+.drug-h{padding:12px 15px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--brand-soft),transparent 80%)}
+.drug-h h3{font-size:1.2rem;margin:0}
+.drug-b{padding:12px 15px}
+.doses{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+@media (min-width:640px){.doses{grid-template-columns:repeat(4,1fr)}}
+.dbox{background:var(--surface2);border-radius:10px;padding:8px 10px}
+.dbox .k{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.dbox .v{font-size:1.02rem;font-weight:750;font-variant-numeric:tabular-nums;line-height:1.25}
+.dbox .v small{font-weight:500;color:var(--muted);font-size:.78rem}
+.dbox.no{background:var(--danger-soft)} .dbox.no .v{color:var(--danger)}
+.dbox.cap{background:var(--warn-soft)} .dbox.cap .v{color:var(--warn)}
+.two{display:grid;gap:10px}
+@media (min-width:700px){.two{grid-template-columns:1fr 1fr}}
+.lst h4{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;margin:4px 0 2px}
+.lst.good h4{color:var(--ok)} .lst.bad h4{color:var(--danger)}
+.lst ul{font-size:.92rem}
+.dil{font-size:.88rem;background:var(--surface2);border-radius:9px;padding:7px 10px;margin-top:8px}
+
+details{border-top:1px solid var(--line);margin-top:10px}
+details>summary{cursor:pointer;list-style:none;padding:11px 0 9px;font-weight:650;font-size:.93rem;color:var(--brand);display:flex;align-items:center;gap:8px;min-height:44px}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s;flex:none;margin:0 3px}
+details[open]>summary::before{transform:rotate(45deg)}
+details .dx{font-size:.92rem;padding-bottom:8px}
+.card>details:first-child{border-top:0;margin-top:0}
+
+/* matriz situações especiais */
+.mx td,.mx th{text-align:center;vertical-align:middle}
+.mx td:first-child,.mx th:first-child{text-align:left;font-weight:650;position:sticky;left:0;background:var(--surface);z-index:1}
+.mx th:first-child{background:var(--surface2)}
+.ic{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:26px;border-radius:7px;font-weight:800;font-size:.9rem;padding:0 6px}
+.ic.y{background:var(--ok-soft);color:var(--ok)}
+.ic.c{background:var(--warn-soft);color:var(--warn)}
+.ic.x{background:var(--danger-soft);color:var(--danger)}
+.ic.o{color:var(--muted)}
+.mx .why{display:block;font-size:.7rem;color:var(--muted);font-weight:500;line-height:1.15;margin-top:2px}
+
+/* desmame */
+.pipe{display:grid;gap:6px;counter-reset:p}
+@media (min-width:880px){.pipe{grid-template-columns:repeat(6,1fr)}}
+.pstep{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;position:relative;display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:start}
+@media (min-width:880px){.pstep{grid-template-columns:1fr}}
+.pstep .pn{width:28px;height:28px;border-radius:50%;background:var(--danger);color:#fff;font-weight:800;display:grid;place-items:center;font-size:.85rem}
+@media (prefers-color-scheme:dark){.pstep .pn{color:#0f151b}}
+.pstep:nth-child(2) .pn{background:#c0501b}.pstep:nth-child(3) .pn{background:#a86400}.pstep:nth-child(4) .pn{background:#3f7d2c}.pstep:nth-child(5) .pn{background:#1b7f96}.pstep:nth-child(6) .pn{background:#1864ab}
+.pstep h4{font-size:.95rem}
+.pstep p{font-size:.82rem;margin:.1em 0;color:var(--muted)}
+.sched{font-variant-numeric:tabular-nums}
+.sched td:nth-child(3){font-weight:700}
+.barcell{display:block;height:8px;border-radius:4px;background:var(--brand);margin-top:3px}
+
+/* BRAIN MAPS */
+.bm{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.bml{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 11px;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center}
+.bml .L{font-size:1.5rem;font-weight:850;color:var(--brand);text-align:center}
+.bml span{font-size:.86rem;line-height:1.25}
+
+/* checklist */
+.cl{list-style:none;padding:0;margin:0;counter-reset:c}
+.cl li{border-bottom:1px solid var(--line);margin:0}
+.cl li:last-child{border-bottom:0}
+.cl label{display:grid;grid-template-columns:26px 1fr;gap:10px;padding:10px 2px;cursor:pointer;align-items:start}
+.cl input{width:22px;height:22px;accent-color:var(--ok);margin-top:1px}
+.cl input:checked+span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--ok)}
+.btn{font:inherit;font-weight:650;border-radius:10px;border:1.5px solid var(--brand);background:transparent;color:var(--brand);padding:8px 14px;min-height:44px;cursor:pointer}
+.btn.fill{background:var(--brand);color:#fff}
+@media (prefers-color-scheme:dark){.btn.fill{color:#0f151b}}
+
+/* calculadora */
+.calc-top{display:grid;gap:10px;align-items:end}
+@media (min-width:640px){.calc-top{grid-template-columns:180px 1fr 1fr}}
+.drow{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:grid;gap:8px;grid-template-columns:1fr 1fr;align-items:center}
+.drow.off{opacity:.55}
+.drow .nm{grid-column:1/-1;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.drow .nm label{font-weight:700;display:flex;gap:9px;align-items:center;cursor:pointer;min-height:36px}
+.drow .nm input{width:22px;height:22px;accent-color:var(--brand)}
+.drow .res{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;background:var(--surface2);border-radius:9px;padding:8px 10px}
+.drow .mlh{font-size:1.45rem;font-weight:850;font-variant-numeric:tabular-nums;color:var(--brand)}
+.drow .mlh small{font-size:.8rem;font-weight:600;color:var(--muted)}
+.drow .abs{font-size:.86rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.drow .bol{grid-column:1/-1;font-size:.84rem;color:var(--muted)}
+.drow .fx{font-size:.74rem;color:var(--muted);margin-top:2px}
+@media (min-width:880px){
+  .drow{grid-template-columns:1.1fr 1fr 1fr 1.6fr}
+  .drow .nm{grid-column:auto}
+  .drow .res{grid-column:auto}
+  .drow .bol{grid-column:1/-1}
+}
+.tot{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tot .dbox .v{font-size:1.2rem}
+
+/* bottom nav */
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px rgba(0,0,0,.06)}
+.bottomnav a,.bottomnav button{all:unset;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:.66rem;font-weight:600;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bottomnav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bottomnav .on{color:var(--brand)}
+.drawer{position:fixed;inset:0;z-index:50;display:none}
+.drawer.open{display:block}
+.drawer .scrim{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.drawer .panel{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:18px 18px 0 0;padding:10px 12px calc(16px + env(safe-area-inset-bottom));max-height:80vh;overflow:auto}
+.drawer .panel a{display:block;padding:12px;border-radius:10px;text-decoration:none;color:var(--ink);font-weight:600;border-bottom:1px solid var(--line)}
+.drawer .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:4px auto 8px}
+
+/* certeza */
+.cert{display:grid;gap:10px}
+@media (min-width:760px){.cert{grid-template-columns:repeat(3,1fr)}}
+.cert .card{border-top:6px solid}
+.cert .hi{border-top-color:var(--ok)} .cert .md{border-top-color:var(--warn)} .cert .lo{border-top-color:var(--danger)}
+.cert ul{font-size:.9rem}
+
+.refs{font-size:.84rem}
+.refs li{margin:.35em 0}
+.foot{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;margin-top:20px}
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px;margin-bottom:14px;box-shadow:var(--shadow)}
+.hero p{margin:.2em 0;font-size:.9rem}
+.legend-prop{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.84rem}
+
+@media print{
+  :root{--bg:#fff}
+  .topbar{position:static;background:#fff;color:#000;border-bottom:2px solid #000}
+  .bottomnav,.side,.drawer,.noprint{display:none!important}
+  .wrap{display:block}
+  body{padding:0;font-size:11pt}
+  .card,.stair,.rule{box-shadow:none;break-inside:avoid}
+  section.sec{break-inside:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="grow">
+    <h1>Analgossedação na UTI Pediátrica</h1>
+    <div class="sub">HGVC · Protocolo v2.0 (set/2026) · versão de bolso</div>
+  </div>
+  <span class="pill-top">Confira doses</span>
+  <button type="button" class="topbtn" id="shareBtn" aria-label="Compartilhar ou instalar"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+</header>
+<div class="updbar" id="updBar" hidden><span>Há uma versão nova do protocolo.</span><button type="button" class="btn fill" id="updBtn">Atualizar</button></div>
+
+<div class="wrap">
+<nav class="side" aria-label="Seções">
+  <div class="grp">Beira-leito</div>
+  <a href="#inicio">Em 30 segundos</a>
+  <a href="#agitado">Paciente agitado</a>
+  <a href="#avaliar">Avaliar e alvos</a>
+  <a href="#escada">Escada de escalonamento</a>
+  <a href="#farmacos">Fármacos</a>
+  <a href="#calc">Calculadora de infusão</a>
+  <a href="#especiais">Situações especiais</a>
+  <a href="#desmame">Desmame e abstinência</a>
+  <a href="#delirium">Delirium</a>
+  <a href="#checklist">Checklist da visita</a>
+  <a href="#casos">Casos rápidos</a>
+  <div class="grp">Consulta</div>
+  <a href="#fundamentos">Fundamentos</a>
+  <a href="#certeza">Grau de certeza</a>
+  <a href="#revisao">Notas desta versão</a>
+  <a href="#refs">Referências</a>
+  <a href="#instalar">Instalar e compartilhar</a>
+</nav>
+
+<main>
+
+<!-- ================= INÍCIO ================= -->
+<section class="sec" id="inicio">
+  <div class="hero">
+    <p><b>Como usar.</b> A parte de cima de cada seção é o que se faz à beira-leito. O “porquê” (farmacologia, fisiopatologia e evidência) fica recolhido em <b>Por quê</b> — abra quando precisar. Para usar sem internet, <a href="#instalar">instale no celular ou no computador</a>.</p>
+    <div class="legend-prop" style="margin-top:6px"><span class="tag t-prop">proposta</span><span class="muted">= complemento desta versão web que <b>não está no texto aprovado v2.0</b>; validar com a coordenação antes de adotar.</span></div>
+  </div>
+
+  <div class="sec-head"><span class="n">00</span><h2>Em 30 segundos</h2></div>
+  <div class="rules">
+    <div class="rule"><h3>Dor antes de sedação</h3><p>Agitação em VM é dor, desconforto ou problema do ventilador até prova em contrário.</p></div>
+    <div class="rule"><h3>Escore antes de dose</h3><p>Nenhum ajuste sem COMFORT-B/FLACC registrado. Reavaliar 30 min após cada mudança.</p></div>
+    <div class="rule"><h3>Alvo = sedação mínima eficaz</h3><p>Não é paciente parado. O dano da sedação excessiva continua depois da alta.</p></div>
+    <div class="rule"><h3>Eixo: fentanil + dexmedetomidina</h3><p>Midazolam não é 1ª linha. Cetamina é o 3º agente. Propofol só &lt;48 h e &lt;4 mg/kg/h.</p></div>
+    <div class="rule"><h3>Um fármaco por vez</h3><p>Nunca subir dois ao mesmo tempo sem reavaliar entre eles.</p></div>
+    <div class="rule"><h3>BNM invalida o COMFORT-B</h3><p>Sob bloqueio, a profundidade é prescrita. Retire o BNM <b>antes</b> de desmamar sedação.</p></div>
+    <div class="rule"><h3>≥5 dias = plano de desmame</h3><p>Opioide e/ou BZD contínuo por ≥5 dias gera dependência física. Planeje a retirada desde já.</p></div>
+    <div class="rule"><h3>Desmame é ordenado</h3><p>BNM → propofol → midazolam → fentanil → cetamina → alfa-2 por último.</p></div>
+    <div class="rule"><h3>Nunca dexmed + clonidina</h3><p>Clonidina <b>substitui</b> a dexmedetomidina, não se soma a ela.</p></div>
+  </div>
+</section>
+
+<!-- ================= AGITADO ================= -->
+<section class="sec" id="agitado">
+  <div class="sec-head"><span class="n">01</span><h2>Paciente agitado ou brigando com o ventilador</h2></div>
+  <p class="sec-lead">Sequência para as primeiras decisões. Siga de cima para baixo.</p>
+  <div class="card">
+  <div class="flow">
+    <div class="fstep"><div class="fdot">1</div><div class="fbody">
+      <h4>Excluir causa tratável (Degrau 0)</h4>
+      <ul>
+        <li><b>Oxigenação/ventilação:</b> hipoxemia, hipercapnia, assincronia por parâmetro inadequado</li>
+        <li><b>Tubo:</b> posição, obstrução, dobra</li>
+        <li><b>Corpo:</b> dor de dreno, distensão gástrica, bexiga cheia, febre, hipoglicemia</li>
+        <li><b>Abstinência já instalada</b> (WAT-1)</li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">2</div><div class="fbody">
+      <h4>Tem dor? (FLACC ou EVA/faces)</h4>
+      <div class="yesno">
+        <div class="yn y"><b>Sim →</b> bolus de fentanil <span class="dose">1 mcg/kg</span> em ≥1 min + aumentar infusão <span class="dose">+1 mcg/kg/h</span></div>
+        <div class="yn n"><b>Não →</b> vá ao passo 3</div>
+      </div>
+    </div></div>
+    <div class="fstep"><div class="fdot">3</div><div class="fbody">
+      <h4>COMFORT-B ≥23 sem dor</h4>
+      <p>Subir o alfa-2 — <b>sem bolus</b>:</p>
+      <ul>
+        <li>Dexmedetomidina <span class="dose">+0,2–0,3 mcg/kg/h</span>, ou</li>
+        <li>Clonidina <span class="dose">+0,25–0,5 mcg/kg/h</span></li>
+      </ul>
+      <p class="small muted">Base já no teto? Siga a <a href="#escada">escada</a>.</p>
+    </div></div>
+    <div class="fstep"><div class="fdot">4</div><div class="fbody">
+      <h4>Reavaliar</h4>
+      <p>COMFORT-B <b>30 min</b> após o ajuste. Clonidina: efeito em <b>6–12 h</b> — não titular de hora em hora.</p>
+    </div></div>
+  </div>
+  </div>
+</section>
+
+<!-- ================= AVALIAR ================= -->
+<section class="sec" id="avaliar">
+  <div class="sec-head"><span class="n">02</span><h2>Avaliar e definir o alvo</h2></div>
+  <p class="sec-lead">Toda titulação é ancorada em escore documentado.</p>
+
+  <div class="card">
+    <h3>COMFORT-B · faixas (6 a 30)</h3>
+    <div class="cbar" role="img" aria-label="Faixas da COMFORT-B: 6 a 10 hipersedação, 11 a 16 sedação moderada, 17 a 22 sedação leve, 23 a 30 sedação insuficiente">
+      <div class="hiper">6–10<span>hipersedação</span></div>
+      <div class="mod">11–16<span>moderada</span></div>
+      <div class="leve">17–22<span>leve</span></div>
+      <div class="insuf">23–30<span>insuficiente</span></div>
+    </div>
+    <div class="gray-brace">11–22: zona que não discrimina bem → registrar NISS</div>
+    <p class="small muted" style="margin-top:8px">NISS = leitura da enfermagem à beira-leito: sedação insuficiente / adequada / excessiva. Na faixa 11–22, sem o NISS a escala não decide.</p>
+  </div>
+
+  <div class="card">
+    <h3>Alvo por fase da doença</h3>
+    <div class="phases">
+      <div class="phase a"><div class="ph">Aguda · instabilidade · ventilação protetora limítrofe</div><div class="tg">11–16</div><div class="small muted">Sincronia e proteção pulmonar</div></div>
+      <div class="phase b"><div class="ph">Estabilização</div><div class="tg">17–22</div><div class="small muted">Menos exposição, permite mobilizar</div></div>
+      <div class="phase c"><div class="ph">Desmame ventilatório / TRE</div><div class="tg">17–22</div><div class="small muted">Desperto e cooperativo</div></div>
+    </div>
+    <p class="small muted" style="margin:8px 0 0">O alvo do dia é definido na visita e registrado.</p>
+  </div>
+
+  <div class="card noprint">
+    <h3>Interpretar um escore agora</h3>
+    <div class="interp">
+      <div>
+        <label class="field"><span>COMFORT-B</span>
+          <input type="number" id="cbN" min="6" max="30" value="19" inputmode="numeric">
+        </label>
+        <input type="range" id="cbR" min="6" max="30" value="19" aria-label="COMFORT-B">
+        <div class="field"><span>Fase</span>
+          <div class="seg" role="radiogroup">
+            <label><input type="radio" name="fase" value="aguda">Aguda</label>
+            <label><input type="radio" name="fase" value="estab" checked>Estabilização</label>
+            <label><input type="radio" name="fase" value="desmame">Desmame/TRE</label>
+          </div>
+        </div>
+        <label class="chk"><input type="checkbox" id="cbBNM"> Em bloqueio neuromuscular</label>
+      </div>
+      <div class="out" id="cbOut" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <h3 style="margin:18px 2px 8px;font-size:1.05rem">Instrumentos e frequência</h3>
+  <div class="grid g2">
+    <div class="card scale"><div class="dom">Sedação / conforto</div><div class="ins">COMFORT-B</div>
+      <div class="kv"><b>Quando:</b> 4/4 h e 30 min após cada ajuste</div>
+      <div class="kv"><b>Leitura:</b> ≤10 hiper · 11–22 zona cinzenta (+NISS) · ≥23 insuficiente</div></div>
+    <div class="card scale"><div class="dom">Dor</div><div class="ins">FLACC <span class="muted small">(pré-verbal)</span> · EVA/faces <span class="muted small">(colaborativo)</span></div>
+      <div class="kv"><b>Quando:</b> 4/4 h e após procedimento</div>
+      <div class="kv"><b>Leitura:</b> analgesia ajustada independentemente da sedação</div>
+      <div class="kv"><span class="tag t-prop">proposta</span> FLACC 0 sem dor · 1–3 leve · 4–6 moderada · 7–10 intensa → tratar se ≥4</div></div>
+    <div class="card scale"><div class="dom">Nível de consciência</div><div class="ins">RASS pediátrica ou SBS</div>
+      <div class="kv"><b>Quando:</b> 1×/turno</div>
+      <div class="kv"><b>Leitura:</b> alvo definido diariamente na visita</div></div>
+    <div class="card scale"><div class="dom">Abstinência</div><div class="ins">WAT-1</div>
+      <div class="kv"><b>Quando:</b> 12/12 h, do 1º dia de desmame até 72 h após a última dose</div>
+      <div class="kv"><b>Positivo:</b> <span class="tag t-danger">WAT-1 ≥3</span></div></div>
+    <div class="card scale"><div class="dom">Delirium</div><div class="ins">CAPD <span class="muted small">(ou pCAM-ICU)</span></div>
+      <div class="kv"><b>Quando:</b> 1×/turno</div>
+      <div class="kv"><b>Positivo:</b> <span class="tag t-danger">CAPD ≥9</span><a class="cite" href="#ref-35">35</a> <span class="tag t-prop">proposta</span> → pacote <a href="#delirium">BRAIN MAPS</a></div></div>
+    <div class="card scale" style="border-left-color:var(--danger)"><div class="dom">Bloqueio neuromuscular</div><div class="ins">TOF + sedação profunda documentada</div>
+      <div class="kv"><b>Quando:</b> 4/4 h enquanto em BNM</div>
+      <div class="kv"><b>Atenção:</b> COMFORT-B <b>não é válida</b>. BIS, se disponível.</div>
+      <div class="kv"><span class="tag t-prop">proposta</span> alvo TOF 1–2 respostas em 4</div></div>
+  </div>
+
+  <details class="card">
+    <summary>Por quê — COMFORT-B, NISS e bloqueio</summary>
+    <div class="dx">
+      <p><b>Itens da COMFORT-B</b> (1 a 5 pontos cada; total 6–30): alerta · calma/agitação · resposta respiratória (em VM) ou choro · movimentos · tônus muscular · tensão facial.</p>
+      <p><b>A faixa 11–22.</b> Na validação original (Ista 2005; 78 pacientes, 843 observações)<a class="cite" href="#ref-23">23</a>, ≤10 = hipersedação e ≥23 = sedação insuficiente. Os próprios autores dizem que a faixa 11–22 não discrimina bem e depende do julgamento da enfermagem, formalizado no NISS. Por isso ela não é “alvo limpo”. Os ensaios estratificam dentro dela (leve 17–22, moderada 11–16, profunda 6–10), e é essa a estratificação adotada aqui.</p>
+      <p><b>Sob BNM</b> não há comportamento para pontuar. A profundidade é garantida por prescrição deliberada e, se disponível, por EEG processado (BIS). Desmamar o sedativo com o paciente ainda bloqueado arrisca <i>awareness</i> (consciência sob paralisia).</p>
+      <p><b>Instrumentos em português do Brasil:</b> RASS (<i>Rev Bras Ter Intensiva</i> 2021;33:102-110); CAPD (Barbosa 2018; pontos-âncora para &lt;24 meses em <i>Crit Care Sci</i> 2023;35:320-327); pCAM-ICU (Molon 2018).</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= ESCADA ================= -->
+<section class="sec" id="escada">
+  <div class="sec-head"><span class="n">03</span><h2>Escada de escalonamento</h2></div>
+  <p class="sec-lead">Suba um degrau só quando o anterior estiver otimizado e reavaliado.</p>
+
+  <div class="stairs">
+    <div class="stair"><div class="lvl l0"><small>degrau</small>0</div><div class="bd">
+      <h4>Antes de qualquer fármaco</h4>
+      <p>Tratar a causa (ver <a href="#agitado">passo 1</a>). Ambiente: ciclo claro-escuro, menos ruído, agrupar manipulações, presença dos pais.</p>
+    </div></div>
+    <div class="stair"><div class="lvl l1"><small>degrau</small>1</div><div class="bd">
+      <h4>Base</h4>
+      <p>Fentanil <span class="dose">1 mcg/kg/h</span> + dexmedetomidina <span class="dose">0,3 mcg/kg/h</span></p>
+      <p>Bolus de fentanil <span class="dose">1 mcg/kg</span> se necessário. Bolus repetidos = sinal para subir a infusão.</p>
+    </div></div>
+    <div class="stair"><div class="lvl l2"><small>degrau</small>2</div><div class="bd">
+      <h4>Titular a base</h4>
+      <p>Dexmedetomidina até <span class="dose">1,2–1,5 mcg/kg/h</span> · fentanil até <span class="dose">3–5 mcg/kg/h</span></p>
+      <p class="small muted">Guiado por COMFORT-B (sedação) e FLACC (dor), separadamente.</p>
+    </div></div>
+    <div class="stair"><div class="lvl l3"><small>degrau</small>3</div><div class="bd">
+      <h4>Terceiro agente: cetamina</h4>
+      <p>Iniciar <span class="dose">0,5 mg/kg/h</span> → até <span class="dose">2 mg/kg/h</span></p>
+      <p>Preferir cedo se <b>choque, droga vasoativa ou broncoespasmo</b>.</p>
+    </div></div>
+    <div class="stair"><div class="lvl l4"><small>degrau</small>4</div><div class="bd">
+      <h4>Profundidade adicional</h4>
+      <ul>
+        <li>Necessidade previsível <b>&lt;48 h</b> → propofol <span class="dose">1–4 mg/kg/h</span></li>
+        <li>Necessidade prolongada ou contraindicação ao propofol → midazolam <span class="dose">50–200 mcg/kg/h</span></li>
+      </ul>
+    </div></div>
+    <div class="stair"><div class="lvl l5"><small>degrau</small>5</div><div class="bd">
+      <h4>Bloqueio neuromuscular</h4>
+      <p>Só se a ventilação protetora for inalcançável com sedação otimizada. <b>Mínimo, porém efetivo</b>, sempre com sedação. Titular por TOF. Reavaliar a necessidade a cada 24 h.</p>
+      <p><b>Rocurônio:</b> após 4–8 h de infusão, a velocidade necessária cai para ~20% da inicial — não manter a taxa por inércia.</p>
+      <p class="small"><span class="tag t-prop">proposta</span> Doses da bula (contexto anestésico, ≥3 meses): <span class="dose">0,6 mg/kg</span> para intubação; infusão iniciada em <span class="dose">7–12 mcg/kg/min</span> após sinal de recuperação do bloqueio, titulada por TOF.<a class="cite" href="#ref-40">40</a></p>
+    </div></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:12px">
+    <div class="call c-info"><b>Clonidina: alternativa, não degrau</b>Substitui a dexmedetomidina (em qualquer degrau) se ela estiver indisponível ou se houver uso prolongado com transição enteral prevista. Ataque <span class="dose">1–2 mcg/kg</span> + <span class="dose">0,5–2 mcg/kg/h</span>. <b>Nunca associar as duas.</b></div>
+    <div class="call c-warn"><b>Sedação prevista &gt;5–7 dias</b>Planeje o rodízio de classes desde o início, em vez de escalonar o mesmo fármaco indefinidamente. Evidência limitada; no estudo de referência só 35% dos pacientes seguiram o rodízio corretamente.<a class="cite" href="#ref-37">37</a></div>
+  </div>
+
+  <div class="call c-prop"><b><span class="tag t-prop">proposta</span> Analgesia adjuvante no pós-operatório</b>Paracetamol IV ou enteral junto com o opioide melhora a analgesia e reduz a necessidade de opioide no pós-operatório imediato (PANDEM: recomendação condicional, evidência baixa; não se estende a doença clínica).<a class="cite" href="#ref-1">1</a> Paracetamol IV (bula): neonato ≥32 sem de IG <span class="dose">12,5 mg/kg 6/6 h</span> máx. 50 mg/kg/dia · 29 dias–2 anos <span class="dose">15 mg/kg 6/6 h</span> máx. 60 · 2–12 anos <span class="dose">15 mg/kg 6/6 h</span> máx. 75.<a class="cite" href="#ref-41">41</a></div>
+
+  <h3 style="margin:18px 2px 8px;font-size:1.05rem">Titulação pelo COMFORT-B</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Escore</th><th>Leitura</th><th>Conduta</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag t-danger">≥23</span></td><td>Insuficiente</td><td>Checar dor (FLACC) e causa reversível. <b>Com dor:</b> fentanil bolus 1 mcg/kg + infusão +1 mcg/kg/h. <b>Sem dor:</b> dexmed +0,2–0,3 mcg/kg/h (sem bolus) ou clonidina +0,25–0,5 mcg/kg/h.</td></tr>
+        <tr><td><span class="tag" style="background:var(--z-leve-soft);color:var(--z-leve)">17–22</span></td><td>Alvo da estabilização</td><td>Manter. Na fase aguda com assincronia, subir um degrau. +NISS.</td></tr>
+        <tr><td><span class="tag" style="background:var(--z-mod-soft);color:var(--z-mod)">11–16</span></td><td>Alvo da fase aguda</td><td>Manter. Na estabilização, começar a reduzir o fármaco de maior potencial deletério (<a href="#desmame">ordem de retirada</a>). +NISS.</td></tr>
+        <tr><td><span class="tag" style="background:var(--z-hiper-soft);color:var(--z-hiper)">≤10</span></td><td>Hipersedação</td><td>Reduzir 20–25% do agente de maior risco; reavaliar em 1 h. Excluir acúmulo (LRA, disfunção hepática, metabólito ativo).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="call c-info" style="margin-top:10px"><b>Clonidina tem ritmo próprio</b>Incrementos de <span class="dose">0,25 mcg/kg/h a cada 6–12 h</span>. Teto de rotina 2 mcg/kg/h. Não subir se a FC cair &gt;20% do basal ou a PAM ficar abaixo do p5 para a idade.</div>
+</section>
+
+<!-- ================= FÁRMACOS ================= -->
+<section class="sec" id="farmacos">
+  <div class="sec-head"><span class="n">04</span><h2>Fármacos</h2></div>
+  <p class="sec-lead">Dose, quando preferir, quando evitar e diluição. O “porquê” fica recolhido no fim de cada cartão.</p>
+  <nav class="drugnav" aria-label="Fármacos">
+    <a href="#d-fen">Fentanil</a><a href="#d-dex">Dexmedetomidina</a><a href="#d-cet">Cetamina</a><a href="#d-clo">Clonidina</a><a href="#d-pro">Propofol</a><a href="#d-mid">Midazolam</a>
+  </nav>
+
+  <!-- Fentanil -->
+  <article class="card drug" id="d-fen">
+    <div class="drug-h"><h3>Fentanil</h3><span class="tag t-brand">opioide de eixo</span><span class="tag t-ok">1ª linha</span></div>
+    <div class="drug-b">
+      <div class="doses">
+        <div class="dbox"><div class="k">Bolus</div><div class="v">1–2 mcg/kg <small>em ≥1 min</small></div></div>
+        <div class="dbox"><div class="k">Início</div><div class="v">1 mcg/kg/h</div></div>
+        <div class="dbox"><div class="k">Faixa</div><div class="v">1–5 mcg/kg/h</div></div>
+        <div class="dbox cap"><div class="k">Tolerância</div><div class="v">até 10 mcg/kg/h</div></div>
+      </div>
+      <div class="two">
+        <div class="lst good"><h4>Prefira / use</h4><ul>
+          <li>Opioide padrão da UTIP</li>
+          <li><b>Lesão renal aguda</b>: metabólitos inativos (≠ morfina)</li>
+        </ul></div>
+        <div class="lst bad"><h4>Cuidado</h4><ul>
+          <li>Bolus rápido em dose alta → <b>rigidez torácica</b> (reverter com naloxona ou BNM)</li>
+          <li><b>Dependência física em até 5 dias</b> de dose regular</li>
+          <li>Principal indutor de abstinência prolongada</li>
+          <li>&gt;5 dias: considerar rodízio para morfina ou hidromorfona, se rim permitir</li>
+        </ul></div>
+      </div>
+      <div class="dil"><b>Diluição:</b> 500 mcg (10 mL de 50 mcg/mL) + 40 mL SF 0,9% → <b>10 mcg/mL</b></div>
+      <details><summary>Por quê — farmacologia e evidência</summary><div class="dx">
+        <p>Agonista µ puro, 80–100× mais potente que a morfina, muito lipofílico (entra rápido no SNC). Metabolismo hepático (CYP3A4) em norfentanil e hidroxifentanil, <b>inativos</b>. A morfina gera M3G e M6G, hidrossolúveis e ativos, que acumulam na disfunção renal.</p>
+        <p><b>Dependência ≠ transtorno por uso.</b> Dependência fisiológica e tolerância compartilham fisiopatologia com o transtorno por uso de substância, mas a abordagem é outra (AAP 2025).</p>
+        <p><b>Abstinência:</b> em coorte prospectiva com WAT-1 (Dokken 2021)<a class="cite" href="#ref-27">27</a>, a dose de fentanil antes do desmame associou-se a abstinência mais grave; a de midazolam, não. Rodízio após 5 dias explora a tolerância cruzada incompleta.</p>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- Dexmedetomidina -->
+  <article class="card drug" id="d-dex">
+    <div class="drug-h"><h3>Dexmedetomidina</h3><span class="tag t-brand">alfa-2</span><span class="tag t-ok">1ª linha</span><span class="tag t-warn">off-label em UTIP</span></div>
+    <div class="drug-b">
+      <div class="doses">
+        <div class="dbox no"><div class="k">Bolus</div><div class="v">Não fazer</div></div>
+        <div class="dbox"><div class="k">Início</div><div class="v">0,2–0,3 mcg/kg/h</div></div>
+        <div class="dbox"><div class="k">Titular</div><div class="v">+0,1–0,3 <small>a cada 30 min</small></div></div>
+        <div class="dbox cap"><div class="k">Faixa / teto</div><div class="v">0,2–1,4 <small>teto 1,5 mcg/kg/h</small></div></div>
+      </div>
+      <div class="two">
+        <div class="lst good"><h4>Prefira / use</h4><ul>
+          <li>Sedativo de base com fentanil</li>
+          <li><b>Não deprime o drive respiratório</b></li>
+          <li>Alfa-2 preferido na <b>LRA</b> (metabolismo hepático)</li>
+          <li>Cobertura no desmame: <span class="dose">0,2–0,4 mcg/kg/h</span></li>
+        </ul></div>
+        <div class="lst bad"><h4>Cuidado</h4><ul>
+          <li><b>Bradicardia dose-dependente</b></li>
+          <li>Bolus: hipertensão transitória, bradicardia, parada sinusal</li>
+          <li><b>Abstinência própria</b> (taquicardia, hipertensão, agitação) → nunca suspender abruptamente: −10% a cada 12 h ou trocar para clonidina enteral</li>
+          <li>Nunca junto com clonidina</li>
+        </ul></div>
+      </div>
+      <div class="dil"><b>Diluição:</b> 200 mcg (2 mL de 100 mcg/mL) + 48 mL SF 0,9% → <b>4 mcg/mL</b></div>
+      <details><summary>Por quê — farmacologia e o que a evidência de 2025 mostra</summary><div class="dx">
+        <p>Agonista alfa-2 muito seletivo (α2:α1 ≈ 1.600:1). No <i>locus coeruleus</i> produz EEG parecido com sono não REM; no corno dorsal, analgesia leve. Metabolismo hepático (glicuronidação direta e CYP2A6), metabólitos inativos. O bolus estimula receptores α2B vasculares periféricos (vasoconstrição) antes da simpatólise central — daí a hipertensão e a bradicardia reflexa.</p>
+        <p><b>Bradicardia:</b> queda de 10%, 15% e 24% na FC com 0,25, 0,5 e 0,75 mcg/kg/h em lactentes após cirurgia cardíaca.</p>
+        <p><b>Metanálise Zorko 2025</b> (12 RCTs, 592 pacientes, GRADE):<a class="cite" href="#ref-7">7</a></p>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Desfecho</th><th>Efeito</th><th>Certeza</th></tr></thead>
+          <tbody>
+            <tr><td>Duração de VM</td><td>−2,2 h — pouca ou nenhuma diferença</td><td><span class="tag t-warn">moderada</span></td></tr>
+            <tr><td>Permanência na UTIP</td><td>−0,2 dia — pouca ou nenhuma</td><td><span class="tag t-warn">moderada</span></td></tr>
+            <tr><td>Bradicardia importante</td><td>RR 1,42 (0,45–4,49)</td><td><span class="tag t-warn">moderada</span></td></tr>
+            <tr><td>Hipotensão importante</td><td>RR 1,35 (0,48–3,82)</td><td><span class="tag t-warn">moderada</span></td></tr>
+            <tr><td>Delirium</td><td>RR 0,83 (0,64–1,07) — pode reduzir</td><td><span class="tag t-danger">baixa</span></td></tr>
+            <tr><td>Abstinência</td><td>RR 0,93 (0,55–1,59) — incerto</td><td><span class="tag t-danger">muito baixa</span></td></tr>
+            <tr><td>Atingir alvo de sedação</td><td>Discordante entre 3 ensaios</td><td><span class="tag t-danger">muito baixa</span></td></tr>
+          </tbody>
+        </table></div>
+        <p><b>Leitura:</b> é segura (bradicardia/hipotensão com intervenção em ~5–6%) e provavelmente não encurta VM nem internação. Benefício em delirium plausível, de baixa certeza. Muitos ensaios usaram doses abaixo da prática atual (≤0,5 mcg/kg/h em 5 de 12). Um único ensaio com seguimento de 12 meses achou pior motricidade fina (OR 10,3; IC 1,1–93,2) — achado isolado, IC amplíssimo.</p>
+        <p><b>Abstinência da dexmedetomidina</b> (Burbano 2012; 62 cardiopatas, mediana 5,8 dias, 0,71 mcg/kg/h)<a class="cite" href="#ref-10">10</a>: taquicardia 27%, hipertensão 35%, agitação 27%. Taquicardia em 42% na suspensão abrupta vs 14% no desmame.</p>
+        <p><b>Regulatório:</b> o FDA aprova para sedação em UTI de adultos e, em pediatria, só para sedação em procedimentos não invasivos (≥1 mês).<a class="cite" href="#ref-39">39</a> A bula brasileira diz que segurança e eficácia em menores de 18 anos “não foram estudadas” — não é contraindicação formal.<a class="cite" href="#ref-42">42</a> Sedação em UTIP é off-label no Brasil e nos EUA, sustentada por diretriz.<a class="cite" href="#ref-1">1</a></p>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- Cetamina -->
+  <article class="card drug" id="d-cet">
+    <div class="drug-h"><h3>Cetamina</h3><span class="tag t-brand">antagonista NMDA</span><span class="tag t-warn">3º agente</span></div>
+    <div class="drug-b">
+      <div class="doses">
+        <div class="dbox"><div class="k">Bolus</div><div class="v">0,5–1 mg/kg</div></div>
+        <div class="dbox"><div class="k">Infusão</div><div class="v">0,5–2 mg/kg/h <small>8,3–33 mcg/kg/min</small></div></div>
+        <div class="dbox"><div class="k">Poupar opioide</div><div class="v">0,1–0,5 mg/kg/h</div></div>
+        <div class="dbox cap"><div class="k">Broncoespasmo</div><div class="v">1–2 mg/kg/h</div></div>
+      </div>
+      <div class="two">
+        <div class="lst good"><h4>Prefira / use</h4><ul>
+          <li><b>Choque / droga vasoativa</b></li>
+          <li><b>Broncoespasmo grave</b> (broncodilatadora)</li>
+          <li>Preserva drive respiratório e tônus de via aérea</li>
+          <li>Não depende do rim</li>
+        </ul></div>
+        <div class="lst bad"><h4>Cuidado</h4><ul>
+          <li><b>Taquicardia (63%) e hipotensão (54%)</b> na série pediátrica — “simpatomimética” não garante estabilidade</li>
+          <li>Hipersecreção (29%): antissialagogo se abundante</li>
+          <li>Fenômeno de emergência (13%), mais em adolescentes</li>
+          <li>Aumenta pressão intraocular</li>
+          <li>Clearance muito variável → titular por escore</li>
+        </ul></div>
+      </div>
+      <div class="dil"><b>Diluição:</b> 500 mg (10 mL de 50 mg/mL) + 40 mL SF 0,9% → <b>10 mg/mL</b></div>
+      <details><summary>Por quê — farmacologia e evidência</summary><div class="dx">
+        <p>Antagonista não competitivo do receptor NMDA, com ação em receptores opioides e monoaminérgicos. Simpatomimética indireta (sustenta PA e débito). Metabolismo hepático (CYP3A4/CYP2B6) em norcetamina, ativa.</p>
+        <p><span class="tag t-prop">proposta</span> O efeito simpatomimético é indireto; a cetamina tem ação inotrópica negativa direta, que pode aparecer quando as reservas de catecolaminas estão esgotadas (choque prolongado). Isso ajuda a explicar a hipotensão frequente na série abaixo.</p>
+        <p><b>Variabilidade:</b> em 25 crianças com 0,3–3,6 mg/kg/h (Flint 2017), a variação interindividual do clearance foi de 40% para a S-cetamina e 104% para a S-norcetamina.<a class="cite" href="#ref-20">20</a> Dose fixa não funciona.</p>
+        <p><b>Ketamine-PICU Study</b> (Groth 2024; retrospectivo, 24 pacientes, 4 UTIPs, 25% com vasopressor)<a class="cite" href="#ref-19">19</a>: dose inicial mediana 0,5 mg/kg/h; mais tempo na meta de dor e menos equivalente de morfina nas primeiras 24 h, <b>efeito não sustentado</b> em 25–48 h.</p>
+        <p><b>Cetamina + propofol</b> em infusão prolongada (Torres Soblechero 2023; 32 crianças)<a class="cite" href="#ref-21">21</a> para poupar BZD e opioide: é opção, não padrão (amostra pequena, observacional).</p>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- Clonidina -->
+  <article class="card drug" id="d-clo">
+    <div class="drug-h"><h3>Clonidina</h3><span class="tag t-brand">alfa-2</span><span class="tag">retaguarda · ponte enteral</span></div>
+    <div class="drug-b">
+      <div class="doses">
+        <div class="dbox"><div class="k">Ataque</div><div class="v">1–2 mcg/kg <small>em 15–30 min</small></div></div>
+        <div class="dbox"><div class="k">Infusão</div><div class="v">0,5–2 mcg/kg/h</div></div>
+        <div class="dbox"><div class="k">Titular</div><div class="v">+0,25 <small>a cada 6–12 h</small></div></div>
+        <div class="dbox cap"><div class="k">Teto</div><div class="v">2 <small>rotina</small> · 3 <small>absoluto</small></div></div>
+      </div>
+      <div class="tbl-wrap" style="margin-bottom:10px"><table>
+        <thead><tr><th>Situação</th><th>Ajuste</th></tr></thead>
+        <tbody>
+          <tr><td>Neonato (&lt;28 dias)</td><td>Metade: ataque <b>1 mcg/kg</b>, manutenção <b>0,25–0,5 mcg/kg/h</b></td></tr>
+          <tr><td>LRA / diálise</td><td>Reduzir ~50%, <b>teto 1 mcg/kg/h</b>. Hemodiálise remove só ~5%</td></tr>
+          <tr><td>Ponte enteral</td><td><b>3–5 mcg/kg</b> VO/SNG a cada 6–8 h</td></tr>
+          <tr><td>Parar de subir se</td><td>FC ↓ &gt;20% do basal ou PAM &lt; p5 para a idade</td></tr>
+        </tbody>
+      </table></div>
+      <div class="two">
+        <div class="lst good"><h4>Prefira / use</h4><ul>
+          <li>Dexmedetomidina indisponível</li>
+          <li>Uso prolongado com transição para via enteral</li>
+          <li>Último fármaco do desmame</li>
+        </ul></div>
+        <div class="lst bad"><h4>Cuidado</h4><ul>
+          <li><b>Sem ataque parece inerte</b> (equilíbrio só em ~24 h)</li>
+          <li><b>Retirada abrupta:</b> rebote hipertensivo e taquicardia → desmame em 24–72 h (mais lento se &gt;7 dias)</li>
+          <li>Nunca junto com dexmedetomidina</li>
+          <li>Tende a ser <b>subdosada</b>, não superdosada</li>
+        </ul></div>
+      </div>
+      <div class="dil"><b>Diluição:</b> 150 mcg (1 mL de 150 mcg/mL) + 49 mL SF 0,9% → <b>3 mcg/mL</b></div>
+      <details><summary>Por quê — farmacocinética e evidência</summary><div class="dx">
+        <p>Alfa-2 com seletividade α2:α1 ≈ 200:1 (bem menor que a da dexmedetomidina; mais componente α1 vascular).</p>
+        <ul>
+          <li><b>Biodisponibilidade oral 70–80%</b> (a revisão de Eberl assume 55% ao comparar doses — atenção ao converter).</li>
+          <li><b>Meia-vida:</b> 12–16 h em adultos; mais curta em crianças (~5–6 h); neonatos e lactentes jovens têm clearance imaturo (base para metade da dose); insuficiência renal prolonga para 17,5–41 h.</li>
+          <li><b>40–50% excretada inalterada na urina</b>; metabólito principal inativo.</li>
+          <li>Mesmo com meia-vida pediátrica curta, sem ataque o equilíbrio leva ~24 h.</li>
+        </ul>
+        <p><b>Doses na literatura:</b> o SLEEPS (10 UTIPs do Reino Unido) usou 3 mcg/kg + 0–3 mcg/kg/h.<a class="cite" href="#ref-12">12</a> A modelagem PK/PD do CloSed — ensaio interrompido precocemente, 28 crianças de 0–6 anos com morfina de base — sugere 4 mcg/kg + 3 mcg/kg/h para sedação adequada.<a class="cite" href="#ref-14">14</a> A simulação de Hayden propõe 2 mcg/kg + até 2 mcg/kg/h titulados, com metade da dose em neonatos.<a class="cite" href="#ref-13">13</a></p>
+        <p><b>Dado brasileiro</b> (Neves, Piva e cols., <i>Rev Assoc Med Bras</i> 2022; 66 lactentes)<a class="cite" href="#ref-18">18</a>: 0,53 mcg/kg/h nas 6 h iniciais, 0,85 na manutenção, 0,63 pré-extubação, sem instabilidade relevante. Alvo de sedação definido sem escore validado — retrato da prática, não alvo terapêutico.</p>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- Propofol -->
+  <article class="card drug" id="d-pro">
+    <div class="drug-h"><h3>Propofol 1%</h3><span class="tag t-brand">GABA-A</span><span class="tag t-danger">janela curta</span></div>
+    <div class="drug-b">
+      <div class="doses">
+        <div class="dbox"><div class="k">Infusão</div><div class="v">1–4 mg/kg/h</div></div>
+        <div class="dbox cap"><div class="k">Limite de dose</div><div class="v">&lt;4 mg/kg/h</div></div>
+        <div class="dbox cap"><div class="k">Limite de tempo</div><div class="v">&lt;48 h</div></div>
+        <div class="dbox"><div class="k">Calorias</div><div class="v">1 mL = 1,1 kcal</div></div>
+      </div>
+      <div class="call c-danger"><b>Síndrome da infusão do propofol (PRIS)</b>A prevenção é respeitar dose e tempo. Exame laboratorial dá falsa segurança: a PRIS se instala rápido e é largamente irreversível.</div>
+      <div class="two">
+        <div class="lst good"><h4>Prefira / use</h4><ul>
+          <li>Necessidade de profundidade previsivelmente <b>&lt;48 h</b></li>
+          <li>Hipertensão intracraniana (preserva acoplamento)</li>
+        </ul></div>
+        <div class="lst bad"><h4>Evite / vigie</h4><ul>
+          <li><b>Choque / instabilidade</b></li>
+          <li>Risco maior: &gt;48 h, &gt;4 mg/kg/h, &lt;12 meses, doença crítica, pouca reserva de carboidrato, catecolamina ou corticoide</li>
+          <li>Sinais: acidose com ânion-gap alto, lactato, CK, triglicerídeos, transaminases, lipase; ECG tipo Brugada em V1–V2; bradiarritmia refratária</li>
+          <li><b>Trocar frasco e equipo a cada 12 h</b></li>
+          <li>Somar o volume e as calorias ao balanço</li>
+        </ul></div>
+      </div>
+      <div class="dil"><b>Diluição:</b> não diluir → <b>10 mg/mL</b></div>
+      <details><summary>Por quê — PRIS e risco real</summary><div class="dx">
+        <p>Agonista GABA-A de início e término rápidos. A PRIS é toxicidade mitocondrial: desacopla a cadeia respiratória e bloqueia o metabolismo de ácidos graxos e acilcarnitinas.</p>
+        <p>A série de Bray (1998)<a class="cite" href="#ref-22">22</a> descreveu 18 casos pediátricos, todos com &gt;4 mg/kg/h por &gt;48 h. Uma coorte de 25 anos com 554 crianças (mediana 3,0 mg/kg/h por 22,8 h) teve 1 caso (0,2%) e nenhuma morte atribuível <span class="tag t-warn">fonte a confirmar</span>. Isso contextualiza o risco, mas não autoriza passar da janela; o rótulo do FDA mantém advertência contra sedação contínua em UTI pediátrica. Emulsão lipídica é meio de cultura — daí a troca a cada 12 h.</p>
+      </div></details>
+    </div>
+  </article>
+
+  <!-- Midazolam -->
+  <article class="card drug" id="d-mid">
+    <div class="drug-h"><h3>Midazolam</h3><span class="tag t-brand">benzodiazepínico</span><span class="tag t-danger">resgate, não eixo</span></div>
+    <div class="drug-b">
+      <div class="doses">
+        <div class="dbox"><div class="k">Bolus</div><div class="v">0,05–0,2 mg/kg</div></div>
+        <div class="dbox"><div class="k">Infusão</div><div class="v">50–200 mcg/kg/h <small>= 0,05–0,2 mg/kg/h</small></div></div>
+        <div class="dbox cap"><div class="k">Máximo usual</div><div class="v">~300 mcg/kg/h</div></div>
+        <div class="dbox"><div class="k">Posição</div><div class="v">3ª–4ª linha</div></div>
+      </div>
+      <div class="two">
+        <div class="lst good"><h4>Indicações que restam</h4><ul>
+          <li>Estado de mal epiléptico</li>
+          <li>Amnésia sob bloqueio neuromuscular</li>
+          <li>Instabilidade que contraindica propofol, com cetamina já no teto</li>
+          <li>Paciente já cronicamente exposto</li>
+        </ul></div>
+        <div class="lst bad"><h4>Cuidado</h4><ul>
+          <li><b>Fator de risco independente para delirium</b></li>
+          <li>Abstinência: alarme com carga cumulativa na ordem de <b>16–24 mg/kg</b></li>
+          <li><b>LRA:</b> metabólito ativo acumula → reduzir dose, esperar despertar tardio, considerar trocar</li>
+        </ul></div>
+      </div>
+      <div class="dil"><b>Diluição:</b> 50 mg (10 mL de 5 mg/mL) + 40 mL SF 0,9% → <b>1 mg/mL</b></div>
+      <details><summary>Por quê — metabólitos e carga cumulativa</summary><div class="dx">
+        <p>CYP3A4 → alfa-hidroxi-midazolam (<b>ativo</b>) → glicuronidado a alfa-hidroxi-midazolam-glicuronídeo (<b>também ativo</b>, eliminação renal). Na LRA esse glicuronídeo sobe — mecanismo clássico da “sedação prolongada inexplicada”.</p>
+        <p>PANDEM 2022: minimizar sedação baseada em BZD para reduzir delirium (evidência moderada). Cargas cumulativas pré-desmame associadas a mais abstinência: média 16,0 mg/kg (Best 2015)<a class="cite" href="#ref-28">28</a> e 24 mg/kg no grupo WAT-1 positivo (Amigoni). São ordens de grandeza para alarme, não limiares validados.</p>
+      </div></details>
+    </div>
+  </article>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Fármaco</th><th>Apresentação</th><th>Diluição padrão</th><th>Final</th></tr></thead>
+      <tbody>
+        <tr><td><b>Fentanil</b></td><td>50 mcg/mL · amp 10 mL</td><td>10 mL + 40 mL SF</td><td><b>10 mcg/mL</b></td></tr>
+        <tr><td><b>Cetamina</b></td><td>50 mg/mL · fr 10 mL</td><td>10 mL + 40 mL SF</td><td><b>10 mg/mL</b></td></tr>
+        <tr><td><b>Dexmedetomidina</b></td><td>100 mcg/mL · amp 2 mL</td><td>2 mL + 48 mL SF</td><td><b>4 mcg/mL</b></td></tr>
+        <tr><td><b>Clonidina</b></td><td>150 mcg/mL · amp 1 mL</td><td>1 mL + 49 mL SF</td><td><b>3 mcg/mL</b></td></tr>
+        <tr><td><b>Midazolam</b></td><td>5 mg/mL · amp 10 mL</td><td>10 mL + 40 mL SF</td><td><b>1 mg/mL</b></td></tr>
+        <tr><td><b>Propofol 1%</b></td><td>10 mg/mL</td><td>Não diluir</td><td><b>10 mg/mL</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small muted" style="margin:6px 2px">Conferir a apresentação disponível na farmácia antes de prescrever.</p>
+</section>
+
+<!-- ================= CALCULADORA ================= -->
+<section class="sec noprint" id="calc">
+  <div class="sec-head"><span class="n">05</span><h2>Calculadora de infusão</h2></div>
+  <p class="sec-lead">Converte dose em mL/h nas diluições padrão. Confira sempre o resultado antes de programar a bomba.</p>
+
+  <div class="call c-danger"><b>Ferramenta de apoio, não de prescrição</b>Os números saem das concentrações digitadas. Se a farmácia usar outra diluição, altere a concentração no campo correspondente. Dupla checagem continua obrigatória.</div>
+
+  <div class="card">
+    <div class="calc-top">
+      <label class="field" style="margin:0"><span>Peso (kg)</span><input type="number" id="peso" min="0.4" max="150" step="0.1" value="10" inputmode="decimal"></label>
+      <label class="chk"><input type="checkbox" id="ctxNeo"> Neonato (&lt;28 dias)</label>
+      <label class="chk"><input type="checkbox" id="ctxLRA"> Lesão renal aguda / diálise</label>
+    </div>
+  </div>
+
+  <div id="calcRows"></div>
+
+  <div class="card">
+    <h3>Total das infusões marcadas</h3>
+    <div class="tot">
+      <div class="dbox"><div class="k">mL/h</div><div class="v" id="totMlh">–</div></div>
+      <div class="dbox"><div class="k">mL/kg/dia</div><div class="v" id="totMlkg">–</div></div>
+      <div class="dbox"><div class="k">kcal/dia (propofol)</div><div class="v" id="totKcal">–</div></div>
+    </div>
+    <p class="small muted" style="margin:8px 0 0">Some ao balanço hídrico. Em crianças maiores o volume das diluições padrão cresce rápido — discuta concentração maior com a farmácia.</p>
+  </div>
+  <details class="card"><summary>Concentração dupla para crianças maiores</summary><div class="dx">
+    <p><span class="tag t-prop">proposta</span> Mesmos 50 mL com o dobro de fármaco: metade do volume infundido. Validar estabilidade e rotulagem com a farmácia antes de adotar.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Fármaco</th><th>Preparo</th><th>Final</th></tr></thead><tbody>
+      <tr><td>Fentanil</td><td>1.000 mcg (20 mL) + 30 mL SF 0,9%</td><td><b>20 mcg/mL</b></td></tr>
+      <tr><td>Cetamina</td><td>1.000 mg (20 mL) + 30 mL SF 0,9%</td><td><b>20 mg/mL</b></td></tr>
+      <tr><td>Dexmedetomidina</td><td>400 mcg (4 mL) + 46 mL SF 0,9%</td><td><b>8 mcg/mL</b></td></tr>
+      <tr><td>Clonidina</td><td>300 mcg (2 mL) + 48 mL SF 0,9%</td><td><b>6 mcg/mL</b></td></tr>
+      <tr><td>Midazolam</td><td>100 mg (20 mL) + 30 mL SF 0,9%</td><td><b>2 mg/mL</b></td></tr>
+    </tbody></table></div>
+    <p class="small muted">Na calculadora, basta trocar o campo “Concentração”.</p>
+  </div></details>
+</section>
+
+<!-- ================= SITUAÇÕES ESPECIAIS ================= -->
+<section class="sec" id="especiais">
+  <div class="sec-head"><span class="n">06</span><h2>Situações especiais</h2></div>
+  <p class="sec-lead">Escolha do agente conforme o cenário. Toque na tabela e deslize para os lados no celular.</p>
+
+  <div class="tbl-wrap">
+    <table class="mx">
+      <thead><tr><th>Fármaco</th><th>LRA / TSR</th><th>Choque</th><th>Broncoespasmo grave</th><th>HIC</th></tr></thead>
+      <tbody>
+        <tr><td>Fentanil</td><td><span class="ic y">✓</span><span class="why">preferir</span></td><td><span class="ic o">·</span></td><td><span class="ic o">·</span></td><td><span class="ic y">✓</span><span class="why">preserva acoplamento</span></td></tr>
+        <tr><td>Morfina</td><td><span class="ic x">✕</span><span class="why">M3G/M6G acumulam</span></td><td><span class="ic o">·</span></td><td><span class="ic x">✕</span><span class="why">libera histamina</span></td><td><span class="ic o">·</span></td></tr>
+        <tr><td>Cetamina</td><td><span class="ic y">✓</span><span class="why">hepática</span></td><td><span class="ic y">✓</span><span class="why">eixo · vigiar PA</span></td><td><span class="ic y">✓</span><span class="why">1–2 mg/kg/h</span></td><td><span class="ic c">!</span><span class="why">permitida em VM normocapnia; individualizar</span></td></tr>
+        <tr><td>Dexmedetomidina</td><td><span class="ic y">✓</span><span class="why">alfa-2 preferido</span></td><td><span class="ic c">!</span><span class="why">cautela, sem bolus</span></td><td><span class="ic o">·</span></td><td><span class="ic o">·</span></td></tr>
+        <tr><td>Clonidina</td><td><span class="ic c">!</span><span class="why">−50%, teto 1</span></td><td><span class="ic c">!</span><span class="why">cautela, sem ataque rápido</span></td><td><span class="ic o">·</span></td><td><span class="ic o">·</span></td></tr>
+        <tr><td>Propofol</td><td><span class="ic o">·</span></td><td><span class="ic x">✕</span><span class="why">evitar</span></td><td><span class="ic o">·</span></td><td><span class="ic y">✓</span><span class="why">preserva acoplamento</span></td></tr>
+        <tr><td>Midazolam</td><td><span class="ic x">✕</span><span class="why">reduzir ou trocar</span></td><td><span class="ic o">·</span></td><td><span class="ic o">·</span></td><td><span class="ic o">·</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="small muted" style="margin:6px 2px 12px"><span class="ic y" style="height:20px;min-width:22px">✓</span> preferir · <span class="ic c" style="height:20px;min-width:22px">!</span> cautela/ajustar · <span class="ic x" style="height:20px;min-width:22px">✕</span> evitar · <span class="ic o">·</span> sem orientação específica no protocolo</p>
+
+  <div class="grid g2">
+    <div class="card"><h3>Lesão renal aguda / TSR</h3><ul>
+      <li>Preferir fentanil, cetamina, dexmedetomidina</li>
+      <li>Evitar/reduzir morfina e midazolam</li>
+      <li>Clonidina −50%, teto 1 mcg/kg/h</li>
+      <li>Hemodiálise intermitente: metabólitos podem “voltar” após a sessão (redistribuição lenta)</li>
+    </ul></div>
+    <div class="card"><h3>Choque / instabilidade</h3><ul>
+      <li>Cetamina como eixo, com PA monitorizada</li>
+      <li>Evitar propofol</li>
+      <li>Alfa-2 com cautela e sem bolus</li>
+      <li>Corrigir hipovolemia antes de culpar o sedativo</li>
+    </ul></div>
+    <div class="card"><h3>Broncoespasmo grave / asma quase fatal</h3><ul>
+      <li>Cetamina em dose plena: <span class="dose">1–2 mg/kg/h</span></li>
+      <li>Evitar morfina</li>
+    </ul></div>
+    <div class="card"><h3>PARDS / ventilação protetora</h3><ul>
+      <li>Titular sedação para atingir volume corrente e pressão de distensão alvo</li>
+      <li>BNM só se a meta protetora falhar com sedação otimizada, pelo menor tempo</li>
+    </ul></div>
+    <div class="card"><h3>Hipertensão intracraniana</h3><ul>
+      <li>Propofol e fentanil preservam o acoplamento</li>
+      <li>Cetamina não é contraindicada no paciente ventilado em normocapnia — decisão individual</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ================= DESMAME ================= -->
+<section class="sec" id="desmame">
+  <div class="sec-head"><span class="n">07</span><h2>Desmame e prevenção de abstinência</h2></div>
+
+  <div class="grid g3">
+    <div class="card" style="border-left:5px solid var(--warn)"><div class="small muted"><b>RISCO</b></div><div style="font-size:1.3rem;font-weight:800">≥5 dias</div><div class="small">de opioide e/ou BZD contínuo</div></div>
+    <div class="card" style="border-left:5px solid var(--danger)"><div class="small muted"><b>RISCO ALTO</b></div><div style="font-size:1.3rem;font-weight:800">≥10 dias</div><div class="small">carga cumulativa pesa mais que a dose do momento</div></div>
+    <div class="card" style="border-left:5px solid var(--brand)"><div class="small muted"><b>RITMO</b></div><div style="font-size:1.3rem;font-weight:800">−10–20%</div><div class="small">da dose <b>original</b> a cada 24–48 h</div></div>
+  </div>
+
+  <h3 style="margin:14px 2px 8px;font-size:1.05rem">Ordem de retirada — um por vez, 12–24 h entre fármacos diferentes</h3>
+  <div class="pipe">
+    <div class="pstep"><div class="pn">1</div><div><h4>BNM</h4><p>Primeiro, sempre</p></div></div>
+    <div class="pstep"><div class="pn">2</div><div><h4>Propofol</h4><p>PRIS, lipídio, volume</p></div></div>
+    <div class="pstep"><div class="pn">3</div><div><h4>Midazolam</h4><p>Delirium, abstinência</p></div></div>
+    <div class="pstep"><div class="pn">4</div><div><h4>Fentanil</h4><p>Metadona se ≥5 dias</p></div></div>
+    <div class="pstep"><div class="pn">5</div><div><h4>Cetamina</h4><p>−0,25–0,5 mg/kg/h a cada 12–24 h</p></div></div>
+    <div class="pstep"><div class="pn">6</div><div><h4>Alfa-2</h4><p>Por último — sustenta a retirada dos demais</p></div></div>
+  </div>
+
+  <div class="call c-danger"><b>WAT-1 a cada 12 h durante o desmame</b>WAT-1 ≥3 → interromper o passo. Persistente → dose de resgate e voltar ao degrau anterior.</div>
+
+  <div class="grid g2">
+    <div class="card"><h3>Cobertura alfa-2</h3>
+      <p>Em quem recebeu ≥5 dias de opioide/BZD: dexmedetomidina <span class="dose">0,2–0,4 mcg/kg/h</span> (ou clonidina equivalente) <b>até 24 h do início do desmame</b>, mantida até depois da retirada desses agentes.</p>
+      <p class="small muted">Estratégia razoável e segura; efeito sobre abstinência de certeza muito baixa.</p>
+    </div>
+    <div class="card"><h3>Metadona (cobertura opioide enteral)</h3>
+      <ul>
+        <li><b>Esquema 5 dias:</b> −20% da dose diária a cada 24 h</li>
+        <li><b>Esquema 10 dias:</b> −20% a cada 48 h</li>
+        <li>Escolha pela duração e dose da exposição prévia</li>
+        <li>Iniciar com o fentanil ainda correndo; após a 1ª dose, reduzir a infusão 20% a cada 24 h</li>
+        <li>ECG (QTc) basal e após estabilização</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="call c-warn"><b>Dose inicial de metadona: não existe fórmula única validada em pediatria</b>As doses iniciais publicadas variam até 12 vezes. Calcular caso a caso <b>com a farmácia clínica</b>, a partir do equivalente diário de morfina, com redução deliberada por tolerância cruzada incompleta. Reavaliar em 24 h. Atenção ao acúmulo tardio (meia-vida longa e variável).</div>
+
+  <div class="grid g3">
+    <div class="card"><h3>Benzodiazepínico</h3><p>Converter para enteral de meia-vida longa (diazepam ou lorazepam) e reduzir 10–20% a cada 24–48 h.</p>
+      <p class="small"><span class="tag t-prop">proposta</span> Esquema publicado (Erasmus MC): <b>lorazepam VO/dia = midazolam IV/dia ÷ 12</b>, dividido em 4 tomadas. O midazolam cai à metade após a 2ª e a 3ª dose e é suspenso após a 4ª (24 h). Houve supersedação em 38% nas 24 h seguintes: vigiar COMFORT-B.<a class="cite" href="#ref-38">38</a></p></div>
+    <div class="card"><h3>Clonidina</h3><p>Normalmente a última: após encerrar metadona e BZD enteral. Retirar em 24–72 h (mais lento se &gt;7 dias). Vigiar rebote hipertensivo.</p></div>
+    <div class="card"><h3>Dexmedetomidina</h3><p>−10% a cada 12 h, ou converter para clonidina enteral quando acesso venoso ou tempo de internação justificarem.</p></div>
+  </div>
+
+  <div class="card noprint">
+    <h3>Montar cronograma de redução</h3>
+    <p class="small muted" style="margin-top:0">Redução linear sobre a dose <b>original</b>. Cada passo depende de WAT-1 &lt;3.</p>
+    <div class="grid g4">
+      <label class="field"><span>Dose original</span><input type="number" id="wDose" value="3" min="0" step="any" inputmode="decimal"></label>
+      <label class="field"><span>Unidade</span><select id="wUn"><option>mcg/kg/h</option><option>mg/kg/h</option><option>mg/kg/dia</option><option>mg/dose</option></select></label>
+      <label class="field"><span>Redução por passo</span><select id="wPct"><option value="10">10%</option><option value="15">15%</option><option value="20" selected>20%</option></select></label>
+      <label class="field"><span>Intervalo</span><select id="wInt"><option value="12">12 h</option><option value="24" selected>24 h</option><option value="48">48 h</option></select></label>
+    </div>
+    <div class="tbl-wrap"><table class="sched"><thead><tr><th>Passo</th><th>Início</th><th>Dose</th><th style="width:35%">% da original</th></tr></thead><tbody id="wBody"></tbody></table></div>
+  </div>
+
+  <details class="card">
+    <summary>Por quê — dependência, abstinência e evidência</summary>
+    <div class="dx">
+      <p>A AAP (2025)<a class="cite" href="#ref-25">25</a> situa a dependência fisiológica em até 5 dias de dose regular de opioide e recomenda redução de 10–20% da dose original a cada 24–48 h. O WAT-1 (Franck 2008)<a class="cite" href="#ref-24">24</a> é aplicado desde o primeiro dia de desmame até 72 h após a última dose.</p>
+      <p>A cobertura alfa-2 segue o desenho do RCT de Mondardini (2022)<a class="cite" href="#ref-9">9</a>: dexmedetomidina 0,2–0,4 mcg/kg/h iniciada nas primeiras 24 h de desmame em crianças com ≥5 dias de opioide/BZD, mantida até depois da retirada.</p>
+      <p>Metadona: meia-vida longa, biodisponibilidade oral 75–80%, antagonismo NMDA adicional. Os esquemas de 5 e 10 dias vêm de protocolos validados (Meyer &amp; Berens 2001)<a class="cite" href="#ref-26">26</a>. A troca de midazolam IV por lorazepam enteral tem suporte na literatura pediátrica.<a class="cite" href="#ref-38">38</a></p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= DELIRIUM ================= -->
+<section class="sec" id="delirium">
+  <div class="sec-head"><span class="n">08</span><h2>Delirium</h2></div>
+  <p class="sec-lead">CAPD 1×/turno. Rastreio positivo → checar BRAIN MAPS.</p>
+  <div class="bm">
+    <div class="bml"><div class="L">B</div><span><b>Bring oxygen</b> — oxigenação e perfusão</span></div>
+    <div class="bml"><div class="L">R</div><span><b>Remover</b> fármacos deliriogênicos</span></div>
+    <div class="bml"><div class="L">A</div><span><b>Ambiente</b> — ruído, luz, família</span></div>
+    <div class="bml"><div class="L">I</div><span><b>Infecção, imobilização,</b> inflamação</span></div>
+    <div class="bml"><div class="L">N</div><span><b>Nova</b> disfunção orgânica</span></div>
+    <div class="bml"><div class="L">M</div><span><b>Metabólico</b> — eletrólitos, glicemia</span></div>
+    <div class="bml"><div class="L">A</div><span><b>Acordado</b> — ciclo sono-vigília</span></div>
+    <div class="bml"><div class="L">P</div><span><b>Pain</b> — dor</span></div>
+    <div class="bml"><div class="L">S</div><span><b>Sedação</b> — há excesso?</span></div>
+  </div>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card"><h3 style="color:var(--ok)">Fazer</h3><ul>
+      <li>Retirar ou reduzir BZD e anticolinérgicos</li>
+      <li>Restaurar ciclo sono-vigília</li>
+      <li>Mobilização precoce</li>
+      <li>Presença da família</li>
+      <li>Corrigir distúrbios metabólicos; tratar a dor</li>
+    </ul></div>
+    <div class="card"><h3 style="color:var(--danger)">Não fazer de rotina</h3><ul>
+      <li>Haloperidol ou antipsicótico atípico para prevenir ou encurtar delirium (PANDEM)</li>
+      <li>Antipsicótico ou melatonina de rotina (PALICC-2 não recomenda)</li>
+    </ul>
+    <p class="small"><b>Exceção:</b> delirium hiperativo com risco à segurança — antipsicótico individualizado, com ECG.</p></div>
+  </div>
+</section>
+
+<!-- ================= CHECKLIST ================= -->
+<section class="sec" id="checklist">
+  <div class="sec-head"><span class="n">09</span><h2>Checklist da visita diária</h2></div>
+  <div class="card">
+    <ol class="cl">
+      <li><label><input type="checkbox"><span>Qual é o <b>alvo COMFORT-B de hoje</b>? Foi atingido? NISS registrado na faixa 11–22?</span></label></li>
+      <li><label><input type="checkbox"><span><b>BNM?</b> Ainda necessário? Velocidade reduzida após 4–8 h de infusão?</span></label></li>
+      <li><label><input type="checkbox"><span>Há <b>dor</b> sendo tratada como agitação?</span></label></li>
+      <li><label><input type="checkbox"><span>Qual fármaco posso <b>retirar hoje</b>?</span></label></li>
+      <li><label><input type="checkbox"><span><b>Propofol:</b> quantas horas e qual dose? Dentro de &lt;48 h e &lt;4 mg/kg/h?</span></label></li>
+      <li><label><input type="checkbox"><span>Há <b>benzodiazepínico</b>? Justifica-se?</span></label></li>
+      <li><label><input type="checkbox"><span><b>Dias de opioide:</b> já é hora de cobertura alfa-2 e de metadona?</span></label></li>
+      <li><label><input type="checkbox"><span><b>WAT-1 e CAPD</b> do turno feitos?</span></label></li>
+      <li><label><input type="checkbox"><span><b>Rim e fígado</b> mudaram? Reajustar fármacos com metabólito ativo?</span></label></li>
+      <li><label><input type="checkbox"><span><b>TRE / prontidão para extubação</b> é possível hoje?</span></label></li>
+    </ol>
+    <button class="btn noprint" type="button" id="clReset" style="margin-top:8px">Limpar checklist</button>
+  </div>
+</section>
+
+<!-- ================= CASOS ================= -->
+<section class="sec" id="casos">
+  <div class="sec-head"><span class="n">10</span><h2>Casos rápidos</h2></div>
+  <p class="sec-lead">Tente responder antes de abrir. Cada resposta aponta a seção que sustenta a decisão.</p>
+
+  <div class="card case"><p class="q">1 · Lactente de 6 kg, bronquiolite, VM dia 2. Fentanil 2 mcg/kg/h + dexmedetomidina 0,6 mcg/kg/h. COMFORT-B 26, FLACC 2. SpO₂ e curvas normais, tubo bem posicionado.</p>
+    <details><summary>Qual o próximo passo?</summary><div class="dx">
+      <p>Causa tratável excluída e sem dor → <b>subir a dexmedetomidina 0,2–0,3 mcg/kg/h, sem bolus</b> (0,6 → 0,8 = 1,2 mL/h a 4 mcg/mL). Reavaliar em 30 min e vigiar FC (bradicardia dose-dependente).</p>
+      <p class="small">Conexões: <a href="#agitado">fluxo do paciente agitado</a> · <a href="#d-dex">dexmedetomidina</a> · <a href="#calc">calculadora</a></p>
+    </div></details></div>
+
+  <div class="card case"><p class="q">2 · Criança de 20 kg em choque séptico com noradrenalina. Dexmedetomidina 1,5 e fentanil 5 mcg/kg/h. COMFORT-B 24 sem dor.</p>
+    <details><summary>Qual agente acrescentar e o que vigiar?</summary><div class="dx">
+      <p>Base no teto → <b>degrau 3: cetamina 0,5 mg/kg/h</b> (1 mL/h a 10 mg/mL), subindo até 2 mg/kg/h. Evitar propofol. Vigiar PA e FC: na série pediátrica houve hipotensão em 54% e taquicardia em 63%.</p>
+      <p class="small">Conexões: <a href="#escada">escada</a> · <a href="#especiais">situações especiais</a> · <a href="#d-cet">cetamina</a></p>
+    </div></details></div>
+
+  <div class="card case"><p class="q">3 · VM dia 8 com fentanil 3 mcg/kg/h e midazolam 100 mcg/kg/h. Melhorando; extubação prevista em 48 h.</p>
+    <details><summary>Como planejar a retirada?</summary><div class="dx">
+      <ol>
+        <li>Risco de abstinência (≥5 dias) → iniciar cobertura alfa-2 em até 24 h do início do desmame.</li>
+        <li>Ordem: <b>midazolam antes do fentanil</b>, um de cada vez, 12–24 h entre fármacos diferentes.</li>
+        <li>Ritmo: −10–20% da dose <b>original</b> a cada 24–48 h; WAT-1 a cada 12 h (≥3 interrompe o passo).</li>
+        <li>Fentanil: cobertura com metadona, dose inicial calculada com a farmácia clínica; ECG para QTc.</li>
+      </ol>
+      <p class="small">Conexões: <a href="#desmame">desmame</a> · cronograma automático no fim da seção</p>
+    </div></details></div>
+
+  <div class="card case"><p class="q">4 · Adolescente com TCE em propofol 4 mg/kg/h há 40 h. Lactato subindo e bicarbonato caindo.</p>
+    <details><summary>O que fazer?</summary><div class="dx">
+      <p>No limite de dose e perto do limite de tempo, com acidose → <b>suspeitar de PRIS e suspender o propofol</b>. Investigar ânion-gap, CK, triglicerídeos, ECG (padrão tipo Brugada) e ritmo. Substituir a sedação (fentanil; cetamina não é contraindicada no ventilado em normocapnia).</p>
+      <p class="small">Conexões: <a href="#d-pro">propofol</a> · <a href="#especiais">HIC</a></p>
+    </div></details></div>
+
+  <div class="card case"><p class="q">5 · Dia 5, estável, fase de estabilização. COMFORT-B 14; a enfermagem registra NISS “sedação excessiva”.</p>
+    <details><summary>Está no alvo?</summary><div class="dx">
+      <p>Não. O alvo da estabilização é 17–22 e o NISS confirma excesso → <b>reduzir o fármaco de maior potencial deletério</b> na ordem de retirada, um de cada vez, e reavaliar.</p>
+      <p class="small">Conexões: <a href="#avaliar">interpretador de escore</a> · <a href="#desmame">ordem de retirada</a></p>
+    </div></details></div>
+</section>
+
+<!-- ================= CONSULTA ================= -->
+<section class="sec" id="fundamentos">
+  <div class="sec-head"><span class="n">11</span><h2>Fundamentos</h2></div>
+  <p class="sec-lead">Para consulta: de onde vêm as regras acima.</p>
+  <div class="card">
+    <details open><summary>Analgesia antes de sedação</summary><div class="dx">
+      <p>Boa parte da “agitação” em VM é dor, desconforto do tubo, bexiga cheia, distensão abdominal, assincronia por parâmetro inadequado ou hipoxemia. Sedar sem tratar a causa mascara o problema e acumula fármaco.</p>
+    </div></details>
+    <details><summary>Sedação mínima eficaz — o dano não termina na alta</summary><div class="dx">
+      <p>A exposição cumulativa a analgossedativos associa-se a delirium, abstinência e desfechos neurocognitivos e psicológicos de longo prazo, incluindo estresse pós-traumático em sobreviventes de UTIP (Hay 2025; Ko 2022)<a class="cite" href="#ref-34">34</a><a class="cite" href="#ref-33">33</a>.</p>
+      <p>PANDEM 2022<a class="cite" href="#ref-1">1</a>: <b>minimizar sedação baseada em BZD</b> sempre que factível (BZD é fator de risco independente para delirium; evidência moderada) e <b>minimizar a exposição sedativa global</b>. O eixo passa a ser opioide + alfa-2.</p>
+    </div></details>
+    <details><summary>Por que protocolizar e titular por escore</summary><div class="dx">
+      <p>O RESTORE (31 UTIPs, 2.449 crianças)<a class="cite" href="#ref-6">6</a> não reduziu o tempo de VM com protocolo dirigido por enfermagem. Estudos de implementação posteriores reduzem consistentemente as doses cumulativas de midazolam e opioide, e um RCT aberto com titulação por COMFORT-B reduziu o tempo de VM (mediana 3,5 vs 8,5 dias) e a exposição ao fentanil.<a class="cite" href="#ref-36">36</a> O ganho do protocolo está na <b>exposição</b>, não necessariamente nos dias de tubo.</p>
+    </div></details>
+    <details><summary>Rocurônio — eliminação e acúmulo</summary><div class="dx">
+      <p>Eliminação predominantemente hepática e biliar; via renal minoritária (10–30%). Na insuficiência renal terminal o clearance cai ~39% e o tempo médio de residência sobe ~84%; na disfunção hepática a duração chega a ~1,5× o normal. Em infusão contínua os compartimentos teciduais enchem em 4–8 h e a velocidade necessária cai para ~20% da inicial. Titular por TOF, sempre.</p>
+    </div></details>
+  </div>
+</section>
+
+<section class="sec" id="certeza">
+  <div class="sec-head"><span class="n">12</span><h2>Grau de certeza</h2></div>
+  <p class="sec-lead">Onde a certeza é baixa, o protocolo orienta e a beira-leito decide.</p>
+  <div class="cert">
+    <div class="card hi"><h3>Razoavelmente sólido</h3><ul>
+      <li>Dano da exposição sedativa cumulativa</li>
+      <li>BZD associado a delirium</li>
+      <li>Segurança hemodinâmica da dexmedetomidina (moderada)</li>
+      <li>Dexmed não muda VM nem tempo de UTI (moderada)</li>
+      <li>Limites de dose/tempo do propofol como prevenção de PRIS</li>
+      <li>Acúmulo de metabólitos de midazolam e morfina na LRA</li>
+      <li>Validade de COMFORT-B e WAT-1</li>
+    </ul></div>
+    <div class="card md"><h3>Plausível, baixa certeza</h3><ul>
+      <li>Dexmedetomidina reduz delirium</li>
+      <li>Clonidina poupa opioide/BZD</li>
+      <li>Superioridade de algum esquema de rodízio</li>
+    </ul></div>
+    <div class="card lo"><h3>Incerto</h3><ul>
+      <li>Alfa-2 previne abstinência (muito baixa)</li>
+      <li>Dexmed atinge alvo de sedação vs outros (muito baixa)</li>
+      <li>Dose inicial ideal de metadona em pediatria</li>
+      <li>Desfechos neurocognitivos de cada agente isolado</li>
+    </ul></div>
+  </div>
+  <p class="small muted">Nenhuma linha substitui reavaliação clínica. Divergência fundamentada da equipe deve ser registrada em prontuário, não silenciada pelo protocolo.</p>
+</section>
+
+<section class="sec" id="revisao">
+  <div class="sec-head"><span class="n">13</span><h2>Notas desta edição web</h2></div>
+  <p class="sec-lead">Edição de 15/09/2026 sobre o texto aprovado v2.0.</p>
+  <div class="card">
+    <h3>Harmonizado (sem mudar conduta)</h3>
+    <ul>
+      <li><b>Teto da clonidina:</b> 2 mcg/kg/h de rotina, 3 absoluto, 1 na LRA (o texto trazia 3 e 2 em seções diferentes).</li>
+      <li><b>CAPD:</b> 1×/turno (o texto trazia “1×/turno” e “diário”).</li>
+      <li><b>Clonidina</b> mostrada como alternativa à dexmedetomidina, fora da escada.</li>
+      <li><b>BRAIN MAPS:</b> a letra I inclui infecção e inflamação.</li>
+      <li><b>Cetamina no choque:</b> preferencial, com vigilância de PA (hipotensão em 54% na série citada).</li>
+      <li><b>Situação regulatória da dexmedetomidina</b> conferida nas bulas do FDA e brasileira.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Referências</h3>
+    <p>As 34 referências do texto foram localizadas no PubMed e tiveram os dados bibliográficos conferidos; as citações incompletas foram completadas. Afirmações que estavam sem fonte receberam referência: RCT de titulação pela COMFORT-B<a class="cite" href="#ref-36">36</a>, estudo de rodízio<a class="cite" href="#ref-37">37</a> e troca de midazolam por lorazepam<a class="cite" href="#ref-38">38</a>.</p>
+    <p class="small"><span class="tag t-warn">fonte a confirmar</span> Coorte de 25 anos com 554 crianças em propofol: fonte não localizada.</p>
+  </div>
+  <div class="card">
+    <h3><span class="tag t-prop">proposta</span> Aguardando validação da coordenação</h3>
+    <ul>
+      <li>Limiares da FLACC (tratar se ≥4) e ponto de corte do CAPD (≥9)</li>
+      <li>Alvo de TOF 1–2/4 e doses de rocurônio da bula</li>
+      <li>Paracetamol adjuvante no pós-operatório</li>
+      <li>Conversão midazolam IV → lorazepam VO (÷12)</li>
+      <li>Tabela de concentração dupla</li>
+      <li>Calculadora de infusão, cronograma de desmame e casos rápidos</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec" id="refs">
+  <div class="sec-head"><span class="n">14</span><h2>Referências</h2></div>
+  <div class="card">
+  <details><summary>Mostrar as 42 referências</summary>
+  <ol class="refs">
+    <li id="ref-1">Smith HAB, Besunder JB, Betters KA, et al. 2022 Society of Critical Care Medicine Clinical Practice Guidelines on Prevention and Management of Pain, Agitation, Neuromuscular Blockade, and Delirium in Critically Ill Pediatric Patients With Consideration of the ICU Environment and Early Mobility (PANDEM). <i>Pediatr Crit Care Med.</i> 2022;23(2):e74-e110. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/35119438/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1097/PCC.0000000000002873" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-2">Emeriaud G, López-Fernández YM, Iyer NP, et al. Executive Summary of the Second International Guidelines for the Diagnosis and Management of Pediatric Acute Respiratory Distress Syndrome (PALICC-2). <i>Pediatr Crit Care Med.</i> 2023;24(2):143-168. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/36661420/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-3">Harris J, Ramelet AS, van Dijk M, et al. Clinical recommendations for pain, sedation, withdrawal and delirium assessment in critically ill infants and children: an ESPNIC position statement. <i>Intensive Care Med.</i> 2016;42:972-986. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/27084344/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-4">Amigoni A, Conti G, Conio A, et al. Recommendations for analgesia and sedation in critically ill children admitted to intensive care unit. <i>J Anesth Analg Crit Care.</i> 2022;2(1):9. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/37386540/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-5">Mondardini MC, Sperotto F, Daverio M, Amigoni A. Analgesia and sedation in critically ill pediatric patients: an update from the recent guidelines and point of view. <i>Eur J Pediatr.</i> 2023;182(5):2013-2026. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/36892607/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-6">Curley MAQ, Wypij D, Watson RS, et al.; RESTORE Study Investigators. Protocolized sedation vs usual care in pediatric patients mechanically ventilated for acute respiratory failure: a randomized clinical trial. <i>JAMA.</i> 2015;313(4):379-389. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/25602358/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-7">Zorko DJ, Klowak JA, Vu M, et al. Efficacy and safety of analgosedation with dexmedetomidine in critically ill mechanically ventilated children: a systematic review and meta-analysis of randomized controlled trials. <i>Intensive Care Med Paediatr Neonatal.</i> 2025;3:30. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/41019379/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1007/s44253-025-00091-4" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-8">Sperotto F, Mondardini MC, Dell'Oste C, et al. Efficacy and safety of dexmedetomidine for prolonged sedation in the PICU: a prospective multicenter study (PROSDEX). <i>Pediatr Crit Care Med.</i> 2020;21:625-636. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/32224830/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-9">Mondardini MC, Daverio M, Caramelli F, et al. Dexmedetomidine for prevention of opioid/benzodiazepine withdrawal syndrome in pediatric intensive care unit: interim analysis of a randomized controlled trial. <i>Pharmacotherapy.</i> 2022;42(2):145-153. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/34882826/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-10">Burbano NH, Otero AV, Berry DE, Orr RA, Munoz RA. Discontinuation of prolonged infusions of dexmedetomidine in critically ill children with heart disease. <i>Intensive Care Med.</i> 2012;38:300-307. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/22160200/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-11">Hayden JC, Breatnach C, Doherty DR, et al. Efficacy of α2-agonists for sedation in pediatric critical care: a systematic review. <i>Pediatr Crit Care Med.</i> 2016;17(2):e66-e75. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/26704469/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-12">Wolf A, McKay A, Spowart C, et al. Prospective multicentre randomised, double-blind, equivalence study comparing clonidine and midazolam as intravenous sedative agents in critically ill children: the SLEEPS (Safety profiLe, Efficacy and Equivalence in Paediatric intensive care Sedation) study. <i>Health Technol Assess.</i> 2014;18(71):1-212. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/26099138/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-13">Hayden JC, Bardol M, Doherty DR, et al. Optimizing clonidine dosage for sedation in mechanically ventilated children: a pharmacokinetic simulation study. <i>Paediatr Anaesth.</i> 2019;29(10):1002-1010. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/31373752/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1111/pan.13715" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-14">Bardol M, Sheng Y, Baarslag M, et al. Pharmacokinetic and pharmacodynamic modeling of clonidine and midazolam for sedation in pediatric intensive care. <i>Paediatr Anaesth.</i> 2025;35(12):1053-1062. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/41045026/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1111/pan.70050" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-15">Eberl S, Ahne G, Toni I, Standing J, Neubert A. Safety of clonidine used for long-term sedation in paediatric intensive care: a systematic review. <i>Br J Clin Pharmacol.</i> 2021;87(3):785-805. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/33368604/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1111/bcp.14552" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-16">Hünseler C, Balling G, Röhlig C, et al. Continuous infusion of clonidine in ventilated newborns and infants: a randomized controlled trial. <i>Pediatr Crit Care Med.</i> 2014;15(6):511-522. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/24751788/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-17">Ambrose C, Sale S, Howells R, et al. Intravenous clonidine infusion in critically ill children: dose-dependent sedative effects and cardiovascular stability. <i>Br J Anaesth.</i> 2000;84:794-796. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/10895758/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-18">Neves CC, Fiamenghi VI, Fontela PS, Piva JP. Continuous clonidine infusion: an alternative for children on mechanical ventilation. <i>Rev Assoc Med Bras.</i> 2022;68(7):953-957. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/35830018/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1590/1806-9282.20220166" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-19">Groth CM, Droege CA, Sarangarm P, et al. Multicenter retrospective review of ketamine use in pediatric intensive care units (Ketamine-PICU Study). <i>Crit Care Res Pract.</i> 2024;2024:6626899. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/39104664/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1155/2024/6626899" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-20">Flint RB, Brouwer CNM, Kränzlin ASC, et al. Pharmacokinetics of S-ketamine during prolonged sedation at the pediatric intensive care unit. <i>Paediatr Anaesth.</i> 2017;27(11):1098-1107. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/29030928/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1111/pan.13239" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-21">Torres Soblechero L, Ocampo Benegas DE, Manrique Martín G, et al. Prospective observational study on the use of continuous intravenous ketamine and propofol infusion for prolonged sedation in critical care. <i>An Pediatr (Engl Ed).</i> 2023;98(4):276-282. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/36925340/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-22">Bray RJ. Propofol infusion syndrome in children. <i>Paediatr Anaesth.</i> 1998;8:491-499. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/9836214/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-23">Ista E, van Dijk M, Tibboel D, de Hoog M. Assessment of sedation levels in pediatric intensive care patients can be improved by using the COMFORT “behavior” scale. <i>Pediatr Crit Care Med.</i> 2005;6(1):58-63. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/15636661/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-24">Franck LS, Harris SK, Soetenga DJ, Amling JK, Curley MAQ. The Withdrawal Assessment Tool-1 (WAT-1): an assessment instrument for monitoring opioid and benzodiazepine withdrawal symptoms in pediatric patients. <i>Pediatr Crit Care Med.</i> 2008;9(6):573-580. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/18838937/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-25">Adler AC, Siegel LB, Wilder RT, Good J; AAP Committee on Drugs, Section on Critical Care, Section on Anesthesiology and Pain Medicine. Recognition and Management of Iatrogenically Induced Opioid Dependence and Withdrawal in Children: Clinical Report. <i>Pediatrics.</i> 2025;156(3):e2025073169. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/40819838/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-26">Meyer MM, Berens RJ. Efficacy of an enteral 10-day methadone wean to prevent opioid withdrawal in fentanyl-tolerant pediatric intensive care unit patients. <i>Pediatr Crit Care Med.</i> 2001;2(4):329-333. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/12793936/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-27">Dokken M, Rustøen T, Diep LM, et al. Iatrogenic withdrawal syndrome frequently occurs in paediatric intensive care without algorithm for tapering of analgosedation. <i>Acta Anaesthesiol Scand.</i> 2021;65:928-935. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/33728643/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-28">Best KM, Boullata JI, Curley MAQ. Risk factors associated with iatrogenic opioid and benzodiazepine withdrawal in critically ill pediatric patients: a systematic review and conceptual model. <i>Pediatr Crit Care Med.</i> 2015;16:175-183. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/25560429/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-29">Barbosa MSR, Duarte MCMB, Bastos VCS, Andrade LB. Tradução e adaptação transcultural da escala Cornell Assessment of Pediatric Delirium para língua portuguesa. <i>Rev Bras Ter Intensiva.</i> 2018;30(2):195-200. Pontos-âncora: Barbosa MSR, Andrade LB, Duarte MCMB, Castro REV. <i>Crit Care Sci.</i> 2023;35(3):320-327 (PMID 38133162). <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/29995085/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-30">Molon ME, Castro REV, Foronda FAK, et al. Tradução e adaptação transcultural para o Brasil do Pediatric Confusion Assessment Method for the Intensive Care Unit. <i>Rev Bras Ter Intensiva.</i> 2018;30(1):71-79. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/29742225/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-31">Massaud-Ribeiro L, Barbosa MCM, Panisset AG, et al. Cross-cultural adaptation of the Richmond Agitation-Sedation Scale to Brazilian Portuguese for the evaluation of sedation in pediatric intensive care. <i>Rev Bras Ter Intensiva.</i> 2021;33(1):102-110. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/33886859/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.5935/0103-507X.20210011" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-32">Klein K, et al. Strategies for the management and prevention of withdrawal syndrome in critically ill pediatric patients: a systematic review. <i>Rev Bras Ter Intensiva.</i> 2022;34(4):507-518. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/36888832/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-33">Ko MSM, Poh PF, Heng KYC, et al. Assessment of long-term psychological outcomes after pediatric intensive care unit admission: a systematic review and meta-analysis. <i>JAMA Pediatr.</i> 2022;176(3):e215767. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/35040918/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-34">Hay RE, O'Hearn K, Zorko DJ, et al. Systematic review and meta-analysis of prevalence and population-level factors contributing to posttraumatic stress disorder in pediatric intensive care survivors. <i>Pediatr Crit Care Med.</i> 2025;26(4):e531-e543. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/39932370/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-35">Traube C, Silver G, Kearney J, et al. Cornell Assessment of Pediatric Delirium: a valid, rapid, observational tool for screening delirium in the PICU. <i>Crit Care Med.</i> 2014;42(3):656-663. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/24145848/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-36">Vallabhaneni P, Khera D, Choudhary B, et al. Protocolized sedation utilizing COMFORT-B scale versus non-protocol-directed sedation in mechanically ventilated children: an open-label, randomized controlled trial. <i>Indian J Pediatr.</i> 2024;91(8):845-847. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/38060153/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1007/s12098-023-04959-1" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-37">Sanavia E, Mencía S, Lafever SN, et al. Sedative and analgesic drug rotation protocol in critically ill children with prolonged sedation: evaluation of implementation and efficacy to reduce withdrawal syndrome. <i>Pediatr Crit Care Med.</i> 2019;20(12):1111-1117. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/31261229/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1097/PCC.0000000000002071" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-38">van der Vossen AC, van Nuland M, Ista EG, de Wildt SN, Hanff LM. Oral lorazepam can be substituted for intravenous midazolam when weaning paediatric intensive care patients off sedation. <i>Acta Paediatr.</i> 2018;107(9):1594-1600. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/29570859/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1111/apa.14327" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-39">U.S. Food and Drug Administration. Precedex (dexmedetomidine hydrochloride) injection — prescribing information, 2024. <span class="rl"><a href="https://www.accessdata.fda.gov/drugsatfda_docs/label/2024/021038Orig1s055lbl.pdf" target="_blank" rel="noopener">fonte</a></span></li>
+    <li id="ref-40">U.S. Food and Drug Administration. Zemuron (rocuronium bromide) injection — prescribing information. <span class="rl"><a href="https://www.accessdata.fda.gov/drugsatfda_docs/label/2010/020214s034lbl.pdf" target="_blank" rel="noopener">fonte</a></span></li>
+    <li id="ref-41">DailyMed/NLM. Ofirmev (acetaminophen) injection — prescribing information. <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=9a38f63a-8852-6dab-e053-2a95a90a90d6" target="_blank" rel="noopener">fonte</a></span></li>
+    <li id="ref-42">Precedex® (cloridrato de dexmedetomidina) — bula para o Brasil. <span class="rl"><a href="https://consultaremedios.com.br/precedex/bula" target="_blank" rel="noopener">fonte</a></span></li>
+  </ol>
+  <p class="small muted">35–42 acrescentadas nesta edição web.</p>
+  </details>
+  </div>
+  <div class="foot">
+    <p><b>Documento de apoio à decisão clínica.</b> Não substitui julgamento individualizado à beira-leito nem a conferência de doses na apresentação farmacêutica disponível. Doses de metadona e conversões opioides devem ser validadas com a farmácia clínica antes da prescrição. O uso de dexmedetomidina para sedação em UTI pediátrica é off-label.</p>
+    <p>UTI Pediátrica — Hospital Geral de Vitória da Conquista · Protocolo v2.0, setembro/2026 · Próxima revisão: setembro/2027 · Edição web de 15/09/2026.</p>
+  </div>
+</section>
+
+<section class="sec" id="instalar">
+  <div class="sec-head"><span class="n">15</span><h2>Instalar e compartilhar</h2></div>
+  <div class="card">
+    <div class="qrbox">
+      <img src="qr.svg" alt="QR code do endereço do protocolo" width="200" height="200">
+      <div>
+        <p class="small muted" style="margin:0">Endereço fixo</p>
+        <p class="urlbig">rvped.github.io/analgossedacao</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn fill" type="button" id="copyBtn">Copiar link</button>
+          <button class="btn" type="button" id="installBtn" hidden>Instalar app</button>
+          <a class="btn" href="cartaz.pdf" style="text-decoration:none;display:inline-flex;align-items:center">Cartaz para imprimir</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grid g3">
+    <div class="card"><h3>Android</h3><ol><li>Abra o link no <b>Chrome</b></li><li>Menu <b>⋮</b> → <b>Instalar app</b> (ou Adicionar à tela inicial)</li><li>Abre como aplicativo e funciona sem internet</li></ol></div>
+    <div class="card"><h3>iPhone / iPad</h3><ol><li>Abra o link no <b>Safari</b></li><li>Botão <b>Compartilhar</b> (quadrado com seta)</li><li><b>Adicionar à Tela de Início</b></li></ol></div>
+    <div class="card"><h3>Computador Windows</h3><ol><li>Digite <b>rvped.github.io/analgossedacao</b></li><li>No Edge ou Chrome: ícone <b>Instalar</b> no fim da barra de endereço</li><li>Ou baixe o <a href="Analgossedacao-UTIP.url" download>atalho para a área de trabalho</a></li></ol></div>
+  </div>
+  <p class="small muted">Sem internet, abre a última versão salva. Com internet, busca a versão mais recente e avisa no topo quando houver atualização.</p>
+</section>
+
+</main>
+</div>
+
+<!-- navegação inferior (celular) -->
+<nav class="bottomnav" aria-label="Navegação rápida">
+  <a href="#inicio" data-sec="inicio"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</a>
+  <a href="#avaliar" data-sec="avaliar"><svg viewBox="0 0 24 24"><path d="M4 19h16M6 16V9M11 16V5M16 16v-6"/></svg>Escore</a>
+  <a href="#escada" data-sec="escada"><svg viewBox="0 0 24 24"><path d="M3 20h5v-5h5v-5h5V5h3"/></svg>Escada</a>
+  <a href="#farmacos" data-sec="farmacos"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-40 12 12)"/><path d="M9.5 8.8l4.9 5.9"/></svg>Fármacos</a>
+  <a href="#calc" data-sec="calc"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M16 11v4"/></svg>Calcular</a>
+  <button type="button" id="moreBtn" aria-haspopup="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mais</button>
+</nav>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="scrim" data-close></div>
+  <div class="panel" role="menu">
+    <div class="grab"></div>
+    <a href="#agitado" data-close>Paciente agitado</a>
+    <a href="#especiais" data-close>Situações especiais</a>
+    <a href="#desmame" data-close>Desmame e abstinência</a>
+    <a href="#delirium" data-close>Delirium · BRAIN MAPS</a>
+    <a href="#checklist" data-close>Checklist da visita</a>
+    <a href="#casos" data-close>Casos rápidos</a>
+    <a href="#fundamentos" data-close>Fundamentos</a>
+    <a href="#certeza" data-close>Grau de certeza</a>
+    <a href="#revisao" data-close>Notas desta versão</a>
+    <a href="#refs" data-close>Referências</a>
+    <a href="#instalar" data-close>Instalar e compartilhar</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  function fmt(n, d){
+    if (!isFinite(n)) return "–";
+    return n.toLocaleString("pt-BR", {minimumFractionDigits:d, maximumFractionDigits:d});
+  }
+  function num(v){ return parseFloat(String(v).replace(",", ".")); }
+
+  /* ---------- gaveta ---------- */
+  var drawer = $("drawer");
+  $("moreBtn").addEventListener("click", function(){ drawer.classList.add("open"); drawer.setAttribute("aria-hidden","false"); });
+  drawer.addEventListener("click", function(e){
+    if (e.target.closest("[data-close]")) { drawer.classList.remove("open"); drawer.setAttribute("aria-hidden","true"); }
+  });
+
+  /* ---------- seção ativa ---------- */
+  var links = document.querySelectorAll(".side a, .bottomnav a");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        var id = en.target.id;
+        links.forEach(function(a){ a.classList.toggle("on", a.getAttribute("href") === "#" + id); });
+      });
+    }, {rootMargin:"-40% 0px -55% 0px"});
+    document.querySelectorAll("section.sec[id]").forEach(function(s){ io.observe(s); });
+  }
+
+  /* ---------- COMFORT-B ---------- */
+  var cbN = $("cbN"), cbR = $("cbR"), cbBNM = $("cbBNM"), cbOut = $("cbOut");
+  var ORDEM = "propofol → midazolam → fentanil → cetamina → alfa-2";
+  function fase(){ var r = document.querySelector("input[name=fase]:checked"); return r ? r.value : "estab"; }
+  function renderCB(){
+    var s = Math.round(num(cbN.value));
+    if (cbBNM.checked) {
+      cbOut.className = "out bnm";
+      cbOut.innerHTML = '<div class="zone">COMFORT-B não é válida sob BNM</div>' +
+        '<ul><li>Profundidade garantida por <b>prescrição deliberada</b> e BIS, se disponível.</li>' +
+        '<li>Monitorar TOF 4/4 h; reavaliar necessidade do BNM a cada 24 h.</li>' +
+        '<li><b>Retirar o BNM antes</b> de qualquer desmame de sedativo (risco de <i>awareness</i>).</li></ul>';
+      return;
+    }
+    if (!isFinite(s) || s < 6 || s > 30) {
+      cbOut.className = "out";
+      cbOut.innerHTML = '<div class="zone">Escore entre 6 e 30</div>';
+      return;
+    }
+    var f = fase(), cls, zone, body;
+    var niss = '<p class="small" style="margin:.4em 0 0"><b>Faixa 11–22:</b> registrar NISS. Sem ele, a escala não decide.</p>';
+    var reav = '<p class="small muted" style="margin:.4em 0 0">Reavaliar 30 min após qualquer ajuste.</p>';
+    if (s <= 10) {
+      cls = "hiper"; zone = s + " · Hipersedação";
+      body = '<ol><li>Reduzir <b>20–25%</b> do agente de maior risco (' + ORDEM + ').</li>' +
+             '<li>Reavaliar em <b>1 h</b>.</li><li>Excluir acúmulo: LRA, disfunção hepática, metabólito ativo (midazolam, morfina).</li></ol>';
+    } else if (s <= 16) {
+      cls = "mod"; zone = s + " · Sedação moderada";
+      body = (f === "aguda")
+        ? '<p><b>No alvo da fase aguda (11–16).</b> Manter.</p>'
+        : '<p><b>Mais profundo que o alvo desta fase (17–22).</b> Começar a reduzir o fármaco de maior potencial deletério, um por vez: ' + ORDEM + '.</p>';
+      body += niss;
+    } else if (s <= 22) {
+      cls = "leve"; zone = s + " · Sedação leve";
+      if (f === "aguda") body = '<p><b>Mais leve que o alvo da fase aguda (11–16).</b> Se houver assincronia ou ventilação protetora limítrofe: subir <b>um degrau</b> da escada.</p>';
+      else if (f === "desmame") body = '<p><b>No alvo.</b> Desperto e cooperativo? Avaliar TRE / prontidão para extubação.</p>';
+      else body = '<p><b>No alvo da estabilização.</b> Manter e procurar o que retirar hoje.</p>';
+      body += niss;
+    } else {
+      cls = "insuf"; zone = s + " · Sedação insuficiente";
+      body = '<ol><li>Excluir causa tratável (hipoxemia, tubo, assincronia, bexiga, distensão, abstinência).</li>' +
+             '<li><b>Dor (FLACC)?</b> Bolus de fentanil 1 mcg/kg + infusão +1 mcg/kg/h.</li>' +
+             '<li><b>Sem dor:</b> dexmedetomidina +0,2–0,3 mcg/kg/h (sem bolus) ou clonidina +0,25–0,5 mcg/kg/h.</li></ol>';
+    }
+    cbOut.className = "out " + cls;
+    cbOut.innerHTML = '<div class="zone">' + zone + '</div>' + body + reav;
+  }
+  cbN.addEventListener("input", function(){ cbR.value = cbN.value; renderCB(); });
+  cbR.addEventListener("input", function(){ cbN.value = cbR.value; renderCB(); });
+  cbBNM.addEventListener("change", renderCB);
+  document.querySelectorAll("input[name=fase]").forEach(function(r){ r.addEventListener("change", renderCB); });
+  renderCB();
+
+  /* ---------- calculadora ----------
+     mL/h = dose (unid/kg/h) × peso × fator / concentração
+     fator converte a unidade da dose para a da concentração (midazolam: mcg → mg). */
+  var DRUGS = [
+    {id:"fen", nome:"Fentanil", du:"mcg/kg/h", cu:"mcg/mL", conc:10, fator:1, def:1, lo:1, hi:5, teto:10, step:0.5, on:true,
+     bolus:{lo:1, hi:2, u:"mcg", txt:"Bolus 1–2 mcg/kg em ≥1 min"}},
+    {id:"dex", nome:"Dexmedetomidina", du:"mcg/kg/h", cu:"mcg/mL", conc:4, fator:1, def:0.3, lo:0.2, hi:1.4, teto:1.5, step:0.1, on:true,
+     bolusTxt:"Sem bolus"},
+    {id:"cet", nome:"Cetamina", du:"mg/kg/h", cu:"mg/mL", conc:10, fator:1, def:0.5, lo:0.1, hi:2, teto:2, step:0.1, on:false,
+     bolus:{lo:0.5, hi:1, u:"mg", txt:"Bolus 0,5–1 mg/kg"}, nota:"0,1–0,5 poupadora de opioide · 0,5–2 sedoanalgesia"},
+    {id:"clo", nome:"Clonidina", du:"mcg/kg/h", cu:"mcg/mL", conc:3, fator:1, def:0.5, lo:0.5, hi:2, teto:3, step:0.25, on:false,
+     bolus:{lo:1, hi:2, u:"mcg", txt:"Ataque 1–2 mcg/kg em 15–30 min"}, nota:"Nunca junto com dexmedetomidina"},
+    {id:"mid", nome:"Midazolam", du:"mcg/kg/h", cu:"mg/mL", conc:1, fator:0.001, def:50, lo:50, hi:200, teto:300, step:10, on:false,
+     bolus:{lo:0.05, hi:0.2, u:"mg", txt:"Bolus 0,05–0,2 mg/kg"}},
+    {id:"pro", nome:"Propofol 1%", du:"mg/kg/h", cu:"mg/mL", conc:10, fator:1, def:1, lo:1, hi:3.99, teto:3.99, step:0.5, on:false, fixo:true,
+     bolusTxt:"Limite: <4 mg/kg/h e <48 h · trocar frasco e equipo 12/12 h"}
+  ];
+
+  var rows = $("calcRows");
+  DRUGS.forEach(function(d){
+    var el = document.createElement("div");
+    el.className = "drow" + (d.on ? "" : " off");
+    el.id = "row-" + d.id;
+    el.innerHTML =
+      '<div class="nm"><label><input type="checkbox" data-k="on"' + (d.on ? " checked" : "") + '>' + d.nome + '</label><span class="tag" data-k="st"></span></div>' +
+      '<label class="field" style="margin:0"><span>Dose (' + d.du + ')</span><input type="number" data-k="dose" min="0" step="' + d.step + '" value="' + d.def + '" inputmode="decimal"></label>' +
+      '<label class="field" style="margin:0"><span>Concentração (' + d.cu + ')</span><input type="number" data-k="conc" min="0" step="any" value="' + d.conc + '" inputmode="decimal"' + (d.fixo ? " readonly" : "") + '></label>' +
+      '<div class="res"><span class="mlh" data-k="mlh">–</span><span class="abs" data-k="abs"></span><span class="fx" data-k="fx"></span></div>' +
+      '<div class="bol" data-k="bol"></div>';
+    rows.appendChild(el);
+    el.addEventListener("input", calc);
+    el.addEventListener("change", calc);
+  });
+
+  function limites(d){
+    var lo = d.lo, hi = d.hi, teto = d.teto, bol = d.bolus ? {lo:d.bolus.lo, hi:d.bolus.hi} : null, extra = [];
+    var neo = $("ctxNeo").checked, lra = $("ctxLRA").checked;
+    if (d.id === "clo") {
+      if (neo) { lo = 0.25; hi = 0.5; teto = 0.5; bol = {lo:1, hi:1}; extra.push("neonato: metade da dose"); }
+      if (lra) { hi = Math.min(hi, 1); teto = Math.min(teto, 1); if (lo > hi) lo = hi / 2; extra.push("LRA: −50%, teto 1 mcg/kg/h"); }
+    }
+    if (d.id === "mid" && lra) extra.push("LRA: metabólito ativo acumula — reduzir ou trocar");
+    return {lo:lo, hi:hi, teto:teto, bol:bol, extra:extra};
+  }
+
+  function calc(){
+    var peso = num($("peso").value);
+    var okPeso = isFinite(peso) && peso >= 0.4 && peso <= 150;
+    var totMlh = 0, kcal = 0;
+    DRUGS.forEach(function(d){
+      var el = $("row-" + d.id);
+      var q = function(k){ return el.querySelector('[data-k="' + k + '"]'); };
+      var on = q("on").checked;
+      el.classList.toggle("off", !on);
+      var dose = num(q("dose").value), conc = num(q("conc").value);
+      var L = limites(d);
+      var st = q("st"), mlhEl = q("mlh"), absEl = q("abs"), fx = q("fx"), bolEl = q("bol");
+
+      // estado da dose
+      var cls = "t-ok", txt = "na faixa";
+      if (!isFinite(dose) || dose < 0) { cls = "t-warn"; txt = "dose inválida"; }
+      else if (d.id === "pro" && dose >= 4) { cls = "t-danger"; txt = "≥4 mg/kg/h: risco de PRIS"; }
+      else if (dose > L.teto) { cls = "t-danger"; txt = "acima do teto (" + fmt(L.teto, L.teto < 1 ? 2 : 1).replace(/,0$/, "") + ")"; }
+      else if (dose > L.hi) { cls = "t-warn"; txt = "acima da faixa usual"; }
+      else if (dose > 0 && dose < L.lo) { cls = "t-warn"; txt = "abaixo da faixa usual"; }
+      st.className = "tag " + cls; st.textContent = txt;
+
+      var faixa = "Faixa " + String(L.lo).replace(".", ",") + "–" + String(d.id === "pro" ? 4 : L.hi).replace(".", ",") + " " + d.du;
+      fx.textContent = [faixa].concat(d.nota ? [d.nota] : [], L.extra).join(" · ");
+
+      if (!okPeso || !isFinite(conc) || conc <= 0 || !isFinite(dose) || dose < 0) {
+        mlhEl.innerHTML = "–"; absEl.textContent = okPeso ? "confira concentração/dose" : "informe o peso"; bolEl.textContent = d.bolusTxt || "";
+        return;
+      }
+      var amountH = dose * peso;               // unid da dose × h⁻¹ (sem /kg)
+      var mlh = amountH * d.fator / conc;
+      mlhEl.innerHTML = fmt(mlh, mlh < 1 ? 2 : 1) + ' <small>mL/h</small>';
+      var absU = d.du.split("/")[0];
+      absEl.textContent = "= " + fmt(amountH, amountH < 10 ? 2 : (amountH < 100 ? 1 : 0)) + " " + absU + "/h";
+
+      if (L.bol) {
+        var bLo = L.bol.lo * peso, bHi = L.bol.hi * peso;
+        var vLo = bLo / conc, vHi = bHi / conc;
+        var range = function(a, b, dd){ return a === b ? fmt(a, dd) : fmt(a, dd) + "–" + fmt(b, dd); };
+        var head = d.bolus.txt;
+        if (d.id === "clo" && $("ctxNeo").checked) head = "Ataque neonatal 1 mcg/kg em 15–30 min";
+        bolEl.innerHTML = "<b>" + head + ":</b> " + range(bLo, bHi, bHi < 10 ? 2 : 1) + " " + d.bolus.u +
+          " = <b>" + range(vLo, vHi, vHi < 1 ? 2 : 1) + " mL</b> da solução de " + fmt(conc, conc < 1 ? 2 : 0) + " " + d.cu;
+      } else {
+        bolEl.textContent = d.bolusTxt || "";
+      }
+      if (on) {
+        totMlh += mlh;
+        if (d.id === "pro") kcal = mlh * 24 * 1.1 * (conc / 10);
+      }
+    });
+    $("totMlh").textContent = okPeso ? fmt(totMlh, totMlh < 1 ? 2 : 1) : "–";
+    $("totMlkg").textContent = okPeso ? fmt(totMlh * 24 / peso, 0) : "–";
+    $("totKcal").textContent = okPeso ? fmt(kcal, 0) : "–";
+  }
+  ["peso", "ctxNeo", "ctxLRA"].forEach(function(id){ $(id).addEventListener("input", calc); $(id).addEventListener("change", calc); });
+  calc();
+
+  /* ---------- cronograma de desmame ---------- */
+  function sched(){
+    var dose = num($("wDose").value), pct = num($("wPct").value), h = num($("wInt").value), un = $("wUn").value;
+    var body = $("wBody"); body.innerHTML = "";
+    if (!isFinite(dose) || dose <= 0) { body.innerHTML = '<tr><td colspan="4" class="muted">Informe a dose original.</td></tr>'; return; }
+    var steps = Math.ceil(100 / pct);
+    for (var i = 0; i <= steps; i++) {
+      var p = Math.max(0, 100 - i * pct);
+      var t = i * h;
+      var quando = i === 0 ? "agora" : (t % 24 === 0 ? "dia " + (t / 24) : t + " h");
+      var val = dose * p / 100;
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + (i === 0 ? "original" : i) + "</td><td>" + quando + "</td><td>" +
+        (p === 0 ? "suspender" : fmt(val, val < 1 ? 2 : (val < 10 ? 2 : 1)) + " " + un) +
+        '</td><td>' + p + '%<span class="barcell" style="width:' + p + '%"></span></td>';
+      body.appendChild(tr);
+      if (p === 0) break;
+    }
+  }
+  ["wDose", "wUn", "wPct", "wInt"].forEach(function(id){ $(id).addEventListener("input", sched); $(id).addEventListener("change", sched); });
+  sched();
+
+  /* ---------- checklist ---------- */
+  $("clReset").addEventListener("click", function(){
+    document.querySelectorAll(".cl input").forEach(function(c){ c.checked = false; });
+  });
+
+  /* ---------- fármaco → calculadora ---------- */
+  document.querySelectorAll("article.drug[id^='d-']").forEach(function(art){
+    var row = $("row-" + art.id.slice(2)), dil = art.querySelector(".dil");
+    if (!row || !dil) return;
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "btn tocalc noprint"; b.textContent = "Calcular mL/h →";
+    b.addEventListener("click", function(){
+      row.querySelector('[data-k="on"]').checked = true; calc();
+      row.scrollIntoView({behavior:"smooth", block:"center"});
+    });
+    dil.insertAdjacentElement("afterend", b);
+  });
+
+  /* ---------- compartilhar / instalar ---------- */
+  var URL_FIXA = "https://rvped.github.io/analgossedacao/";
+  var toastEl = document.createElement("div"); toastEl.className = "toast"; toastEl.setAttribute("role", "status"); document.body.appendChild(toastEl);
+  function toast(t){ toastEl.textContent = t; toastEl.classList.add("on"); setTimeout(function(){ toastEl.classList.remove("on"); }, 2200); }
+  $("copyBtn").addEventListener("click", function(){
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(URL_FIXA).then(function(){ toast("Link copiado"); }, function(){ toast(URL_FIXA); });
+    else toast(URL_FIXA);
+  });
+  $("shareBtn").addEventListener("click", function(){
+    if (navigator.share) navigator.share({title:"Analgossedação UTIP · HGVC", url:URL_FIXA}).catch(function(){});
+    else location.hash = "#instalar";
+  });
+  var adiado = null;
+  window.addEventListener("beforeinstallprompt", function(e){ e.preventDefault(); adiado = e; $("installBtn").hidden = false; });
+  $("installBtn").addEventListener("click", function(){
+    if (!adiado) return;
+    adiado.prompt();
+    adiado.userChoice.then(function(){ adiado = null; $("installBtn").hidden = true; });
+  });
+
+  /* ---------- offline e aviso de versão nova ---------- */
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    navigator.serviceWorker.register("sw.js").then(function(reg){
+      function avisar(w){ $("updBar").hidden = false; $("updBtn").onclick = function(){ w.postMessage("atualizar"); }; }
+      if (reg.waiting && navigator.serviceWorker.controller) avisar(reg.waiting);
+      reg.addEventListener("updatefound", function(){
+        var w = reg.installing;
+        w.addEventListener("statechange", function(){ if (w.state === "installed" && navigator.serviceWorker.controller) avisar(w); });
+      });
+    });
+    var recarregou = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function(){ if (recarregou) return; recarregou = true; location.reload(); });
+  }
+
+  /* ---------- impressão: abrir recolhidos ---------- */
+  var opened = [];
+  window.addEventListener("beforeprint", function(){
+    document.querySelectorAll("details:not([open])").forEach(function(d){ d.open = true; opened.push(d); });
+  });
+  window.addEventListener("afterprint", function(){ opened.forEach(function(d){ d.open = false; }); opened = []; });
+})();
+</script>
+</body>
+</html>
