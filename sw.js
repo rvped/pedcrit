@@ -1,6 +1,6 @@
 /* Service worker — funciona sem internet e avisa quando há versão nova.
    Troque VERSAO a cada publicação para invalidar o cache. */
-const VERSAO = "2026-09-15a";
+const VERSAO = "2026-09-15b";
 const CACHE = "analgo-" + VERSAO;
 const ARQUIVOS = [
   "./",
