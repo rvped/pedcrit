@@ -364,6 +364,13 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 @media (prefers-color-scheme:dark){.sc-opt:has(input:checked) .pt{color:#0f151b}}
 .sc-opt:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:1px}
 .sc-opt:has(input:disabled){cursor:default}
+/* Reserva para navegadores sem :has() (WebView Android antigo, Safari < 15.4). Sem ela o rádio
+   fica invisível (opacity:0) e marcar um item não dá retorno visual nenhum: a escala fica
+   inutilizável, e sem erro. Devolve o rádio nativo, que carrega o próprio estado de seleção. */
+@supports not (selector(:has(*))){
+  .sc-opt{grid-template-columns:22px 44px 1fr}
+  .sc-opt input{position:static;opacity:1;pointer-events:auto;width:22px;height:22px;margin:0;accent-color:var(--brand);flex:none}
+}
 .sc-anc{font-size:.84rem;color:var(--muted);margin:0 4px 4px;padding:6px 8px;background:var(--surface2);border-radius:8px}
 .sc-fonte{margin:10px 2px 0;padding-top:8px;border-top:1px solid var(--line);font-size:.8rem;line-height:1.45}
 .sc-res{position:sticky;bottom:calc(var(--nav-h) + 8px);z-index:5;margin-top:10px}
@@ -381,6 +388,10 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 .fc-modos{margin:4px 0 10px}
 .rx{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86rem;line-height:1.5;background:var(--surface2);border-radius:10px;padding:10px 12px;white-space:pre-wrap;word-break:break-word;margin:8px 0}
 .fc-alertas{margin:6px 0 0;padding-left:1.1em;font-size:.88rem;color:var(--danger)}
+/* Notas fixas do fármaco: permanentes, não são alerta. Em tom neutro para que um alerta
+   verdadeiro ("arredondamento altera a dose em 247%") não se perca no vermelho constante.
+   Alerta que está sempre aceso não alerta. */
+.fc-notas{margin:6px 0 0;padding-left:1.1em;font-size:.84rem;color:var(--muted)}
 .titul td{font-variant-numeric:tabular-nums}
 .titul tr.abaixo td{color:var(--muted)}
 .titul tr.acima td{color:var(--warn);font-weight:650}
@@ -1378,7 +1389,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <li id="ref-91">U.S. Food and Drug Administration / DailyMed. Methadone Hydrochloride Injection, Mylan Institutional — prescribing information. SPL setid 092d78eb-6423-495c-bf0d-e6532bea7138. <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=092d78eb-6423-495c-bf0d-e6532bea7138" target="_blank" rel="noopener">DailyMed</a></span></li>
     <li id="ref-92">Merck Manual Professional Edition. Tetralogy of Fallot — tratamento da crise hipercianótica. Acessado em 15/09/2026. <span class="rl"><a href="https://www.merckmanuals.com/professional/pediatrics/congenital-cardiovascular-anomalies/tetralogy-of-fallot" target="_blank" rel="noopener">Merck Manual</a></span></li>
     <li id="ref-93">Amoretti CF, Rodrigues GO, Carvalho PRA, Trotta EA. Validação de escalas de sedação em crianças submetidas à ventilação mecânica internadas em uma unidade de terapia intensiva pediátrica terciária. <i>Rev Bras Ter Intensiva.</i> 2008;20(4):325-330. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/25307235/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1590/S0103-507X2008000400002" target="_blank" rel="noopener">DOI</a></span></li>
-    <li id="ref-94">Curley MAQ, et al. State Behavioral Scale: a sedation assessment instrument for infants and young children supported on mechanical ventilation. <i>Pediatr Crit Care Med.</i> 2006;7(2):107-114. <span class="rl"><a href="http://www.marthaaqcurley.com/wat-1.html" target="_blank" rel="noopener">Curley lab</a></span></li>
+    <li id="ref-94">Curley MAQ, et al. State Behavioral Scale: a sedation assessment instrument for infants and young children supported on mechanical ventilation. <i>Pediatr Crit Care Med.</i> 2006;7(2):107-114.</li>
     <li id="ref-95">Colleti Junior J, de Castro REV. Brazilian Portuguese translation and cross-cultural adaptation of the Withdrawal Assessment Tool-Alpha 2 Agonist. <i>Crit Care Sci.</i> 2026;38:e20260065. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/42615695/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.62675/2965-2774.20260065" target="_blank" rel="noopener">DOI</a></span></li>
     <li id="ref-96">Solodiuk JC, Donado C, Wickerham L, Goodyear L, Hayes J, Mortell RE, et al. Development and preliminary testing of the Withdrawal Assessment Tool-Alpha 2 Agonist: an assessment instrument for monitoring iatrogenic withdrawal symptoms in children receiving an alpha-2 agonist. <i>Pediatr Crit Care Med.</i> 2025;26(1):e67-76.</li>
     <li id="ref-97">Barbosa MSR, Andrade LB, Duarte MCMB, Castro REV. Tradução e adaptação transcultural dos pontos âncoras da escala Cornell Assessment of Pediatric Delirium para língua portuguesa. <i>Crit Care Sci.</i> 2023;35(3):320-327. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/38133162/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.5935/2965-2774.20230165-pt" target="_blank" rel="noopener">DOI</a></span></li>
@@ -2113,7 +2124,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     },
     bolus: [
       { rotulo: "Bólus", unidade: "mg/kg", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
-        faixa: [0.5, 1], padrao: 1, max: { valor: 2, massa: "mg" }, min: null, diluicao: null,
+        faixa: [0.5, 1], padrao: 1, max: null, maxKg: { valor: 2, massa: "mg" }, min: null, diluicao: null,
         via: "EV lento, em 1–2 min, a cada 6–12 h",
         notas: ["o máximo de 2 mg/kg/dose é o teto neonatal conservador; a bula permite até 6 mg/kg/dose em crianças", "velocidade de até 4 mg/min, e até 2,5 mg/min na insuficiência renal grave"] }
     ],
@@ -2283,7 +2294,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         dica: "moda da temperatura documentada nas últimas 12 horas",
         opcoes: [{ pontos: 0, texto: "Não" }, { pontos: 1, texto: "Sim" }] },
       { id: "estado", grupo: "Observação por 2 minutos antes do estímulo", nome: "Estado comportamental", curto: "estado",
-        opcoes: [{ pontos: 0, texto: "SBS ≤ 0 ou adormecido/acordado calmo" }, { pontos: 1, texto: "SBS ≥ +1 ou acordado agitado" }] },
+        opcoes: [{ pontos: 0, texto: "SBS¹ ≤ 0 ou adormecido/acordado calmo" }, { pontos: 1, texto: "SBS¹ ≥ +1 ou acordado agitado" }] },
       { id: "tremor", grupo: "Observação por 2 minutos antes do estímulo", nome: "Tremor", curto: "tremor",
         opcoes: [{ pontos: 0, texto: "Nenhum/leve" }, { pontos: 1, texto: "Moderado/intenso" }] },
       { id: "sudorese", grupo: "Observação por 2 minutos antes do estímulo", nome: "Alguma sudorese", curto: "sudorese",
@@ -2296,7 +2307,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         opcoes: [{ pontos: 0, texto: "Nenhuma/leve" }, { pontos: 1, texto: "Moderada/intensa" }] },
       { id: "tonus", grupo: "Observação de 1 minuto durante estímulo", nome: "Tônus muscular", curto: "tônus",
         opcoes: [{ pontos: 0, texto: "Normal" }, { pontos: 1, texto: "Aumentado" }] },
-      { id: "recuperacao", grupo: "Recuperação após estímulo", nome: "Tempo para retornar a tranquilidade (SBS ≤ 0)", curto: "recup",
+      { id: "recuperacao", grupo: "Recuperação após estímulo", nome: "Tempo para retornar a tranquilidade (SBS¹ ≤ 0)", curto: "recup",
         opcoes: [{ pontos: 0, texto: "< 2 minutos" }, { pontos: 1, texto: "2-5 minutos" }, { pontos: 2, texto: "> 5 minutos" }] }
     ],
     faixas: [
@@ -2309,7 +2320,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     traducao: "validada", seloTraducao: "tradução certificada", refs: [24, 94]
   },
   {
-    id: "wata2a", nome: "Ferramenta de avaliação de abstinência — Alfa 2 Agonist (WAT-A2A)", curto: "WAT-A2A", sinal: false,
+    id: "wata2a", nome: "Ferramenta de Avaliação de Abstinência – Alfa 2 Agonist (WAT-A2A)", curto: "WAT-A2A", sinal: false,
     instrucoes: [
       "Instruções da Ferramenta de Avaliação de Abstinência – Alfa 2 Agonist (WAT-A2A)",
       "– Inicie a pontuação da WAT-A2A a partir do primeiro dia do desmame em pacientes que receberam doses de dexmedetomidina e/ou clonidina, incluindo adesivo transdérmico por > 5 dias. A WAT-A2A deve ser realizada pelo uma vez a cada 12 horas (ex: às 8h e às 20h +/- 2 horas). Continue a pontuar duas vezes por dia até 24 horas após a última dose de dexmedetomidina ou 72 horas após a última dose de clonidina.",
@@ -2465,7 +2476,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     instrucoes: [
       "O que avalia: cinco categorias de comportamento — face, pernas, atividade, choro e consolabilidade —, cada uma pontuada de 0 a 2, para um total de 0 a 10.",
       "Indicação: dor em crianças pré-verbais ou não verbais. A validação original foi feita dos 2 meses aos 7 anos. Para crianças com comprometimento cognitivo existe a versão revisada, a FLACCr.",
-      "Como aplicar: observe a criança acordada por 1 a 2 minutos, com pernas e corpo descobertos; se estiver dormindo, observe por 2 minutos ou mais. Reposicione-a, avalie tônus e tensão corporal e inicie medidas de conforto se necessário.",
+      "Como aplicar: as orientações de aplicação fazem parte do instrumento licenciado e não são reproduzidas aqui. Consulte o formulário oficial do serviço ou o artigo da FLACCr (botão abaixo).",
       "Marque o total obtido no formulário impresso ou no prontuário e lance-o no campo abaixo para obter a leitura e o texto para copiar.",
       "Este aplicativo não reproduz os descritores do instrumento: a FLACC é licenciada pela Universidade de Michigan e o uso clínico contínuo exige licença paga."
     ],
@@ -2479,7 +2490,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       { rotulo: "Abrir FLACCr (BR)", href: "https://www.scielo.br/j/rlae/a/9cvLjk5YBbBz49cbZJjQzTL/?lang=pt" },
       { rotulo: "Licença (Univ. Michigan)", href: "https://available-inventions.umich.edu/product/face-legs-activity-cry-consolability-observational-tool-as-a-measure-of-pain" }
     ],
-    fonte: "Descrição, indicação e modo de aplicar em redação própria. A versão brasileira da FLACCr está em Bussotti EA et al., Rev Latino-Am Enfermagem 2015; a da FLACC, em Silva FC e Thuler LCS, J Pediatr (Rio J) 2008.",
+    fonte: "Descrição e indicação em redação própria. As orientações de aplicação e os descritores pontuados NÃO são reproduzidos aqui: pertencem ao instrumento licenciado. A versão brasileira da FLACCr está em Bussotti EA et al., Rev Latino-Am Enfermagem 2015; a da FLACC, em Silva FC e Thuler LCS, J Pediatr (Rio J) 2008.",
     licenca: "Instrumento licenciado. Os limiares de leitura são proposta do serviço, aguardando validação da coordenação.",
     copyright: "FLACC © 2002 The Regents of the University of Michigan. O uso em operações clínicas contínuas requer licença comercial paga, inclusive para serviços sem fins lucrativos. Por isso os descritores não são reproduzidos aqui.",
     traducao: "livre", seloTraducao: "cartão informativo, não interativo",
@@ -2585,7 +2596,11 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     }
     function fmtBR(n){
       if (!isFinite(n)) return "–";
-      var a = Math.abs(n), casas = a < 10 ? 2 : (a < 100 ? 1 : 0);
+      /* Casas conforme a magnitude. Duas casas fixas abaixo de 0,1 davam 1–2 algarismos
+         significativos e imprimiam incoerência na prescrição (adrenalina 3 kg: 0,05 e 0,09,
+         quando 0,05 × 2 = 0,10) — justamente a faixa em que adrenalina e noradrenalina
+         operam em neonatos. */
+      var a = Math.abs(n), casas = a < 0.1 ? 3 : (a < 10 ? 2 : (a < 100 ? 1 : 0));
       var s = n.toFixed(casas);
       if (casas > 0) s = s.replace(/\.?0+$/, "");
       return s.replace(".", ",");
@@ -2612,6 +2627,9 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       var conc = opc.conc != null ? opc.conc : b.conc.valor;
       var dose = doseKg * peso;
       var r = { doseCalculada: dose, limitada: null, alertas: [] };
+      /* Teto POR QUILO (maxKg) antes do teto absoluto (max): são conceitos clínicos distintos.
+         "máx 2 mg/kg/dose" escala com o peso; "máx 6 mg/dose" não. Um bólus declara no máximo um dos dois. */
+      if (b.maxKg) { var mkg = b.maxKg.valor * massaFator(b.maxKg.massa, u.massa) * peso; if (dose > mkg + EPS) { dose = mkg; r.limitada = "maxKg"; r.alertas.push("limitada ao teto por quilo (" + fmtBR(b.maxKg.valor) + " " + b.maxKg.massa + "/kg = " + fmtBR(mkg) + " " + u.massa + ")"); } }
       if (b.max) { var mx = b.max.valor * massaFator(b.max.massa, u.massa); if (dose > mx + EPS) { dose = mx; r.limitada = "max"; r.alertas.push("limitada à dose máxima (" + fmtBR(b.max.valor) + " " + b.max.massa + ")"); } }
       if (b.min) { var mn = b.min.valor * massaFator(b.min.massa, u.massa); if (dose < mn - EPS) { dose = mn; r.limitada = "min"; r.alertas.push("elevada à dose mínima (" + fmtBR(b.min.valor) + " " + b.min.massa + ")"); } }
       var fm = massaFator(u.massa, b.conc.massa);
@@ -2947,6 +2965,16 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     var out = p.querySelector(".sc-res"), s = CALC.somaEscala(e, SC.resp[e.id], SC.estado[e.id]);
     var nissBox = p.querySelector("[data-niss-box]");
     if (nissBox) nissBox.hidden = !(s.completo && s.total >= e.niss.de && s.total <= e.niss.ate);
+    /* Escala bloqueada (CAPD com RASS −4/−5): não exibir nem deixar copiar um escore que o próprio
+       painel declara não avaliável — o botão de copiar o mandaria para o prontuário assim mesmo. */
+    var btCopiar = p.querySelector('[data-acao="copiar"]');
+    if (scBloqueio(e)) {
+      out.className = "out sc-res";
+      out.innerHTML = '<div class="zone">' + e.curto + ': não avaliável agora</div>';
+      if (btCopiar) { btCopiar.disabled = true; btCopiar.setAttribute("aria-disabled", "true"); }
+      return;
+    }
+    if (btCopiar) { btCopiar.disabled = false; btCopiar.removeAttribute("aria-disabled"); }
     if (!s.completo) {
       out.className = "out sc-res";
       out.innerHTML = e.tipo === "total"
@@ -2976,7 +3004,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     return i === -1 ? "" : conc.rotulo.slice(i + 3);
   }
   function fcCard(f){
-    var modos = fcModos(f), st = FC_EST[f.id] = FC_EST[f.id] || { modo: modos[0][0], extra12: 0, bol: 0, intervalo: f.enteral ? f.enteral.intervalos[0] : null, incluir: false, cetS: false };
+    var modos = fcModos(f), st = FC_EST[f.id] = FC_EST[f.id] || { modo: modos[0][0], extra12: 0, bol: 0, intervalo: f.enteral ? f.enteral.intervalos[0] : null, incluir: false, cetS: false, icAuto: f.ic ? String(f.ic.padrao) : null, bolAuto: null };
     var d = document.createElement("details");
     d.className = "card fc"; d.id = "fc-" + f.id; d.setAttribute("data-grupo", f.grupo);
     var h = '<summary><span class="fc-nome">' + f.nome + '</span> <span class="muted small">' + f.apresentacao + '</span></summary><div class="fc-b">';
@@ -2987,7 +3015,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       (f.ic.semDiluicao ? '' : '<label class="field"><span>Ampola (' + f.ic.conc.massa + '/mL' + fcSufixoConc(f.ic.conc) + ')</span><input type="number" inputmode="decimal" min="0" step="any" data-k="icConc" value="' + f.ic.conc.valor + '"></label>') + '</div>' +
       (f.ic.semDiluicao ? '' : '<div class="grid g2"><label class="field"><span>Diluente</span><select data-k="icDil">' + f.ic.diluentes.map(function(x){ return "<option>" + x + "</option>"; }).join("") + '</select></label>' +
         '<div class="field"><span>Volume</span><div class="sc-acoes" style="margin:0"><button type="button" class="btn" data-acao="menos12">−12 mL</button><button type="button" class="btn" data-acao="mais12">+12 mL</button></div></div></div>') +
-      '<div data-k="icFaixa" class="small muted"></div><div class="rx" data-k="icRx"></div><ul class="fc-alertas" data-k="icAl"></ul>' +
+      '<div data-k="icFaixa" class="small muted"></div><div class="rx" data-k="icRx"></div><ul class="fc-alertas" data-k="icAl"></ul><ul class="fc-notas" data-k="icNotas"></ul>' +
       '<label class="chk"><input type="checkbox" data-k="icInc"' + (st.incluir ? " checked" : "") + '> Incluir no total</label>' +
       '<div class="sc-acoes"><button type="button" class="btn fill" data-acao="copiarIC">Copiar prescrição</button></div>' +
       '<details><summary>Tabela de titulação (a cada 0,5 mL/h)</summary><div class="tbl-wrap"><table class="titul"><thead><tr><th>mL/h</th><th>' + f.ic.unidade + '</th><th>Leitura</th></tr></thead><tbody data-k="icTit"></tbody></table></div></details>' +
@@ -2996,7 +3024,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       (f.bolus.length > 1 ? '<div class="seg fc-modos" role="radiogroup">' + f.bolus.map(function(b, i){ return '<label><input type="radio" name="fcb-' + f.id + '" data-bol="1" value="' + i + '"' + (st.bol === i ? " checked" : "") + '>' + b.rotulo + '</label>'; }).join("") + '</div>' : '') +
       '<div class="grid g2"><label class="field"><span data-k="bolUn"></span><input type="number" inputmode="decimal" min="0" step="any" data-k="bolDose"></label>' +
       '<label class="field"><span data-k="bolConcUn"></span><input type="number" inputmode="decimal" min="0" step="any" data-k="bolConc"></label></div>' +
-      '<div data-k="bolFaixa" class="small muted"></div><div class="rx" data-k="bolRx"></div><ul class="fc-alertas" data-k="bolAl"></ul></div>';
+      '<div data-k="bolFaixa" class="small muted"></div><div class="rx" data-k="bolRx"></div><ul class="fc-alertas" data-k="bolAl"></ul><ul class="fc-notas" data-k="bolNotas"></ul></div>';
     if (f.enteral) h += '<div data-painel="enteral"' + (st.modo === "enteral" ? "" : " hidden") + '>' +
       '<div class="grid g2"><label class="field"><span>Dose (' + f.enteral.unidade + ')</span><input type="number" inputmode="decimal" min="0" step="any" data-k="entDose" value="' + f.enteral.padrao + '"></label>' +
       '<div class="field"><span>Intervalo</span><div class="rx" style="margin:0">de 6/6 h (fixo)</div></div></div>' +
@@ -3099,9 +3127,19 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     var st = FC_EST[f.id], b = f.bolus[st.bol], q = function(k){ return d.querySelector('[data-k="' + k + '"]'); };
     q("bolUn").textContent = "Dose (" + b.unidade + ")";
     q("bolConcUn").textContent = "Ampola (" + b.conc.massa + "/mL" + fcSufixoConc(b.conc) + ")";
-    if (reset) { q("bolDose").value = b.padrao; q("bolConc").value = b.conc.valor; }
+    if (reset) { q("bolDose").value = b.padrao; q("bolConc").value = b.conc.valor; st.bolAuto = String(b.padrao); }
   }
   function fcLista2(ul, arr){ ul.innerHTML = arr.map(function(a){ return "<li>" + a + "</li>"; }).join(""); }
+  /* Ao mudar o contexto (neonato / LRA) ou a variante S(+), o padrão ajustado precisa chegar ao
+     CAMPO, não só à faixa e ao teto: sem isto o midazolam neonatal exibe faixa 0,03–0,06 e teto
+     0,06 mas mantém 0,1 no campo, quase o dobro do teto neonatal. Só reescreve se o campo ainda
+     tiver exatamente o valor que NÓS escrevemos da última vez — um número digitado à mão pelo
+     profissional nunca é apagado. */
+  function fcSincronizarPadrao(el, st, chave, padrao){
+    if (!el || padrao == null) return;
+    if (st[chave] != null && el.value !== st[chave]) return;
+    el.value = st[chave] = String(padrao);
+  }
   function fcCalc(f, d){
     var peso = fcPeso(), ctx = fcCtx(), st = FC_EST[f.id], q = function(k){ return d.querySelector('[data-k="' + k + '"]'); };
     var notasCtx = [];
@@ -3109,8 +3147,10 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     if (f.ic) {
       var ic = CALC.aplicarAjustes(f.ic, f.ajustes && { neo: f.ajustes.neo && f.ajustes.neo.ic, lra: f.ajustes.lra && f.ajustes.lra.ic }, ctx);
       if (f.id === "cet" && st.cetS) ic = fcMeia(ic);
+      fcSincronizarPadrao(q("icDose"), st, "icAuto", ic.padrao);
       var dose = num(q("icDose").value), conc = f.ic.semDiluicao ? f.ic.conc.valor : num(q("icConc").value);
       q("icFaixa").textContent = "Faixa usual " + CALC.fmtBR(ic.faixa[0]) + "–" + CALC.fmtBR(ic.faixa[1]) + " " + ic.unidade + (ic.teto != null ? " · teto " + CALC.fmtBR(ic.teto) : "") + (notasCtx.length ? " · " + notasCtx.join(" · ") : "");
+      fcLista2(q("icNotas"), f.ic.notas || []);
       if (!peso || !(dose > 0) || !(conc > 0)) { q("icRx").textContent = peso ? "Informe dose e apresentação." : "Informe o peso."; fcLista2(q("icAl"), []); q("icTit").innerHTML = ""; st.ultimo = null; }
       else {
         var r = CALC.diluirIC(ic, dose, peso, { conc: conc, extra12: st.extra12 });
@@ -3119,7 +3159,6 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         q("icRx").textContent = CALC.textoPrescricaoIC(f.nome, { unidade: ic.unidade, conc: { valor: conc, massa: f.ic.conc.massa, rotulo: CALC.fmtBR(conc) + " " + f.ic.conc.massa + "/mL" + fcSufixoConc(f.ic.conc) } }, r, dil);
         var al = r.alertas.slice();
         if (r.classe !== "faixa") al.unshift(fcTagTexto(r.classe));
-        (f.ic.notas || []).forEach(function(n){ al.push(n); });
         fcLista2(q("icAl"), al);
         q("icTit").innerHTML = CALC.titulacao(r, ic, 0.5).map(function(l){
           return '<tr class="' + l.classe + (Math.abs(l.vazao - r.vazao) < 1e-9 ? " atual" : "") + '"><td>' + CALC.fmtBR(l.vazao) + '</td><td>' + CALC.fmtBR(l.dose) + '</td><td>' + fcTagTexto(l.classe) + '</td></tr>';
@@ -3127,20 +3166,23 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       }
     }
     if (f.bolus && f.bolus.length) {
-      var b = f.bolus[st.bol], bd = num(q("bolDose").value), bc = num(q("bolConc").value);
+      var b = f.bolus[st.bol], bc = num(q("bolConc").value);
       var bAj = CALC.aplicarAjustes(b, f.ajustes && { neo: f.ajustes.neo && f.ajustes.neo.bolus, lra: f.ajustes.lra && f.ajustes.lra.bolus }, ctx);
       if (f.id === "cet" && st.cetS) bAj = fcMeia(bAj);
-      q("bolFaixa").textContent = "Faixa " + CALC.fmtBR(bAj.faixa[0]) + (bAj.faixa[1] !== bAj.faixa[0] ? "–" + CALC.fmtBR(bAj.faixa[1]) : "") + " " + b.unidade + (b.max ? " · máx " + CALC.fmtBR(b.max.valor) + " " + b.max.massa : "") + " · " + b.via + (notasCtx.length ? " · " + notasCtx.join(" · ") : "");
+      fcSincronizarPadrao(q("bolDose"), st, "bolAuto", bAj.padrao);
+      var bd = num(q("bolDose").value);
+      q("bolFaixa").textContent = "Faixa " + CALC.fmtBR(bAj.faixa[0]) + (bAj.faixa[1] !== bAj.faixa[0] ? "–" + CALC.fmtBR(bAj.faixa[1]) : "") + " " + b.unidade + (b.max ? " · máx " + CALC.fmtBR(b.max.valor) + " " + b.max.massa : "") + (b.maxKg ? " · máx " + CALC.fmtBR(b.maxKg.valor) + " " + b.maxKg.massa + "/kg" : "") + " · " + b.via + (notasCtx.length ? " · " + notasCtx.join(" · ") : "");
+      fcLista2(q("bolNotas"), b.notas || []);
       if (!peso || !(bd > 0) || !(bc > 0)) { q("bolRx").textContent = peso ? "Informe dose e apresentação." : "Informe o peso."; fcLista2(q("bolAl"), []); }
       else {
         var rb = CALC.bolus(bAj, bd, peso, { conc: bc }), massa = CALC.partesDose(b.unidade).massa;
         var linhas = [];
         if (rb.diluicao) linhas.push("Diluir " + CALC.fmtBR(rb.diluicao.mlMed) + " mL da ampola + " + CALC.fmtBR(rb.diluicao.mlSF) + " mL de SF 0,9% → " + CALC.fmtBR(rb.concUso) + " " + b.conc.massa + "/mL" + fcSufixoConc(b.conc));
-        linhas.push("Dose: " + CALC.fmtBR(rb.dose) + " " + massa + (rb.limitada ? " (" + (rb.limitada === "max" ? "limitada ao máximo" : "elevada ao mínimo") + ")" : "") + " = " + CALC.fmtBR(rb.mL) + " mL" + (rb.diluicao ? " da diluição" : " da ampola"));
+        linhas.push("Dose: " + CALC.fmtBR(rb.dose) + " " + massa + (rb.limitada ? " (" + (rb.limitada === "min" ? "elevada ao mínimo" : (rb.limitada === "maxKg" ? "limitada ao teto por quilo" : "limitada ao máximo")) + ")" : "") + " = " + CALC.fmtBR(rb.mL) + " mL" + (rb.diluicao ? " da diluição" : " da ampola"));
         if (Math.abs(rb.doseReal - rb.dose) / rb.dose > 0.02) linhas.push("Dose real no volume arredondado: " + CALC.fmtBR(rb.doseReal) + " " + massa);
         linhas.push("Via: " + b.via);
         q("bolRx").textContent = linhas.join("\n");
-        var alb = rb.alertas.slice(); (b.notas || []).forEach(function(n){ alb.push(n); });
+        var alb = rb.alertas.slice();
         var cb = CALC.classificar(bd, bAj.faixa, null); if (cb !== "faixa") alb.unshift(fcTagTexto(cb));
         fcLista2(q("bolAl"), alb);
       }
@@ -3285,7 +3327,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   /* ---------- impressão: esvaziar os totais das escalas (não reter escore em PDF) ---------- */
   var totaisImpressao = [];
   window.addEventListener("beforeprint", function(){
-    var campos = document.querySelectorAll('input[data-total="1"]');
+    var campos = document.querySelectorAll('input[data-total="1"], input[data-vital]');
     for (var i = 0; i < campos.length; i++){
       totaisImpressao.push({ el: campos[i], val: campos[i].value });
       campos[i].value = "";
