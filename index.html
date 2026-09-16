@@ -2471,6 +2471,29 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     selo: "limiares em proposta", refs: [1]
   }
   ];
+  /* Eletrolitos. Constantes conferidas aritmeticamente; ver docs/entrega.
+     KCl 19,1% = 19,1 g/100 mL = 191 mg/mL. Pelo PM 74,55 seriam 2,562 mEq/mL;
+     adota-se a convencao clinica de 2,5 mEq/mL, que e a usada na beira-leito. */
+  var ELETROLITOS = {
+    kcl: { rotulo: "KCl 19,1%", mEqPorMl: 2.5 },
+    vias: [
+      { id: "avp", rotulo: "Veia periferica", mEqPorL: 40, mlPorKg: 50 },
+      { id: "cvc", rotulo: "Cateter central", mEqPorL: 80, mlPorKg: 25 }
+    ],
+    duracoesK: [4, 6, 8],
+    /* O limite da reposicao NAO e o fluxo do cateter (um 24G comporta ~1.200 mL/h)
+       e sim a velocidade de entrega de potassio. Usual abaixo de 0,25 mEq/kg/h;
+       nao exceder 0,5. Acima de 0,25 exige monitor cardiaco. */
+    kMEqKgHUsual: 0.25,
+    kMEqKgHMax: 0.5,
+    sodio: {
+      tbwFracao: 0.6,
+      quedaMaxPorHora: 0.5,
+      quedaMax24h: 12,
+      naPorLitro045: 77
+    }
+  };
+
   /* ===== DADOS:END ===== */
   /* ===== CALC-CORE:BEGIN ===== */
   var CALC = (function(){
@@ -2714,6 +2737,64 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       if (estado && estado.niss) txt += " · NISS " + estado.niss;
       return txt + " · " + dois(data.getDate()) + "/" + dois(data.getMonth() + 1) + " " + dois(data.getHours()) + ":" + dois(data.getMinutes());
     }
+    /* ---------- eletrolitos ---------- */
+    /* Deficit de agua livre = peso x fracao de agua corporal x (Na atual / Na alvo - 1).
+       A queda segura e de 0,5 mEq/L/h, ou 10 a 12 mEq/L em 24 h: o alvo nunca deve
+       exigir queda maior, e a funcao avisa quando exige. */
+    function corrigirSodio(peso, naAtual, naAlvo, horas){
+      var r = { valido: false, alertas: [] };
+      if (!(peso > 0) || !(naAtual > 0) || !(naAlvo > 0) || !(horas > 0)) return r;
+      r.valido = true;
+      var s = ELETROLITOS.sodio;
+      r.queda = naAtual - naAlvo;
+      r.quedaPorHora = r.queda / horas;
+      r.deficitMl = peso * s.tbwFracao * ((naAtual / naAlvo) - 1) * 1000;
+      r.mlPorHora = r.deficitMl / horas;
+      if (r.queda <= 0) r.alertas.push("o alvo nao e menor que o sodio atual: nada a corrigir por agua livre");
+      if (r.quedaPorHora > s.quedaMaxPorHora + EPS)
+        r.alertas.push("queda de " + fmtBR(r.quedaPorHora) + " mEq/L/h excede o limite de " + fmtBR(s.quedaMaxPorHora) + ": estenda o tempo ou eleve o alvo");
+      if (r.queda > s.quedaMax24h + EPS && horas <= 24 + EPS)
+        r.alertas.push("queda de " + fmtBR(r.queda) + " mEq/L em " + fmtBR(horas) + " h passa do maximo de " + fmtBR(s.quedaMax24h) + " mEq/L em 24 h");
+      /* alvo que respeita o limite de 24 h, para orientar quem digitou demais */
+      r.alvoSeguro24h = naAtual - s.quedaMax24h;
+      return r;
+    }
+
+    /* Reposicao de potassio. O volume sai do TETO DE CONCENTRACAO da via, nao de
+       uma escolha livre: 40 mEq/L em veia periferica, 80 mEq/L em cateter central.
+       Quando o volume resulta alto, a duracao e estendida de 4 h para 6 h e, no
+       maximo, 8 h -- nunca convertida em infusao continua. */
+    function reporPotassio(peso, mEqPorKg, viaId, duracaoH){
+      var r = { valido: false, alertas: [] };
+      if (!(peso > 0) || !(mEqPorKg > 0)) return r;
+      var via = null, i;
+      for (i = 0; i < ELETROLITOS.vias.length; i++) if (ELETROLITOS.vias[i].id === viaId) via = ELETROLITOS.vias[i];
+      if (!via) return r;
+      r.valido = true; r.via = via;
+      r.mEq = mEqPorKg * peso;
+      /* eletrolito concentrado se mede em 0,1 mL: nao passa por arredondarBolus,
+         que arredondaria 12,8 para 13 acima de 1 mL */
+      r.mlKCl = Math.round(r.mEq / ELETROLITOS.kcl.mEqPorMl * 10 + EPS) / 10;
+      r.volumeDiluente = peso * via.mlPorKg;         /* peso x 50 (AVP) ou x 25 (CVC) */
+      r.volumeTotal = r.volumeDiluente + r.mlKCl;    /* o KCl SOMA volume ao soro */
+      r.concentracao = r.mEq / (r.volumeTotal / 1000);
+      /* A duracao e escolhida por quem prescreve: 4 h por padrao, 6 ou 8 h no seletor.
+         Nao ha extensao automatica -- para uma dose fixa em mEq/kg, tanto mEq/kg/h
+         quanto mL/kg/h independem do peso, entao um criterio por peso nunca dispararia. */
+      var L = ELETROLITOS;
+      r.duracaoH = (duracaoH > 0) ? duracaoH : L.duracoesK[0];
+      r.duracoes = L.duracoesK;
+      r.mEqKgH = r.mEq / r.duracaoH / peso;
+      r.mlPorHora = r.volumeTotal / r.duracaoH;
+      if (r.concentracao > via.mEqPorL + EPS)
+        r.alertas.push("concentracao de " + fmtBR(r.concentracao) + " mEq/L passa do teto de " + fmtBR(via.mEqPorL) + " para " + via.rotulo.toLowerCase());
+      if (r.mEqKgH > L.kMEqKgHMax + EPS)
+        r.alertas.push("mesmo em " + fmtBR(r.duracaoH) + " h a entrega e de " + fmtBR(r.mEqKgH) + " mEq/kg/h, acima do maximo de " + fmtBR(L.kMEqKgHMax) + ": fracione a dose e reavalie o potassio");
+      else if (r.mEqKgH > L.kMEqKgHUsual + EPS)
+        r.alertas.push("entrega de " + fmtBR(r.mEqKgH) + " mEq/kg/h: acima do usual de " + fmtBR(L.kMEqKgHUsual) + " -- exige monitor cardiaco");
+      return r;
+    }
+
     return {
       massaFator: massaFator, partesDose: partesDose, arredondarVolume: arredondarVolume,
       arredondarBolus: arredondarBolus, classificar: classificar, diluirIC: diluirIC,
@@ -2722,7 +2803,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       lorazepamDeMidazolam: lorazepamDeMidazolam, clonidinaInicial: clonidinaInicial,
       cronogramaClonidina: cronogramaClonidina, faixaTotal: faixaTotal,
       aplicarAjustes: aplicarAjustes, itensAtivos: itensAtivos, somaEscala: somaEscala,
-      pontosVariacao: pontosVariacao, textoProntuario: textoProntuario
+      pontosVariacao: pontosVariacao, textoProntuario: textoProntuario,
+      corrigirSodio: corrigirSodio, reporPotassio: reporPotassio, ELETROLITOS: ELETROLITOS
     };
   })();
   /* ===== CALC-CORE:END ===== */
