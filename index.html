@@ -397,8 +397,10 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   section.sec{break-inside:auto}
   .sc-tabs,.sc-acoes,.sc-res{display:none!important}
   .sc-painel[hidden]{display:block!important}
+  .sc-opt input,.seg input{display:none}
   .sc-opt:has(input:checked){background:none}
   .sc-opt:has(input:checked) .pt{background:none;color:inherit;border-color:#999}
+  .seg label:has(input:checked){background:none;color:inherit;font-weight:normal}
 }
 </style>
 </head>
@@ -2889,6 +2891,13 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   function fcModos(f){ var m = []; if (f.ic) m.push(["ic", "Infusão contínua"]); if (f.bolus && f.bolus.length) m.push(["bolus", "Bólus / intervalada"]); if (f.enteral) m.push(["enteral", "Enteral"]); return m; }
   function fcTagClasse(c){ return c === "faixa" ? "t-ok" : (c === "teto" ? "t-danger" : "t-warn"); }
   function fcTagTexto(c){ return { faixa: "na faixa", abaixo: "abaixo da faixa usual", acima: "acima da faixa usual", teto: "acima do teto" }[c]; }
+  /* Preserva qualificadores do rótulo da apresentação (ex.: "de base" na noradrenalina) mesmo quando o
+     valor da concentração muda: pega tudo depois de "/mL" no rótulo cadastrado em FARMACOS. */
+  function fcSufixoConc(conc){
+    if (!conc || !conc.rotulo) return "";
+    var i = conc.rotulo.indexOf("/mL");
+    return i === -1 ? "" : conc.rotulo.slice(i + 3);
+  }
   function fcCard(f){
     var modos = fcModos(f), st = FC_EST[f.id] = FC_EST[f.id] || { modo: modos[0][0], extra12: 0, bol: 0, intervalo: f.enteral ? f.enteral.intervalos[0] : null, incluir: false, cetS: false };
     var d = document.createElement("details");
@@ -2898,7 +2907,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     if (f.id === "cet") h += '<label class="chk"><input type="checkbox" data-k="cetS"' + (st.cetS ? " checked" : "") + '> Cetamina <b>S(+)</b> (escetamina): faixas, padrão e teto divididos por 2</label>';
     if (f.ic) h += '<div data-painel="ic"' + (st.modo === "ic" ? "" : " hidden") + '>' +
       '<div class="grid g2"><label class="field"><span>Dose (' + f.ic.unidade + ')</span><input type="number" inputmode="decimal" min="0" step="' + f.ic.passo + '" data-k="icDose" value="' + f.ic.padrao + '"></label>' +
-      (f.ic.semDiluicao ? '' : '<label class="field"><span>Ampola (' + f.ic.conc.massa + '/mL)</span><input type="number" inputmode="decimal" min="0" step="any" data-k="icConc" value="' + f.ic.conc.valor + '"></label>') + '</div>' +
+      (f.ic.semDiluicao ? '' : '<label class="field"><span>Ampola (' + f.ic.conc.massa + '/mL' + fcSufixoConc(f.ic.conc) + ')</span><input type="number" inputmode="decimal" min="0" step="any" data-k="icConc" value="' + f.ic.conc.valor + '"></label>') + '</div>' +
       (f.ic.semDiluicao ? '' : '<div class="grid g2"><label class="field"><span>Diluente</span><select data-k="icDil">' + f.ic.diluentes.map(function(x){ return "<option>" + x + "</option>"; }).join("") + '</select></label>' +
         '<div class="field"><span>Volume</span><div class="sc-acoes" style="margin:0"><button type="button" class="btn" data-acao="menos12">−12 mL</button><button type="button" class="btn" data-acao="mais12">+12 mL</button></div></div></div>') +
       '<div data-k="icFaixa" class="small muted"></div><div class="rx" data-k="icRx"></div><ul class="fc-alertas" data-k="icAl"></ul>' +
@@ -2914,6 +2923,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     if (f.enteral) h += '<div data-painel="enteral"' + (st.modo === "enteral" ? "" : " hidden") + '>' +
       '<div class="grid g2"><label class="field"><span>Dose (' + f.enteral.unidade + ')</span><input type="number" inputmode="decimal" min="0" step="any" data-k="entDose" value="' + f.enteral.padrao + '"></label>' +
       '<div class="field"><span>Intervalo</span><div class="rx" style="margin:0">de 6/6 h (fixo)</div></div></div>' +
+      '<div data-k="entFaixa" class="small muted"></div>' +
       '<div class="rx" data-k="entRx"></div><ul class="fc-alertas" data-k="entAl"></ul>' +
       fcPainelEspecial(f) +
       (f.enteral.notas && f.enteral.notas.length ? '<ul class="small">' + f.enteral.notas.map(function(n){ return "<li>" + n + "</li>"; }).join("") + '</ul>' : '') +
@@ -3011,7 +3021,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   function fcPreencherBolus(f, d, reset){
     var st = FC_EST[f.id], b = f.bolus[st.bol], q = function(k){ return d.querySelector('[data-k="' + k + '"]'); };
     q("bolUn").textContent = "Dose (" + b.unidade + ")";
-    q("bolConcUn").textContent = "Ampola (" + b.conc.massa + "/mL)";
+    q("bolConcUn").textContent = "Ampola (" + b.conc.massa + "/mL" + fcSufixoConc(b.conc) + ")";
     if (reset) { q("bolDose").value = b.padrao; q("bolConc").value = b.conc.valor; }
   }
   function fcLista2(ul, arr){ ul.innerHTML = arr.map(function(a){ return "<li>" + a + "</li>"; }).join(""); }
@@ -3029,7 +3039,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         var r = CALC.diluirIC(ic, dose, peso, { conc: conc, extra12: st.extra12 });
         st.ultimo = r;
         var dil = f.ic.semDiluicao ? "" : q("icDil").value;
-        q("icRx").textContent = CALC.textoPrescricaoIC(f.nome, { unidade: ic.unidade, conc: { valor: conc, massa: f.ic.conc.massa, rotulo: CALC.fmtBR(conc) + " " + f.ic.conc.massa + "/mL" } }, r, dil);
+        q("icRx").textContent = CALC.textoPrescricaoIC(f.nome, { unidade: ic.unidade, conc: { valor: conc, massa: f.ic.conc.massa, rotulo: CALC.fmtBR(conc) + " " + f.ic.conc.massa + "/mL" + fcSufixoConc(f.ic.conc) } }, r, dil);
         var al = r.alertas.slice();
         if (r.classe !== "faixa") al.unshift(fcTagTexto(r.classe));
         (f.ic.notas || []).forEach(function(n){ al.push(n); });
@@ -3043,12 +3053,12 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       var b = f.bolus[st.bol], bd = num(q("bolDose").value), bc = num(q("bolConc").value);
       var bAj = CALC.aplicarAjustes(b, f.ajustes && { neo: f.ajustes.neo && f.ajustes.neo.bolus, lra: f.ajustes.lra && f.ajustes.lra.bolus }, ctx);
       if (f.id === "cet" && st.cetS) bAj = fcMeia(bAj);
-      q("bolFaixa").textContent = "Faixa " + CALC.fmtBR(bAj.faixa[0]) + (bAj.faixa[1] !== bAj.faixa[0] ? "–" + CALC.fmtBR(bAj.faixa[1]) : "") + " " + b.unidade + (b.max ? " · máx " + CALC.fmtBR(b.max.valor) + " " + b.max.massa : "") + " · " + b.via;
+      q("bolFaixa").textContent = "Faixa " + CALC.fmtBR(bAj.faixa[0]) + (bAj.faixa[1] !== bAj.faixa[0] ? "–" + CALC.fmtBR(bAj.faixa[1]) : "") + " " + b.unidade + (b.max ? " · máx " + CALC.fmtBR(b.max.valor) + " " + b.max.massa : "") + " · " + b.via + (notasCtx.length ? " · " + notasCtx.join(" · ") : "");
       if (!peso || !(bd > 0) || !(bc > 0)) { q("bolRx").textContent = peso ? "Informe dose e apresentação." : "Informe o peso."; fcLista2(q("bolAl"), []); }
       else {
         var rb = CALC.bolus(bAj, bd, peso, { conc: bc }), massa = CALC.partesDose(b.unidade).massa;
         var linhas = [];
-        if (rb.diluicao) linhas.push("Diluir " + CALC.fmtBR(rb.diluicao.mlMed) + " mL da ampola + " + CALC.fmtBR(rb.diluicao.mlSF) + " mL de SF 0,9% → " + CALC.fmtBR(rb.concUso) + " " + b.conc.massa + "/mL");
+        if (rb.diluicao) linhas.push("Diluir " + CALC.fmtBR(rb.diluicao.mlMed) + " mL da ampola + " + CALC.fmtBR(rb.diluicao.mlSF) + " mL de SF 0,9% → " + CALC.fmtBR(rb.concUso) + " " + b.conc.massa + "/mL" + fcSufixoConc(b.conc));
         linhas.push("Dose: " + CALC.fmtBR(rb.dose) + " " + massa + (rb.limitada ? " (" + (rb.limitada === "max" ? "limitada ao máximo" : "elevada ao mínimo") + ")" : "") + " = " + CALC.fmtBR(rb.mL) + " mL" + (rb.diluicao ? " da diluição" : " da ampola"));
         if (Math.abs(rb.doseReal - rb.dose) / rb.dose > 0.02) linhas.push("Dose real no volume arredondado: " + CALC.fmtBR(rb.doseReal) + " " + massa);
         linhas.push("Via: " + b.via);
@@ -3060,6 +3070,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     }
     if (f.enteral) {
       var e = f.enteral, ed = num(q("entDose").value);
+      q("entFaixa").textContent = notasCtx.join(" · ");
+      q("entFaixa").hidden = !notasCtx.length;
       if (!peso || !(ed > 0)) { q("entRx").textContent = peso ? "Informe a dose." : "Informe o peso."; fcLista2(q("entAl"), []); }
       else {
         var re = CALC.enteral(e, ed, peso, st.intervalo), em = CALC.partesDose(e.unidade).massa;
