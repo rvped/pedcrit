@@ -525,6 +525,13 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <p class="small muted" style="margin:8px 0 0">O alvo do dia é definido na visita e registrado.</p>
   </div>
 
+  <div class="card" id="pontuar">
+    <h3>Pontuar agora</h3>
+    <p class="small muted" style="margin-top:0">Toque na opção que descreve o paciente. A soma e a leitura aparecem ao completar. Nada fica salvo no aparelho.</p>
+    <div class="sc-tabs noprint" role="tablist" id="scTabs"></div>
+    <div id="scCorpo"></div>
+  </div>
+
   <div class="card noprint">
     <h3>Interpretar um escore agora</h3>
     <div class="interp">
@@ -2740,6 +2747,143 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   cbBNM.addEventListener("change", renderCB);
   document.querySelectorAll("input[name=fase]").forEach(function(r){ r.addEventListener("change", renderCB); });
   renderCB();
+
+  /* ---------- escalas: pontuar agora ---------- */
+  function copiarTexto(txt){
+    function fallback(){
+      var ta = document.createElement("textarea");
+      ta.value = txt; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("Copiado"); } catch (e) { toast("Não foi possível copiar"); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(function(){ toast("Copiado"); }, fallback);
+    else fallback();
+  }
+  var SC = { atual: ESCALAS[0].id, resp: {}, estado: {}, vitais: {} };
+  function scZerar(e){
+    SC.resp[e.id] = {};
+    SC.estado[e.id] = e.variantes ? { vm: true } : {};
+    if (e.idades) SC.estado[e.id].idade = e.idades[e.idades.length - 1].id;
+    SC.vitais[e.id] = {};
+  }
+  ESCALAS.forEach(scZerar);
+  var scTabs = $("scTabs"), scCorpo = $("scCorpo");
+  function scLimites(basal){
+    if (!(basal > 0)) return "Informe o valor basal (o valor mais frequente dos últimos 5 dias) para ver os limites.";
+    return "<b>+20%</b> (1 ponto) a partir de " + CALC.fmtBR(basal * 1.2) + " · <b>+50%</b> (2 pontos) a partir de " + CALC.fmtBR(basal * 1.5);
+  }
+  function scBloqueio(e){
+    if (!e.requer) return null;
+    var v = SC.resp[e.requer.escala] && SC.resp[e.requer.escala].nivel;
+    return (v != null && e.requer.inaptos.indexOf(v) >= 0) ? e.requer.texto : null;
+  }
+  function scRender(){
+    scTabs.innerHTML = "";
+    ESCALAS.forEach(function(e){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "sc-tab" + (e.id === SC.atual ? " on" : "");
+      b.setAttribute("role", "tab"); b.setAttribute("aria-selected", e.id === SC.atual ? "true" : "false");
+      b.textContent = e.curto;
+      b.addEventListener("click", function(){ SC.atual = e.id; scRender(); });
+      scTabs.appendChild(b);
+    });
+    scCorpo.innerHTML = "";
+    ESCALAS.forEach(function(e){ scCorpo.appendChild(scPainel(e)); });
+  }
+  function scPainel(e){
+    var p = document.createElement("div");
+    p.className = "sc-painel"; p.id = "sc-" + e.id; p.hidden = e.id !== SC.atual;
+    var est = SC.estado[e.id], resp = SC.resp[e.id], bloq = scBloqueio(e);
+    var h = '<div class="sc-head"><b>' + e.nome + '</b> <span class="tag ' + (e.traducao === "validada" ? "t-ok" : "t-warn") + '">' + e.seloTraducao + '</span>' +
+      (e.selo ? ' <span class="tag t-prop">' + e.selo + '</span>' : '') +
+      (e.refs && e.refs.length ? ' ' + e.refs.map(function(n){ return '<a class="cite" href="#ref-' + n + '">' + n + '</a>'; }).join("") : '') + '</div>';
+    if (e.instrucoes && e.instrucoes.length) h += '<details><summary>Como aplicar</summary><div class="dx"><ul>' + e.instrucoes.map(function(t){ return "<li>" + t + "</li>"; }).join("") + '</ul></div></details>';
+    if (e.variantes) h += '<div class="field"><span>' + e.variantes.rotulo + '</span><div class="seg" role="radiogroup">' +
+      '<label><input type="radio" name="scv-' + e.id + '" data-var="1" value="sim"' + (est.vm ? " checked" : "") + '>' + e.variantes.sim + '</label>' +
+      '<label><input type="radio" name="scv-' + e.id + '" data-var="1" value="nao"' + (!est.vm ? " checked" : "") + '>' + e.variantes.nao + '</label></div></div>';
+    if (e.idades) h += '<label class="field"><span>Idade (pontos-âncora)</span><select data-idade="1">' +
+      e.idades.map(function(a){ return '<option value="' + a.id + '"' + (a.id === est.idade ? " selected" : "") + '>' + a.rotulo + '</option>'; }).join("") + '</select></label>';
+    if (bloq) h += '<div class="call c-warn"><b>Não avaliável agora</b>' + bloq + '</div>';
+    if (e.tipo === "total") h += '<label class="field"><span>Total da ' + e.curto + ' (0–10)</span><input type="number" inputmode="numeric" min="0" max="10" step="1" data-total="1" value="' + (resp.total != null ? resp.total : "") + '"></label>';
+    if (e.links && e.links.length) h += '<div class="sc-acoes noprint">' + e.links.map(function(l){ return '<a class="btn" href="' + l.href + '" target="_blank" rel="noopener">' + l.rotulo + '</a>'; }).join("") + '</div>';
+    var grupo = null;
+    CALC.itensAtivos(e, est).forEach(function(it){
+      if (it.grupo && it.grupo !== grupo) { grupo = it.grupo; h += '<div class="sc-grupo">' + grupo + '</div>'; }
+      h += '<fieldset class="sc-item"><legend>' + it.nome + (it.dica ? ' <span class="muted small">' + it.dica + '</span>' : '') + '</legend>';
+      if (it.auto === "variacao") {
+        var vt = SC.vitais[e.id][it.id] || {};
+        h += '<div class="grid g2"><label class="field"><span>' + it.rotuloBasal + '</span><input type="number" inputmode="decimal" min="0" data-vital="' + it.id + '" data-q="basal" value="' + (vt.basal != null ? vt.basal : "") + '"></label>' +
+             '<label class="field"><span>' + it.rotuloAtual + '</span><input type="number" inputmode="decimal" min="0" data-vital="' + it.id + '" data-q="atual" value="' + (vt.atual != null ? vt.atual : "") + '"></label></div>';
+        h += '<div class="sc-anc" data-lim="' + it.id + '">' + scLimites(vt.basal) + '</div>';
+      }
+      if (it.ancoras && est.idade && it.ancoras[est.idade]) h += '<div class="sc-anc"><b>Âncora:</b> ' + it.ancoras[est.idade] + '</div>';
+      it.opcoes.forEach(function(o){
+        var chk = resp[it.id] === o.pontos ? " checked" : "";
+        var rot = (e.sinal && o.pontos > 0 ? "+" : "") + String(o.pontos).replace("-", "−");
+        h += '<label class="sc-opt"><input type="radio" name="sc-' + e.id + '-' + it.id + '" value="' + o.pontos + '"' + chk + ((it.auto || bloq) ? " disabled" : "") + '><span class="pt">' + rot + '</span><span class="tx">' + o.texto + '</span></label>';
+      });
+      h += '</fieldset>';
+    });
+    if (e.niss) h += '<fieldset class="sc-item" data-niss-box hidden><legend>' + e.niss.nome + '</legend>' +
+      e.niss.opcoes.map(function(o){ return '<label class="sc-opt"><input type="radio" name="scn-' + e.id + '" data-niss="1" value="' + o.valor + '"' + (est.niss === o.valor ? " checked" : "") + '><span class="pt">' + o.sigla + '</span><span class="tx">' + o.texto + '</span></label>'; }).join("") + '</fieldset>';
+    h += '<p class="small muted sc-fonte"><b>Fonte:</b> ' + e.fonte + '<br><b>Licença:</b> ' + e.licenca + (e.copyright ? '<br>' + e.copyright : '') + '</p>';
+    h += '<div class="out sc-res" aria-live="polite"></div><div class="sc-acoes noprint">' +
+      '<button type="button" class="btn" data-acao="limpar">Limpar</button>' +
+      '<button type="button" class="btn fill" data-acao="copiar">Copiar para o prontuário</button></div>';
+    p.innerHTML = h;
+    p.addEventListener("change", function(ev){
+      var t = ev.target, pref = "sc-" + e.id + "-";
+      if (t.name && t.name.indexOf(pref) === 0) { SC.resp[e.id][t.name.slice(pref.length)] = Number(t.value); scAtualizar(e, p); if (e.id === "rass") scRender(); }
+      else if (t.getAttribute("data-var")) { SC.estado[e.id].vm = t.value === "sim"; scRender(); }
+      else if (t.getAttribute("data-idade")) { SC.estado[e.id].idade = t.value; scRender(); }
+      else if (t.getAttribute("data-niss")) { SC.estado[e.id].niss = t.value; scAtualizar(e, p); }
+    });
+    p.addEventListener("input", function(ev){
+      var t = ev.target;
+      if (t.getAttribute("data-total")) {
+        var v = t.value === "" ? null : Math.round(num(t.value));
+        if (v == null || !isFinite(v) || v < 0 || v > 10) delete SC.resp[e.id].total;
+        else SC.resp[e.id].total = v;
+        scAtualizar(e, p);
+        return;
+      }
+      var id = t.getAttribute("data-vital");
+      if (!id) return;
+      var vt = SC.vitais[e.id][id] = SC.vitais[e.id][id] || {};
+      vt[t.getAttribute("data-q")] = t.value === "" ? null : num(t.value);
+      var lim = p.querySelector('[data-lim="' + id + '"]');
+      if (lim) lim.innerHTML = scLimites(vt.basal);
+      var pts = CALC.pontosVariacao(vt.basal, vt.atual);
+      if (pts == null) delete SC.resp[e.id][id]; else SC.resp[e.id][id] = pts;
+      p.querySelectorAll('input[name="sc-' + e.id + '-' + id + '"]').forEach(function(r){ r.checked = Number(r.value) === pts; });
+      scAtualizar(e, p);
+    });
+    p.addEventListener("click", function(ev){
+      var a = ev.target.getAttribute && ev.target.getAttribute("data-acao");
+      if (a === "limpar") { scZerar(e); scRender(); }
+      if (a === "copiar") copiarTexto(CALC.textoProntuario(e, SC.resp[e.id], SC.estado[e.id], new Date()));
+    });
+    scAtualizar(e, p);
+    return p;
+  }
+  function scAtualizar(e, p){
+    var out = p.querySelector(".sc-res"), s = CALC.somaEscala(e, SC.resp[e.id], SC.estado[e.id]);
+    var nissBox = p.querySelector("[data-niss-box]");
+    if (nissBox) nissBox.hidden = !(s.completo && s.total >= e.niss.de && s.total <= e.niss.ate);
+    if (!s.completo) {
+      out.className = "out sc-res";
+      out.innerHTML = e.tipo === "total"
+        ? '<div class="zone">' + e.curto + ': informe o total, de 0 a 10</div>'
+        : '<div class="zone">' + e.curto + ': faltam ' + s.faltam + (s.faltam === 1 ? " item" : " itens") + '</div><p class="small muted" style="margin:0">Soma parcial: ' + s.total + '</p>';
+      return;
+    }
+    var f = s.faixa, tot = (e.sinal && s.total > 0 ? "+" : "") + String(s.total).replace("-", "−");
+    out.className = "out sc-res " + (f ? f.classe : "");
+    out.innerHTML = '<div class="zone">' + e.curto + ' ' + tot + (f ? ' · ' + f.rotulo : '') + '</div>' + (f && f.texto ? '<p style="margin:0">' + f.texto + '</p>' : '');
+    if (e.id === "comfortb") { cbN.value = s.total; cbR.value = s.total; renderCB(); }
+  }
+  scRender();
 
   /* ---------- calculadora ----------
      mL/h = dose (unid/kg/h) × peso × fator / concentração
