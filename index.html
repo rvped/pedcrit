@@ -380,6 +380,15 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 .sc-opt:has(input:checked) .pt{background:var(--brand);border-color:var(--brand);color:#fff}
 @media (prefers-color-scheme:dark){.sc-opt:has(input:checked) .pt{color:#0f151b}}
 .sc-opt:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:1px}
+/* Foco visível por teclado. O app tinha regra só para campos numéricos e para as
+   opções de escala. O controle segmentado esconde o input (opacity:0), e a barra
+   inferior e o botão do topo usam all:unset — nos três casos o anel do navegador
+   não aparece, deixando quem navega por teclado sem saber onde está.
+   Onde :has() não existir, a reserva já revela o input nativo, que traz o anel próprio. */
+.seg label:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:-2px}
+.bottomnav a:focus-visible,.bottomnav button:focus-visible{outline:2px solid var(--brand);outline-offset:-3px;border-radius:8px}
+.topbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.btn:focus-visible,.drugnav a:focus-visible,.sc-tab:focus-visible,.side a:focus-visible,details>summary:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .sc-opt:has(input:disabled){cursor:default}
 /* Reserva para navegadores sem :has() (WebView Android antigo, Safari < 15.4). Sem ela o rádio
    fica invisível (opacity:0) e marcar um item não dá retorno visual nenhum: a escala fica
