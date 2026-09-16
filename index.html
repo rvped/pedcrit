@@ -3328,6 +3328,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   /* ---------- impressão: abrir recolhidos ---------- */
   var opened = [];
   window.addEventListener("beforeprint", function(){
+    if (opened.length) return; /* captura anterior ainda pendente: não recapturar */
     document.querySelectorAll("details:not([open])").forEach(function(d){ d.open = true; opened.push(d); });
   });
   window.addEventListener("afterprint", function(){ opened.forEach(function(d){ d.open = false; }); opened = []; });
@@ -3335,6 +3336,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   /* ---------- impressão: esvaziar os totais das escalas (não reter escore em PDF) ---------- */
   var totaisImpressao = [];
   window.addEventListener("beforeprint", function(){
+    if (totaisImpressao.length) return; /* captura anterior ainda pendente: não recapturar por cima */
     var campos = document.querySelectorAll('input[data-total="1"], input[data-vital]');
     for (var i = 0; i < campos.length; i++){
       totaisImpressao.push({ el: campos[i], val: campos[i].value });
