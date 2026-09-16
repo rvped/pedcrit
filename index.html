@@ -401,6 +401,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   .sc-opt:has(input:checked){background:none}
   .sc-opt:has(input:checked) .pt{background:none;color:inherit;border-color:#999}
   .seg label:has(input:checked){background:none;color:inherit;font-weight:normal}
+  input[data-total="1"]{color:transparent;-webkit-text-fill-color:transparent}
 }
 </style>
 </head>
@@ -424,7 +425,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   <a href="#avaliar">Avaliar e alvos</a>
   <a href="#escada">Escada de escalonamento</a>
   <a href="#farmacos">Fármacos</a>
-  <a href="#calc">Calculadora de infusão</a>
+  <a href="#calc">Calculadora de doses</a>
   <a href="#especiais">Situações especiais</a>
   <a href="#desmame">Desmame e abstinência</a>
   <a href="#delirium">Delirium</a>
@@ -685,7 +686,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
           <li>&gt;5 dias: considerar rodízio para morfina ou hidromorfona, se rim permitir</li>
         </ul></div>
       </div>
-      <div class="dil"><b>Diluição:</b> 500 mcg (10 mL de 50 mcg/mL) + 40 mL SF 0,9% → <b>10 mcg/mL</b></div>
+      <div class="dil"><b>Diluição da v2.0 (referência):</b> 500 mcg (10 mL de 50 mcg/mL) + 40 mL SF 0,9% → <b>10 mcg/mL</b></div>
       <details><summary>Por quê — farmacologia e evidência</summary><div class="dx">
         <p>Agonista µ puro, 80–100× mais potente que a morfina, muito lipofílico (entra rápido no SNC). Metabolismo hepático (CYP3A4) em norfentanil e hidroxifentanil, <b>inativos</b>. A morfina gera M3G e M6G, hidrossolúveis e ativos, que acumulam na disfunção renal.</p>
         <p><b>Dependência ≠ transtorno por uso.</b> Dependência fisiológica e tolerância compartilham fisiopatologia com o transtorno por uso de substância, mas a abordagem é outra (AAP 2025).</p>
@@ -720,7 +721,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
           <li><span class="tag t-prop">proposta</span> Febre ou hipertermia que não cede ao resfriamento: suspeitar da dexmedetomidina e suspender. Após 24 h há tolerância e taquifilaxia, com mais efeitos adversos dose-dependentes (bula FDA)<a class="cite" href="#ref-39">39</a></li>
         </ul></div>
       </div>
-      <div class="dil"><b>Diluição:</b> 200 mcg (2 mL de 100 mcg/mL) + 48 mL SF 0,9% → <b>4 mcg/mL</b></div>
+      <div class="dil"><b>Diluição da v2.0 (referência):</b> 200 mcg (2 mL de 100 mcg/mL) + 48 mL SF 0,9% → <b>4 mcg/mL</b></div>
       <details><summary>Por quê — farmacologia e o que a evidência de 2025 mostra</summary><div class="dx">
         <p>Agonista alfa-2 muito seletivo (α2:α1 ≈ 1.600:1). No <i>locus coeruleus</i> produz EEG parecido com sono não REM; no corno dorsal, analgesia leve. Metabolismo hepático (glicuronidação direta e CYP2A6), metabólitos inativos. O bolus estimula receptores α2B vasculares periféricos (vasoconstrição) antes da simpatólise central — daí a hipertensão e a bradicardia reflexa.</p>
         <p><b>Bradicardia:</b> queda de 10%, 15% e 24% na FC com 0,25, 0,5 e 0,75 mcg/kg/h em lactentes após cirurgia cardíaca.</p>
@@ -770,7 +771,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
           <li>Clearance muito variável → titular por escore</li>
         </ul></div>
       </div>
-      <div class="dil"><b>Diluição:</b> 500 mg (10 mL de 50 mg/mL) + 40 mL SF 0,9% → <b>10 mg/mL</b></div>
+      <div class="dil"><b>Diluição da v2.0 (referência):</b> 500 mg (10 mL de 50 mg/mL) + 40 mL SF 0,9% → <b>10 mg/mL</b></div>
       <details><summary>Por quê — farmacologia e evidência</summary><div class="dx">
         <p>Antagonista não competitivo do receptor NMDA, com ação em receptores opioides e monoaminérgicos. Simpatomimética indireta (sustenta PA e débito). Metabolismo hepático (CYP3A4/CYP2B6) em norcetamina, ativa.</p>
         <p><span class="tag t-prop">proposta</span> O efeito simpatomimético é indireto; a cetamina tem ação inotrópica negativa direta, que pode aparecer quando as reservas de catecolaminas estão esgotadas (choque prolongado). Isso ajuda a explicar a hipotensão frequente na série abaixo.</p>
@@ -813,7 +814,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
           <li>Tende a ser <b>subdosada</b>, não superdosada</li>
         </ul></div>
       </div>
-      <div class="dil"><b>Diluição:</b> 150 mcg (1 mL de 150 mcg/mL) + 49 mL SF 0,9% → <b>3 mcg/mL</b></div>
+      <div class="dil"><b>Diluição da v2.0 (referência):</b> 150 mcg (1 mL de 150 mcg/mL) + 49 mL SF 0,9% → <b>3 mcg/mL</b></div>
       <details><summary>Por quê — farmacocinética e evidência</summary><div class="dx">
         <p>Alfa-2 com seletividade α2:α1 ≈ 200:1 (bem menor que a da dexmedetomidina; mais componente α1 vascular).</p>
         <ul>
@@ -852,7 +853,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
           <li>Somar o volume e as calorias ao balanço</li>
         </ul></div>
       </div>
-      <div class="dil"><b>Diluição:</b> não diluir → <b>10 mg/mL</b></div>
+      <div class="dil"><b>Diluição da v2.0 (referência):</b> não diluir → <b>10 mg/mL</b></div>
       <details><summary>Por quê — PRIS e risco real</summary><div class="dx">
         <p>Agonista GABA-A de início e término rápidos. A PRIS é toxicidade mitocondrial: desacopla a cadeia respiratória e bloqueia o metabolismo de ácidos graxos e acilcarnitinas.</p>
         <p>A série de Bray (1998)<a class="cite" href="#ref-22">22</a> descreveu 18 casos pediátricos, todos com &gt;4 mg/kg/h por &gt;48 h. Uma coorte de 25 anos (Mayo Clinic, 2000–2024) com 554 crianças (mediana 3,0 mg/kg/h por 22,8 h) teve 1 caso (0,2%) e nenhuma morte atribuível, mas bradicardia em 26% e acidose metabólica em 3,4%.<a class="cite" href="#ref-43">43</a> Na UTI cardíaca do mesmo centro, 641 pós-operatórios (mediana 1,2 mg/kg/h) não tiveram nenhum caso.<a class="cite" href="#ref-44">44</a> São dados retrospectivos de um único centro. Isso contextualiza o risco, mas não autoriza passar da janela; o rótulo do FDA mantém advertência contra sedação contínua em UTI pediátrica. Emulsão lipídica é meio de cultura — daí a troca a cada 12 h.</p>
@@ -883,7 +884,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
           <li><b>LRA:</b> metabólito ativo acumula → reduzir dose, esperar despertar tardio, considerar trocar</li>
         </ul></div>
       </div>
-      <div class="dil"><b>Diluição:</b> 50 mg (10 mL de 5 mg/mL) + 40 mL SF 0,9% → <b>1 mg/mL</b></div>
+      <div class="dil"><b>Diluição da v2.0 (referência):</b> 50 mg (10 mL de 5 mg/mL) + 40 mL SF 0,9% → <b>1 mg/mL</b></div>
       <details><summary>Por quê — metabólitos e carga cumulativa</summary><div class="dx">
         <p>CYP3A4 → alfa-hidroxi-midazolam (<b>ativo</b>) → glicuronidado a alfa-hidroxi-midazolam-glicuronídeo (<b>também ativo</b>, eliminação renal). Na LRA esse glicuronídeo sobe — mecanismo clássico da “sedação prolongada inexplicada”.</p>
         <p>PANDEM 2022: minimizar sedação baseada em BZD para reduzir delirium (evidência moderada). Cargas cumulativas pré-desmame associadas a mais abstinência: média 16,0 mg/kg (Best 2015)<a class="cite" href="#ref-28">28</a> e 24 mg/kg no grupo WAT-1 positivo (Amigoni). São ordens de grandeza para alarme, não limiares validados.</p>
@@ -3156,14 +3157,11 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
   /* ---------- fármaco → calculadora ---------- */
   document.querySelectorAll("article.drug[id^='d-']").forEach(function(art){
-    var row = $("row-" + art.id.slice(2)), dil = art.querySelector(".dil");
-    if (!row || !dil) return;
+    var id = art.id.slice(2), dil = art.querySelector(".dil");
+    if (!dil || !$("fc-" + id)) return;
     var b = document.createElement("button");
-    b.type = "button"; b.className = "btn tocalc noprint"; b.textContent = "Calcular mL/h →";
-    b.addEventListener("click", function(){
-      row.querySelector('[data-k="on"]').checked = true; calc();
-      row.scrollIntoView({behavior:"smooth", block:"center"});
-    });
+    b.type = "button"; b.className = "btn tocalc noprint"; b.textContent = "Calcular dose →";
+    b.addEventListener("click", function(){ abrirFarmaco(id); });
     dil.insertAdjacentElement("afterend", b);
   });
 
