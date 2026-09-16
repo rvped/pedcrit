@@ -1426,10 +1426,147 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         "# Cada " + fmtBR(r.vazao) + " mL/h = " + fmtBR(r.doseReal) + " " + u + " · cada 1 mL/h = " + fmtBR(r.porMlh) + " " + u
       ].join("\n");
     }
+    function bolus(b, doseKg, peso, opc){
+      opc = opc || {};
+      var u = partesDose(b.unidade);
+      var conc = opc.conc != null ? opc.conc : b.conc.valor;
+      var dose = doseKg * peso;
+      var r = { doseCalculada: dose, limitada: null, alertas: [] };
+      if (b.max) { var mx = b.max.valor * massaFator(b.max.massa, u.massa); if (dose > mx + EPS) { dose = mx; r.limitada = "max"; r.alertas.push("limitada à dose máxima (" + fmtBR(b.max.valor) + " " + b.max.massa + ")"); } }
+      if (b.min) { var mn = b.min.valor * massaFator(b.min.massa, u.massa); if (dose < mn - EPS) { dose = mn; r.limitada = "min"; r.alertas.push("elevada à dose mínima (" + fmtBR(b.min.valor) + " " + b.min.massa + ")"); } }
+      var fm = massaFator(u.massa, b.conc.massa);
+      var concUso = b.diluicao ? conc * b.diluicao.mlMed / (b.diluicao.mlMed + b.diluicao.mlSF) : conc;
+      r.dose = dose; r.concUso = concUso; r.diluicao = b.diluicao || null;
+      r.mL = arredondarBolus(dose * fm / concUso);
+      r.doseReal = r.mL * concUso / fm;
+      return r;
+    }
+    function enteral(e, doseKg, peso, intervaloH){
+      var u = partesDose(e.unidade);
+      var dose = doseKg * peso, porDia = 24 / intervaloH;
+      var r = { dose: dose, doseDia: dose * porDia, doseKgDia: doseKg * porDia, comprimidos: [], alertas: [] };
+      (e.alertasDose || []).forEach(function(a){
+        if (dose > a.acima * massaFator(a.massa, u.massa) + EPS) r.alertas.push(a.texto);
+      });
+      (e.alertasKgDia || []).forEach(function(a){
+        if (r.doseKgDia > a.acima + EPS) r.alertas.push(a.texto);
+      });
+      (e.apresentacoes || []).forEach(function(a){
+        var n = dose * massaFator(u.massa, a.massa) / a.valor;
+        r.comprimidos.push({ apresentacao: a, quantidade: Math.round(n * 4 + EPS) / 4, exato: n });
+      });
+      return r;
+    }
+    /* Metadona: regra de Steineck 2014 por dias de fentanil e dose cumulativa,
+       com a dose PBPK de Hoop-Sommen 2026 (razão 1:10) ao lado. Sempre de 6/6 h. */
+    function metadonaInicial(dias, cumulativaMcgKg, fentMcgKgH, peso){
+      var cum = (cumulativaMcgKg == null || !isFinite(cumulativaMcgKg)) ? null : cumulativaMcgKg;
+      var r = { faixa: "baixa", mgKgDose: 0.1, mgDose: 0, mgDia: 0, pbpk: null, divergente: false, alertas: [] };
+      if (dias < 5 && (cum == null || cum < 1500)) { r.faixa = "nao-converter"; r.mgKgDose = 0; }
+      else if (dias > 15 || (cum != null && cum >= 2500)) { r.faixa = "alta"; r.mgKgDose = 0.2; }
+      r.mgDose = r.mgKgDose * peso;
+      r.mgDia = r.mgDose * 4;
+      var pbpkDia = 10 * (fentMcgKgH * peso * 24 / 1000);
+      r.pbpk = { mgDose: pbpkDia / 4, mgKgDose: peso > 0 ? pbpkDia / 4 / peso : 0 };
+      if (r.mgKgDose > 0 && Math.abs(r.pbpk.mgKgDose - r.mgKgDose) / r.mgKgDose > 0.5 + EPS) r.divergente = true;
+      if (r.mgDose > 10 + EPS) r.alertas.push("acima de 10 mg/dose (" + fmtBR(r.mgDose) + " mg): teto publicado — conferir com a farmácia clínica");
+      if (r.mgKgDose * 4 > 0.7 + EPS) r.alertas.push("acima de 0,7 mg/kg/dia (" + fmtBR(r.mgKgDose * 4) + " mg/kg/dia): teto do protocolo de Roterdã — vigiar sedação excessiva");
+      if (r.divergente) r.alertas.push("a dose PBPK (" + fmtBR(r.pbpk.mgKgDose) + " mg/kg/dose) difere mais de 50% da dose da regra: decidir com a farmácia clínica");
+      return r;
+    }
+    /* Lorazepam: van der Vossen 2018 — lorazepam VO/dia = midazolam IV/dia ÷ 12, em 4 tomadas. */
+    function lorazepamDeMidazolam(midMgKgH, peso){
+      var mgDia = midMgKgH * peso * 24 / 12, mgDose6h = mgDia / 4;
+      var r = { mgDia: mgDia, mgDose6h: mgDose6h, mgKgDose: peso > 0 ? mgDose6h / peso : 0, alertas: [] };
+      if (mgDose6h > 4 + EPS) r.alertas.push("acima de 4 mg/dose (" + fmtBR(mgDose6h) + " mg): teto publicado — revisar com a farmácia clínica");
+      else if (mgDose6h > 2 + EPS) r.alertas.push("acima de 2 mg/dose (" + fmtBR(mgDose6h) + " mg): acima do usual — conferir");
+      return r;
+    }
+    /* Clonidina: dose inicial por idade (Liu 2020, Heifner 2026, Kelner 2026);
+       ao lado, a dose proporcional à dexmedetomidina 1:10 de Phillips 2025. */
+    function clonidinaInicial(idadeMeses, dexMcgKgH, peso){
+      var mcgKgDose = idadeMeses < 6 ? 1 : 2, prop = 10 * dexMcgKgH / 4;
+      var r = {
+        mcgKgDose: mcgKgDose, mcgDose: mcgKgDose * peso, teto: 3, alertas: [],
+        proporcional: { mcgKgDose: prop, mcgDose: prop * peso, acimaDoTeto: prop > 3 + EPS }
+      };
+      if (r.proporcional.acimaDoTeto) r.alertas.push("a dose proporcional à dexmedetomidina (" + fmtBR(prop) + " mcg/kg/dose) passa do teto de 3 mcg/kg/dose: limitar a 3 e escalonar por escore");
+      return r;
+    }
+    /* Desmame da clonidina (Liu 2020): 6/6 h ×4 → 8/8 h ×3 → 12/12 h ×2 → 24 h ×1 → suspender. */
+    function cronogramaClonidina(mcgDose){
+      var blocos = [[4, 6], [3, 8], [2, 12], [1, 24]], linhas = [], hora = 0, n = 0, i, k;
+      for (i = 0; i < blocos.length; i++) {
+        for (k = 0; k < blocos[i][0]; k++) {
+          if (n > 0) hora += blocos[i][1];
+          n++;
+          linhas.push({ n: n, horaInicio: hora, intervaloH: blocos[i][1], mcg: mcgDose });
+        }
+      }
+      return linhas;
+    }
+    function faixaTotal(total, faixas){
+      var f = null;
+      (faixas || []).forEach(function(x){ if (total >= x.min && total <= x.max) f = x; });
+      return f;
+    }
+    function aplicarAjustes(base, ajustes, ctx){
+      var r = {}, k;
+      for (k in base) r[k] = base[k];
+      ["neo", "lra"].forEach(function(c){
+        var a = ajustes && ajustes[c];
+        if (!ctx || !ctx[c] || !a) return;
+        if (a.faixa) r.faixa = a.faixa.slice();
+        if (a.teto != null) r.teto = r.teto != null ? Math.min(r.teto, a.teto) : a.teto;
+        if (a.padrao != null) r.padrao = a.padrao;
+      });
+      return r;
+    }
+    function itensAtivos(esc, estado){
+      estado = estado || {};
+      return (esc.itens || []).filter(function(it){
+        if (!it.somenteSe) return true;
+        for (var k in it.somenteSe) if (estado[k] !== it.somenteSe[k]) return false;
+        return true;
+      });
+    }
+    function somaEscala(esc, resp, estado){
+      resp = resp || {};
+      if (esc.tipo === "total") {
+        var t = resp.total, ok = t != null && isFinite(t);
+        return { total: ok ? t : 0, completo: ok, faltam: ok ? 0 : 1, faixa: ok ? faixaTotal(t, esc.faixas) : null };
+      }
+      var total = 0, faltam = 0;
+      itensAtivos(esc, estado).forEach(function(it){
+        var v = resp[it.id];
+        if (v == null) faltam++; else total += v;
+      });
+      return { total: total, completo: faltam === 0, faltam: faltam, faixa: faltam ? null : faixaTotal(total, esc.faixas) };
+    }
+    function pontosVariacao(basal, atual){
+      if (!(basal > 0) || !(atual >= 0)) return null;
+      var p = (atual - basal) / basal;
+      return p >= 0.5 - EPS ? 2 : (p >= 0.2 - EPS ? 1 : 0);
+    }
+    function dois(n){ return ("0" + n).slice(-2); }
+    function textoProntuario(esc, resp, estado, data){
+      var s = somaEscala(esc, resp, estado);
+      var tot = esc.sinal && s.total > 0 ? "+" + s.total : String(s.total).replace("-", "−");
+      var txt = esc.curto + " " + tot + " (" + (s.faixa ? s.faixa.rotulo : "incompleta") + ")";
+      var ativos = itensAtivos(esc, estado);
+      if (ativos.length > 1) txt += " [" + ativos.map(function(it){ return it.curto + " " + (resp[it.id] == null ? "?" : resp[it.id]); }).join(", ") + "]";
+      if (estado && estado.niss) txt += " · NISS " + estado.niss;
+      return txt + " · " + dois(data.getDate()) + "/" + dois(data.getMonth() + 1) + " " + dois(data.getHours()) + ":" + dois(data.getMinutes());
+    }
     return {
       massaFator: massaFator, partesDose: partesDose, arredondarVolume: arredondarVolume,
       arredondarBolus: arredondarBolus, classificar: classificar, diluirIC: diluirIC,
-      titulacao: titulacao, fmtBR: fmtBR, textoPrescricaoIC: textoPrescricaoIC
+      titulacao: titulacao, fmtBR: fmtBR, textoPrescricaoIC: textoPrescricaoIC,
+      bolus: bolus, enteral: enteral, metadonaInicial: metadonaInicial,
+      lorazepamDeMidazolam: lorazepamDeMidazolam, clonidinaInicial: clonidinaInicial,
+      cronogramaClonidina: cronogramaClonidina, faixaTotal: faixaTotal,
+      aplicarAjustes: aplicarAjustes, itensAtivos: itensAtivos, somaEscala: somaEscala,
+      pontosVariacao: pontosVariacao, textoProntuario: textoProntuario
     };
   })();
   /* ===== CALC-CORE:END ===== */
