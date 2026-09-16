@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e5f78">
-<meta name="description" content="PedCrit — ferramenta de beira-leito para UTI pediátrica, emergência e pronto-socorro: escalas, doses por peso e o Protocolo de Analgossedação da UTIP (HGVC v2.0)">
+<meta name="description" content="PedCrit — seu companheiro no plantão: escalas para marcar, calculadora de doses por peso e condutas de analgossedação em UTI pediátrica, emergência e pronto-socorro">
 <meta name="robots" content="noindex">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -437,7 +437,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 <header class="topbar">
   <div class="grow">
     <h1>PedCrit</h1>
-    <div class="sub">Protocolo de Analgossedação da UTIP (HGVC v2.0) · versão de bolso</div>
+    <div class="sub">Seu companheiro no plantão</div>
   </div>
   <span class="pill-top">Confira doses</span>
   <button type="button" class="topbtn" id="shareBtn" aria-label="Compartilhar ou instalar"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
@@ -461,7 +461,6 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   <div class="grp">Consulta</div>
   <a href="#fundamentos">Fundamentos</a>
   <a href="#certeza">Grau de certeza</a>
-  <a href="#revisao">Notas desta versão</a>
   <a href="#refs">Referências</a>
   <a href="#instalar">Instalar e compartilhar</a>
 </nav>
@@ -472,7 +471,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 <section class="sec" id="inicio">
   <div class="hero">
     <p><b>Como usar.</b> A parte de cima de cada seção é o que se faz à beira-leito. O “porquê” (farmacologia, fisiopatologia e evidência) fica recolhido em <b>Por quê</b> — abra quando precisar. Para usar sem internet, <a href="#instalar">instale no celular ou no computador</a>.</p>
-    <div class="legend-prop" style="margin-top:6px"><span class="tag t-prop">proposta</span><span class="muted">= complemento desta versão web que <b>não está no texto aprovado v2.0</b>; validar com a coordenação antes de adotar.</span></div>
+    <div class="legend-prop" style="margin-top:6px"><span class="tag t-prop">proposta</span><span class="muted">= acréscimo desta edição, além do texto-base; confira antes de adotar na sua rotina.</span></div>
   </div>
 
   <div class="sec-head"><span class="n">00</span><h2>Em 30 segundos</h2></div>
@@ -1232,84 +1231,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   <p class="small muted">Nenhuma linha substitui reavaliação clínica. Divergência fundamentada da equipe deve ser registrada em prontuário, não silenciada pelo protocolo.</p>
 </section>
 
-<section class="sec" id="revisao">
-  <div class="sec-head"><span class="n">13</span><h2>Notas desta edição web</h2></div>
-  <p class="sec-lead">Edição de 15/09/2026 sobre o texto aprovado v2.0.</p>
-  <div class="card">
-    <h3>Harmonizado (sem mudar conduta)</h3>
-    <ul>
-      <li><b>Teto da clonidina:</b> 2 mcg/kg/h de rotina, 3 absoluto, 1 na LRA (o texto trazia 3 e 2 em seções diferentes).</li>
-      <li><b>CAPD:</b> 1×/turno (o texto trazia “1×/turno” e “diário”).</li>
-      <li><b>Clonidina</b> mostrada como alternativa à dexmedetomidina, fora da escada.</li>
-      <li><b>BRAIN MAPS:</b> a letra I inclui infecção e inflamação.</li>
-      <li><b>Cetamina no choque:</b> preferencial, com vigilância de PA (hipotensão em 54% na série citada).</li>
-      <li><b>Situação regulatória da dexmedetomidina</b> conferida nas bulas do FDA e brasileira.</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Referências</h3>
-    <p>As 34 referências do texto foram localizadas no PubMed e tiveram os dados bibliográficos conferidos; as citações incompletas foram completadas. Afirmações que estavam sem fonte receberam referência: RCT de titulação pela COMFORT-B<a class="cite" href="#ref-36">36</a>, estudo de rodízio<a class="cite" href="#ref-37">37</a> e troca de midazolam por lorazepam<a class="cite" href="#ref-38">38</a>.</p>
-    <p class="small">A coorte de 25 anos com 554 crianças em propofol, antes sem fonte, foi identificada (Fashina, Mayo Clinic).<a class="cite" href="#ref-43">43</a></p>
-  </div>
-  <div class="card">
-    <h3>Varredura de evidência 2025–2026 (PubMed, 15/09/2026)</h3>
-    <ul>
-      <li><b>Nenhuma errata ou atualização</b> da PANDEM 2022 nem do relatório da AAP 2025. A errata da PALICC-2 (2024) corrige uma fórmula da Tabela 4 e não afeta sedação ou bloqueio.</li>
-      <li><b>Em elaboração:</b> diretriz europeia GRADE sobre dor, agitação, delirium e abstinência em crianças criticamente enfermas (protocolo publicado).<a class="cite" href="#ref-51">51</a> Revisar este documento quando sair.</li>
-      <li><b>Acrescentado:</b> desfecho neurocognitivo tardio por esquema sedativo<a class="cite" href="#ref-46">46</a>, RCT dexmedetomidina vs midazolam<a class="cite" href="#ref-47">47</a>, oportunidades de desmame<a class="cite" href="#ref-48">48</a>, momento de risco de abstinência e morfina<a class="cite" href="#ref-49">49</a>, escalas de delirium<a class="cite" href="#ref-50">50</a> sinais pediátricos de PRIS<a class="cite" href="#ref-45">45</a> e sedação sob bloqueio neuromuscular.<a class="cite" href="#ref-52">52</a></li>
-      <li><b>Conferência no OpenEvidence (15/09/2026):</b> 4 perguntas, nenhuma contradição com as condutas. Correção: o alvo de TOF passou de 1–2 para 1–3 respostas, como no texto da PANDEM.<a class="cite" href="#ref-1">1</a> Acrescentados a troca de fentanil por hidromorfona<a class="cite" href="#ref-53">53</a> e uma segunda coorte de conversão para benzodiazepínico enteral.<a class="cite" href="#ref-54">54</a></li>
-      <li><b>Conferência no Medscape e nas bulas do FDA (15/09/2026):</b> o teto da dexmedetomidina (1,5 mcg/kg/h) é o máximo da faixa pediátrica aprovada, e as doses pediátricas de rocurônio conferem. Acrescentados os alertas de hipertermia e tolerância após 24 h da dexmedetomidina<a class="cite" href="#ref-39">39</a> e, no rocurônio, os de uso prolongado, miopatia com corticoide e sequência rápida.<a class="cite" href="#ref-40">40</a></li>
-      <li><b>Nada encontrado que contradiga</b> as condutas centrais do protocolo; os achados reforçam minimizar BZD e desmamar ativamente.</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Mudanças desta rodada (PedCrit)</h3>
-    <ul>
-      <li><b>Nome:</b> o aplicativo passa a se chamar <b>PedCrit</b>, para refletir o uso também na emergência e no pronto-socorro. O título do protocolo continua "Protocolo de Analgossedação da UTIP (HGVC v2.0)". Endereço fixo novo: <b>rvped.github.io/pedcrit</b>.</li>
-      <li><b>Seção 02 · "Pontuar agora":</b> sete painéis — COMFORT-B (com NISS), RASS, WAT-1, WAT-A2A, CAPD, FLACC e escala numérica. Soma automática, leitura pelo protocolo e texto para o prontuário. Nada fica salvo no aparelho.</li>
-      <li><b>Seção 05 · "Calculadora de doses":</b> substitui a calculadora de infusão. São 17 fármacos, com infusão contínua preparada para 24 h em múltiplos de 12 mL e medicação em até 50% do volume, bólus com as diluições do serviço e via enteral no desmame.</li>
-      <li><b>Metadona:</b> o intervalo de 4/4 h foi <b>removido</b>. Nenhum protocolo pediátrico publicado usa 4/4 h, e a meia-vida longa torna esse intervalo injustificável.<a class="cite" href="#ref-75">75</a><a class="cite" href="#ref-76">76</a> A resposta ao fentanil alto é aumentar a dose mantendo 6/6 h. Abaixo de 5 dias de fentanil, não se converte.</li>
-      <li><b>Lorazepam:</b> o teto único de 2 mg/dose virou <b>aviso em 2 mg e alerta em 4 mg</b>, que é o teto publicado.<a class="cite" href="#ref-79">79</a> A dose sai da regra ÷12 ÷4, de 6/6 h.<a class="cite" href="#ref-38">38</a></li>
-      <li><b>Clonidina enteral:</b> 3 mcg/kg/dose era dose de topo, não de início. A dose inicial passou a ser <b>por idade</b> — 1 mcg/kg/dose abaixo de 6 meses e 2 acima —, com escalonamento até o teto de 3.<a class="cite" href="#ref-80">80</a><a class="cite" href="#ref-81">81</a><a class="cite" href="#ref-83">83</a></li>
-      <li><b>Atropina:</b> a dose mínima de 0,1 mg passou a valer <b>só na bradicardia</b>; na pré-intubação não há mínimo.<a class="cite" href="#ref-55">55</a></li>
-      <li><b>Midazolam:</b> teto de 0,3 mg/kg/h, com a faixa de 0,3 a 0,4 marcada como zona de exceção que exige adjuvante, e alerta forte acima de 0,4.<a class="cite" href="#ref-88">88</a></li>
-      <li><b>Noradrenalina:</b> o cálculo e o rótulo passaram a ser explicitamente pela <b>base</b>.<a class="cite" href="#ref-63">63</a></li>
-      <li><b>Referências:</b> 54 → 100.</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3><span class="tag t-prop">proposta</span> Aguardando validação da coordenação</h3>
-    <ul>
-      <li>Limiares da FLACC e da escala numérica (tratar se ≥ 4) e ponto de corte do CAPD (≥ 9)</li>
-      <li>Alvo de TOF 1–3/4 (PANDEM) e doses de rocurônio da bula</li>
-      <li>Paracetamol adjuvante no pós-operatório</li>
-      <li>Conversão midazolam IV → lorazepam VO (÷12) e desmame de −10% a cada 24–48 h</li>
-      <li>Estratificação da metadona por dias e por dose cumulativa de fentanil, e a dose PBPK exibida ao lado</li>
-      <li>Dose inicial de clonidina enteral por idade e cronograma de desmame em 4 dias</li>
-      <li>Critério de oportunidade de desmame (0–1 dose SN em 12 h)</li>
-      <li>Não usar dexmedetomidina como sedativo único sob bloqueio neuromuscular</li>
-      <li>Preparar adrenalina e noradrenalina para 24 h (estabilidade fora da bula) e permitir SF 0,9% protegido da luz</li>
-      <li>Validar a calculadora com a farmácia clínica em 3, 15 e 40 kg, com as apresentações usadas no HGVC</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Pendências de licença das escalas</h3>
-    <p class="small">O site é público. Enquanto estas autorizações não saírem, valem as restrições abaixo.</p>
-    <ul>
-      <li><b>FLACC:</b> licença institucional da Universidade de Michigan para ativar a FLACCr interativa. Enquanto isso, o painel é informativo e <b>não reproduz os descritores</b>.<a class="cite" href="#ref-100">100</a></li>
-      <li><b>WAT-1:</b> permissão de Franck e Curley para republicação externa à instituição. O texto está reproduzido sem modificação, com o copyright.<a class="cite" href="#ref-24">24</a></li>
-      <li><b>WAT-A2A:</b> autorização de Solodiuk e Curley para corrigir os erros tipográficos da fonte. Licença CC BY-NC-ND: o texto está reproduzido como está.<a class="cite" href="#ref-95">95</a></li>
-      <li><b>COMFORT-B:</b> autorização de Ista e van Dijk (Erasmus MC). A tradução brasileira não passou por adaptação transcultural formal.<a class="cite" href="#ref-93">93</a></li>
-      <li><b>CAPD:</b> confirmação por escrito com Chane Traube.<a class="cite" href="#ref-97">97</a></li>
-      <li><b>NISS:</b> não existe versão em português. A do aplicativo é tradução livre, não validada, e está rotulada como tal.<a class="cite" href="#ref-23">23</a></li>
-      <li>Nenhuma das versões brasileiras da FLACC, COMFORT-B, WAT-1, CAPD, RASS e WAT-A2A tem validação psicométrica completa publicada.</li>
-      <li><b>Leitura pendente:</b> texto integral do relatório da AAP 2025<a class="cite" href="#ref-25">25</a> e da PANDEM 2022<a class="cite" href="#ref-1">1</a> por acesso institucional, para revisar metadona e lorazepam.</li>
-    </ul>
-  </div>
-</section>
-
 <section class="sec" id="refs">
-  <div class="sec-head"><span class="n">14</span><h2>Referências</h2></div>
+  <div class="sec-head"><span class="n">13</span><h2>Referências</h2></div>
   <div class="card">
   <details><summary>Mostrar as 100 referências</summary>
   <ol class="refs">
@@ -1414,17 +1337,15 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <li id="ref-99">Silva FC, Thuler LCS. Tradução e adaptação transcultural de duas escalas para avaliação da dor em crianças e adolescentes. <i>J Pediatr (Rio J).</i> 2008;84(4):344-349. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/18688551/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1590/S0021-75572008000400010" target="_blank" rel="noopener">DOI</a></span></li>
     <li id="ref-100">University of Michigan Innovation Partnerships. Face, Legs, Activity, Cry, Consolability observational tool as a measure of pain — condições de licenciamento. Acessado em 15/09/2026. <span class="rl"><a href="https://available-inventions.umich.edu/product/face-legs-activity-cry-consolability-observational-tool-as-a-measure-of-pain" target="_blank" rel="noopener">Univ. Michigan</a></span></li>
   </ol>
-  <p class="small muted">35–52 acrescentadas nesta edição web (43–52 na varredura de 15/09/2026).</p>
   </details>
   </div>
   <div class="foot">
-    <p><b>Documento de apoio à decisão clínica.</b> Não substitui julgamento individualizado à beira-leito nem a conferência de doses na apresentação farmacêutica disponível. Doses de metadona e conversões opioides devem ser validadas com a farmácia clínica antes da prescrição. O uso de dexmedetomidina para sedação em UTI pediátrica é off-label.</p>
-    <p>UTI Pediátrica — Hospital Geral de Vitória da Conquista · Protocolo v2.0, setembro/2026 · Próxima revisão: setembro/2027 · Edição web de 15/09/2026.</p>
+    <p><b>Documento de apoio à decisão clínica.</b> Não substitui julgamento individualizado à beira-leito nem a conferência de doses na apresentação farmacêutica disponível.</p>
   </div>
 </section>
 
 <section class="sec" id="instalar">
-  <div class="sec-head"><span class="n">15</span><h2>Instalar e compartilhar</h2></div>
+  <div class="sec-head"><span class="n">14</span><h2>Instalar e compartilhar</h2></div>
   <div class="card">
     <div class="qrbox">
       <img src="qr.svg" alt="QR code do endereço do protocolo" width="200" height="200">
@@ -1471,7 +1392,6 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <a href="#casos" data-close>Casos rápidos</a>
     <a href="#fundamentos" data-close>Fundamentos</a>
     <a href="#certeza" data-close>Grau de certeza</a>
-    <a href="#revisao" data-close>Notas desta versão</a>
     <a href="#refs" data-close>Referências</a>
     <a href="#instalar" data-close>Instalar e compartilhar</a>
   </div>
@@ -1489,7 +1409,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
   /* ===== DADOS:BEGIN ===== */
   /* Valores conferidos nas pesquisas A (ressuscitação), B (vasoativos) e C (desmame)
-     de docs/pesquisas/2026-09-15/. As referências são os <li id="ref-N"> da seção 14. */
+     de docs/pesquisas/2026-09-15/. As referências são os <li id="ref-N"> da seção 13. */
   var FARMACOS = [
   {
     id: "adr", nome: "Adrenalina", grupo: "vasoativos", apresentacao: "1 mg/mL (1:1.000), ampola de 1 mL",
@@ -2520,7 +2440,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       { rotulo: "Licença (Univ. Michigan)", href: "https://available-inventions.umich.edu/product/face-legs-activity-cry-consolability-observational-tool-as-a-measure-of-pain" }
     ],
     fonte: "Descrição e indicação em redação própria. As orientações de aplicação e os descritores pontuados NÃO são reproduzidos aqui: pertencem ao instrumento licenciado. A versão brasileira da FLACCr está em Bussotti EA et al., Rev Latino-Am Enfermagem 2015; a da FLACC, em Silva FC e Thuler LCS, J Pediatr (Rio J) 2008.",
-    licenca: "Instrumento licenciado. Os limiares de leitura são proposta do serviço, aguardando validação da coordenação.",
+    licenca: "Instrumento licenciado. Os limiares de leitura são proposta desta edição, não do instrumento.",
     copyright: "FLACC © 2002 The Regents of the University of Michigan. O uso em operações clínicas contínuas requer licença comercial paga, inclusive para serviços sem fins lucrativos. Por isso os descritores não são reproduzidos aqui.",
     traducao: "livre", seloTraducao: "cartão informativo, não interativo",
     selo: "limiares em proposta", refs: [98, 99, 100]
@@ -2959,7 +2879,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     });
     if (e.niss) h += '<fieldset class="sc-item" data-niss-box hidden><legend>' + e.niss.nome + '</legend>' +
       e.niss.opcoes.map(function(o){ return '<label class="sc-opt"><input type="radio" name="scn-' + e.id + '" data-niss="1" value="' + o.valor + '"' + (est.niss === o.valor ? " checked" : "") + '><span class="pt">' + o.sigla + '</span><span class="tx">' + o.texto + '</span></label>'; }).join("") + '</fieldset>';
-    h += '<p class="small muted sc-fonte"><b>Fonte:</b> ' + e.fonte + '<br><b>Licença:</b> ' + e.licenca + (e.copyright ? '<br>' + e.copyright : '') + '</p>';
+    h += '<p class="small muted sc-fonte"><b>Fonte:</b> ' + e.fonte + '<br><b>Licença:</b> ' + e.licenca + (e.copyright ? '<br>' + e.copyright : '') +
+      (e.refs && e.refs.length ? '<br><b>Referências:</b> ' + e.refs.map(function(n){ return '<a class="cite" href="#ref-' + n + '">' + n + '</a>'; }).join('') : '') + '</p>';
     h += '<div class="out sc-res" aria-live="polite"></div><div class="sc-acoes noprint">' +
       '<button type="button" class="btn" data-acao="limpar">Limpar</button>' +
       '<button type="button" class="btn fill" data-acao="copiar">Copiar para o prontuário</button></div>';

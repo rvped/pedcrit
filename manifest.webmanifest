@@ -1,7 +1,7 @@
 {
   "name": "PedCrit · UTI pediátrica e emergência",
   "short_name": "PedCrit",
-  "description": "Escalas, calculadora de doses por peso e o Protocolo de Analgossedação da UTIP (HGVC v2.0)",
+  "description": "Seu companheiro no plantão: escalas para marcar, calculadora de doses por peso e condutas de analgossedação em pediatria",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",
