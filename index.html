@@ -290,10 +290,19 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 .barcell{display:block;height:8px;border-radius:4px;background:var(--brand);margin-top:3px}
 
 /* BRAIN MAPS */
-.bm{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+/* Duas colunas fixas preenchidas POR COLUNA: os 5 primeiros itens (B,R,A,I,N) descem na
+   coluna da esquerda e os 4 seguintes (M,A,P,S) na da direita, preservando o mnemônico
+   também no celular, onde o auto-fill colapsava tudo numa coluna só. */
+.bm{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,auto);grid-auto-flow:column;gap:8px;align-items:start}
 .bml{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 11px;display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center}
 .bml .L{font-size:1.5rem;font-weight:850;color:var(--brand);text-align:center}
 .bml span{font-size:.86rem;line-height:1.25}
+@media (max-width:480px){
+  .bm{gap:6px}
+  .bml{grid-template-columns:24px 1fr;gap:6px;padding:7px 8px;border-radius:10px}
+  .bml .L{font-size:1.15rem}
+  .bml span{font-size:.76rem;line-height:1.2}
+}
 
 /* checklist */
 .cl{list-style:none;padding:0;margin:0;counter-reset:c}
