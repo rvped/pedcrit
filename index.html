@@ -2043,7 +2043,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         { pontos: 5, texto: "Compete com o ventilador, tosse" } ] },
       { id: "choro", nome: "Choro", curto: "choro", dica: "apenas se paciente com respiração espontânea", somenteSe: { vm: false }, opcoes: [
         { pontos: 1, texto: "Respiração silenciosa, sem som de choro" },
-        { pontos: 2, texto: "Resmungando / choramingando" },
+        { pontos: 2, texto: "Resmungando/ choramingando" },
         { pontos: 3, texto: "Reclamando (monotônico)" },
         { pontos: 4, texto: "Choro" },
         { pontos: 5, texto: "Gritando" } ] },
@@ -2082,24 +2082,32 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   {
     id: "rass", nome: "Escala de agitação e sedação de Richmond (RASS)", curto: "RASS", sinal: true,
     instrucoes: [
-      "1. Observe o paciente. Se estiver alerta e calmo, atribua escore 0. Se houver inquietação ou agitação, atribua de +1 a +4 pela coluna de descrição.",
-      "2. Se o paciente não estiver alerta, chame-o pelo nome, em voz alta, mande-o abrir os olhos e olhar para você. Repita uma vez, se necessário. Você pode estimulá-lo verbalmente a continuar olhando, mas não pode tocá-lo. Atribua −1, −2 ou −3 conforme a resposta.",
-      "3. Se o paciente não responder ao comando verbal, estimule-o fisicamente sacudindo seu ombro e, se não houver resposta, friccionando o esterno. Atribua −4 se houver qualquer movimento e −5 se não houver resposta alguma.",
+      "Instruções para aplicação da escala de agitação e sedação de Richmond",
+      "1. Observe o paciente",
+      "   Se o paciente estiver alerta e calmo, atribua escore 0",
+      "   Se o paciente estiver com um comportamento compatível com inquietação ou agitação, atribua escore de +1 a + 4, de acordo com a coluna \"Descrição\" da escala",
+      "2. Se o paciente não estiver alerta, chame-o pelo nome, em voz alta, mande-o abrir os olhos e olhar para você. Repita uma vez, se necessário. O paciente pode ser verbalmente estimulado a continuar olhando para você, mas você não deve tocá-lo ou estimulá-lo fisicamente",
+      "   Se o paciente apresentar abertura ocular e contato visual, mantido por mais de 10 segundos, atribua escore -1",
+      "   Se o paciente apresentar abertura ocular e contato visual, mantido por não mais do que 10 segundos, atribua escore -2",
+      "   Se o paciente apresentar qualquer movimento em resposta ao comando verbal, mas sem contato visual, atribua escore -3",
+      "3. Se o paciente não responder ao comando verbal, estimule-o fisicamente sacudindo seu ombro e, em seguida, friccionando seu esterno, caso não haja resposta ao estímulo no ombro",
+      "   Se o paciente apresentar qualquer movimento ao estímulo físico, atribua escore -4",
+      "   Se o paciente não apresentar qualquer resposta ao comando verbal ou ao estímulo físico, atribua escore -5",
       "Se o paciente não estava alerta antes do comando ou do estímulo, atribua de −1 a −5 mesmo que fique agitado depois.",
       "Limitação conhecida em lactentes: o escore +4 é pouco aplicável e o passo 2 depende de contato visual."
     ],
     itens: [
       { id: "nivel", nome: "Escore, termo e descrição", curto: "nível", opcoes: [
-        { pontos: 4, texto: "Combativo — claramente combativo ou violento: perigo imediato para a equipe" },
-        { pontos: 3, texto: "Muito agitado — puxa ou remove tubo(s) ou cateter(es) ou apresenta comportamento agressivo com a equipe" },
-        { pontos: 2, texto: "Agitado — movimentos frequentes sem objetivo ou assincronia paciente-ventilador" },
-        { pontos: 1, texto: "Inquieto — ansioso ou apreensivo, porém sem movimentos agressivos ou vigorosos" },
+        { pontos: 4, texto: "Combativo — Claramente combativo ou violento: perigo imediato para a equipe" },
+        { pontos: 3, texto: "Muito agitado — Puxa ou remove tubo(s) ou cateter(es) ou apresenta comportamento agressivo com a equipe" },
+        { pontos: 2, texto: "Agitado — Movimentos frequentes sem objetivo ou assincronia paciente-ventilador" },
+        { pontos: 1, texto: "Inquieto — Ansioso ou apreensivo, porém sem movimentos agressivos ou vigorosos" },
         { pontos: 0, texto: "Alerta e calmo" },
-        { pontos: -1, texto: "Sonolento — não totalmente alerta ao comando verbal, mas mantém despertar sustentado (mais de 10 segundos), com contato visual" },
-        { pontos: -2, texto: "Sedação leve — ao comando verbal, desperta brevemente (menos de 10 segundos), com contato visual" },
-        { pontos: -3, texto: "Sedação moderada — qualquer movimento ao comando verbal (mas sem contato visual)" },
-        { pontos: -4, texto: "Sedação profunda — sem resposta ao comando verbal, mas com qualquer movimento ao estímulo físico" },
-        { pontos: -5, texto: "Não responde a estímulos — sem resposta ao comando verbal ou ao estímulo físico" } ] }
+        { pontos: -1, texto: "Sonolento — Não totalmente alerta ao comando verbal, mas mantém despertar sustentado (mais de 10 segundos), com contato visual" },
+        { pontos: -2, texto: "Sedação leve — Ao comando verbal, desperta brevemente (menos de 10 segundos), com contato visual" },
+        { pontos: -3, texto: "Sedação moderada — Qualquer movimento ao comando verbal (mas sem contato visual)" },
+        { pontos: -4, texto: "Sedação profunda — Sem resposta ao comando verbal, mas com qualquer movimento ao estímulo físico" },
+        { pontos: -5, texto: "Não responde a estímulos — Sem resposta ao comando verbal ou ao estímulo físico" } ] }
     ],
     faixas: [
       { min: -5, max: -4, classe: "alerta", rotulo: "sedação profunda", texto: "Reavalie a necessidade. Com −4 ou −5 a CAPD não pode ser aplicada." },
@@ -2221,8 +2229,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       { id: "s8", rotulo: "8 semanas" }, { id: "s28", rotulo: "28 semanas" }, { id: "a1", rotulo: "1 ano" }, { id: "a2", rotulo: "2 anos" }
     ],
     instrucoes: [
-      "Registre primeiro a pontuação RASS. Se for −4 ou −5, não vá adiante.",
-      "Responda às perguntas com base em suas interações com o paciente durante o seu plantão.",
+      "Pontuação RASS (se -4 ou -5, não ir adiante)",
+      "Favor responder as seguintes perguntas, com base em suas interações com o paciente durante seu plantão:",
       "Os itens 1 a 4 são invertidos: Nunca vale 4 e Sempre vale 0. Os itens 5 a 8 são diretos: Nunca vale 0 e Sempre vale 4.",
       "Use o seletor de idade para ver os pontos-âncora do desenvolvimento esperado. A tabela de âncoras foi feita para crianças menores de 24 meses.",
       "Total de 0 a 32. Um total ≥ 9 indica delirium e dispara a investigação do BRAIN MAPS."
@@ -2321,7 +2329,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       { min: 0, max: 8, classe: "ok", rotulo: "negativo", texto: "Reavalie pelo menos uma vez por turno." },
       { min: 9, max: 32, classe: "alerta", rotulo: "positivo", texto: "Delirium provável: rode o BRAIN MAPS e revise sedativos, sobretudo benzodiazepínicos." }
     ],
-    fonte: "Itens: Barbosa MDSR et al., Rev Bras Ter Intensiva 2018, Tabela 2 (grafia atualizada: \"não sorrir\" → \"não sorri\"). Âncoras: Barbosa MSR et al., Crit Care Sci 2023, Tabela 3 da versão em português.",
+    fonte: "Itens: Barbosa MDSR et al., Rev Bras Ter Intensiva 2018, Tabela 2 (grafia atualizada: \"não sorrir\" → \"não sorri\"; cabeçalho do formulário reproduzido sem o campo de preenchimento \"_______________\", artefato de formulário impresso que não se aplica a um painel interativo). Âncoras: Barbosa MSR et al., Crit Care Sci 2023, Tabela 3 da versão em português.",
     licenca: "Artigos em CC BY 4.0. Traduções autorizadas por Chane Traube; confirmação formal de uso em aplicativo pendente.",
     traducao: "validada", seloTraducao: "adaptação transcultural com pré-teste", refs: [29, 35, 97]
   },
