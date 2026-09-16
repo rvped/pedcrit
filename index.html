@@ -453,6 +453,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   <a href="#escada">Escada de escalonamento</a>
   <a href="#farmacos">Fármacos</a>
   <a href="#calc">Calculadora de doses</a>
+  <a href="#eletrolitos">Eletrólitos</a>
   <a href="#especiais">Situações especiais</a>
   <a href="#desmame">Desmame e abstinência</a>
   <a href="#delirium">Delirium</a>
@@ -957,6 +958,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     </div>
   </div>
 
+  <button type="button" class="btn tocalc noprint" id="calcParaEl">Eletrólitos →</button>
+
   <div id="fcLista"></div>
 
   <div class="card">
@@ -971,8 +974,63 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 </section>
 
 <!-- ================= SITUAÇÕES ESPECIAIS ================= -->
+<section class="sec noprint" id="eletrolitos">
+  <div class="sec-head"><span class="n">06</span><h2>Eletrólitos</h2></div>
+  <p class="sec-lead">Correção de sódio e reposição de potássio, com o preparo escrito para quem vai montar o soro.</p>
+
+  <div class="call c-danger"><b>Ferramenta de apoio, não de prescrição</b>Os números saem do peso e dos valores informados. Confira a apresentação disponível na farmácia e mantenha a dupla checagem.</div>
+
+  <div class="card">
+    <label class="field" style="margin:0"><span>Peso (kg)</span><input type="number" id="elPeso" min="0.4" max="150" step="0.1" value="10" inputmode="decimal"></label>
+    <button type="button" class="btn tocalc noprint" id="elParaCalc">Calculadora de doses →</button>
+  </div>
+
+  <div class="card">
+    <h3>Potássio</h3>
+    <div class="grid g2">
+      <label class="field"><span>Dose (mEq/kg)</span><input type="number" id="elKDose" min="0.1" max="4" step="0.1" value="2" inputmode="decimal"></label>
+      <div class="field"><span>Via</span>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="elKVia" value="avp" checked>Periférica</label>
+          <label><input type="radio" name="elKVia" value="cvc">Central</label>
+        </div>
+      </div>
+    </div>
+    <div class="field"><span>Correr em</span>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="elKDur" value="4" checked>4 h</label>
+        <label><input type="radio" name="elKDur" value="6">6 h</label>
+        <label><input type="radio" name="elKDur" value="8">8 h</label>
+      </div>
+    </div>
+    <div class="rx" id="elKRx"></div>
+    <ul class="fc-alertas" id="elKAl"></ul>
+    <ul class="small">
+      <li>O KCl <b>soma volume</b> ao soro: a concentração sai do total, não do volume de SF.</li>
+      <li>Teto de concentração: 40 mEq/L em veia periférica, 80 mEq/L em cateter central.</li>
+      <li>Entrega usual abaixo de 0,25 mEq/kg/h; não exceder 0,5. Acima de 0,25 exige monitor cardíaco.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Sódio — hipernatremia</h3>
+    <div class="grid g2">
+      <label class="field"><span>Na atual (mEq/L)</span><input type="number" id="elNaAtual" min="120" max="200" step="1" value="158" inputmode="numeric"></label>
+      <label class="field"><span>Na alvo (mEq/L)</span><input type="number" id="elNaAlvo" min="120" max="200" step="1" value="146" inputmode="numeric"></label>
+    </div>
+    <label class="field"><span>Em quantas horas</span><input type="number" id="elNaHoras" min="1" max="72" step="1" value="24" inputmode="numeric"></label>
+    <div class="rx" id="elNaRx"></div>
+    <ul class="fc-alertas" id="elNaAl"></ul>
+    <div class="dil" id="elNaRec"></div>
+    <ul class="small">
+      <li>Queda máxima de <b>0,5 mEq/L/h</b>, ou 10 a 12 mEq/L em 24 h.</li>
+      <li>Déficit de água livre = peso × 0,6 × (Na atual ÷ Na alvo − 1).</li>
+    </ul>
+  </div>
+</section>
+
 <section class="sec" id="especiais">
-  <div class="sec-head"><span class="n">06</span><h2>Situações especiais</h2></div>
+  <div class="sec-head"><span class="n">07</span><h2>Situações especiais</h2></div>
   <p class="sec-lead">Escolha do agente conforme o cenário. Toque na tabela e deslize para os lados no celular.</p>
 
   <div class="tbl-wrap">
@@ -1021,7 +1079,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
 <!-- ================= DESMAME ================= -->
 <section class="sec" id="desmame">
-  <div class="sec-head"><span class="n">07</span><h2>Desmame e prevenção de abstinência</h2></div>
+  <div class="sec-head"><span class="n">08</span><h2>Desmame e prevenção de abstinência</h2></div>
 
   <div class="grid g3">
     <div class="card" style="border-left:5px solid var(--warn)"><div class="small muted"><b>RISCO</b></div><div style="font-size:1.3rem;font-weight:800">≥5 dias</div><div class="small">de opioide e/ou BZD contínuo</div></div>
@@ -1091,7 +1149,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
 <!-- ================= DELIRIUM ================= -->
 <section class="sec" id="delirium">
-  <div class="sec-head"><span class="n">08</span><h2>Delirium</h2></div>
+  <div class="sec-head"><span class="n">09</span><h2>Delirium</h2></div>
   <p class="sec-lead">CAPD 1×/turno. Rastreio positivo → checar BRAIN MAPS.</p>
   <div class="bm">
     <div class="bml"><div class="L">B</div><span><b>Bring oxygen</b> — oxigenação e perfusão</span></div>
@@ -1122,7 +1180,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
 <!-- ================= CHECKLIST ================= -->
 <section class="sec" id="checklist">
-  <div class="sec-head"><span class="n">09</span><h2>Checklist da visita diária</h2></div>
+  <div class="sec-head"><span class="n">10</span><h2>Checklist da visita diária</h2></div>
   <div class="card">
     <ol class="cl">
       <li><label><input type="checkbox"><span>Qual é o <b>alvo COMFORT-B de hoje</b>? Foi atingido? NISS registrado na faixa 11–22?</span></label></li>
@@ -1142,7 +1200,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
 <!-- ================= CASOS ================= -->
 <section class="sec" id="casos">
-  <div class="sec-head"><span class="n">10</span><h2>Casos rápidos</h2></div>
+  <div class="sec-head"><span class="n">11</span><h2>Casos rápidos</h2></div>
   <p class="sec-lead">Tente responder antes de abrir. Cada resposta aponta a seção que sustenta a decisão.</p>
 
   <div class="card case"><p class="q">1 · Lactente de 6 kg, bronquiolite, VM dia 2. Fentanil 2 mcg/kg/h + dexmedetomidina 0,6 mcg/kg/h. COMFORT-B 26, FLACC 2. SpO₂ e curvas normais, tubo bem posicionado.</p>
@@ -1183,7 +1241,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
 <!-- ================= CONSULTA ================= -->
 <section class="sec" id="fundamentos">
-  <div class="sec-head"><span class="n">11</span><h2>Fundamentos</h2></div>
+  <div class="sec-head"><span class="n">12</span><h2>Fundamentos</h2></div>
   <p class="sec-lead">Para consulta: de onde vêm as regras acima.</p>
   <div class="card">
     <details open><summary>Analgesia antes de sedação</summary><div class="dx">
@@ -1203,7 +1261,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 </section>
 
 <section class="sec" id="certeza">
-  <div class="sec-head"><span class="n">12</span><h2>Grau de certeza</h2></div>
+  <div class="sec-head"><span class="n">13</span><h2>Grau de certeza</h2></div>
   <p class="sec-lead">Onde a certeza é baixa, o protocolo orienta e a beira-leito decide.</p>
   <div class="cert">
     <div class="card hi"><h3>Razoavelmente sólido</h3><ul>
@@ -1232,7 +1290,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 </section>
 
 <section class="sec" id="refs">
-  <div class="sec-head"><span class="n">13</span><h2>Referências</h2></div>
+  <div class="sec-head"><span class="n">14</span><h2>Referências</h2></div>
   <div class="card">
   <details><summary>Mostrar as 100 referências</summary>
   <ol class="refs">
@@ -1345,7 +1403,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 </section>
 
 <section class="sec" id="instalar">
-  <div class="sec-head"><span class="n">14</span><h2>Instalar e compartilhar</h2></div>
+  <div class="sec-head"><span class="n">15</span><h2>Instalar e compartilhar</h2></div>
   <div class="card">
     <div class="qrbox">
       <img src="qr.svg" alt="QR code do endereço do protocolo" width="200" height="200">
@@ -1375,7 +1433,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 <nav class="bottomnav" aria-label="Navegação rápida">
   <a href="#inicio" data-sec="inicio"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</a>
   <a href="#avaliar" data-sec="avaliar"><svg viewBox="0 0 24 24"><path d="M4 19h16M6 16V9M11 16V5M16 16v-6"/></svg>Escore</a>
-  <a href="#escada" data-sec="escada"><svg viewBox="0 0 24 24"><path d="M3 20h5v-5h5v-5h5V5h3"/></svg>Escada</a>
+  <a href="#eletrolitos" data-sec="eletrolitos"><svg viewBox="0 0 24 24"><path d="M9 3v7l-4 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-4-9V3"/><path d="M8 3h8M7 14h10"/></svg>Eletrólitos</a>
   <a href="#farmacos" data-sec="farmacos"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-40 12 12)"/><path d="M9.5 8.8l4.9 5.9"/></svg>Fármacos</a>
   <a href="#calc" data-sec="calc"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M16 11v4"/></svg>Calcular</a>
   <button type="button" id="moreBtn" aria-haspopup="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mais</button>
@@ -1385,6 +1443,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   <div class="panel" role="menu">
     <div class="grab"></div>
     <a href="#agitado" data-close>Paciente agitado</a>
+    <a href="#escada" data-close>Escada de escalonamento</a>
     <a href="#especiais" data-close>Situações especiais</a>
     <a href="#desmame" data-close>Desmame e abstinência</a>
     <a href="#delirium" data-close>Delirium · BRAIN MAPS</a>
@@ -1409,7 +1468,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
   /* ===== DADOS:BEGIN ===== */
   /* Valores conferidos nas pesquisas A (ressuscitação), B (vasoativos) e C (desmame)
-     de docs/pesquisas/2026-09-15/. As referências são os <li id="ref-N"> da seção 13. */
+     de docs/pesquisas/2026-09-15/. As referências são os <li id="ref-N"> da seção 14. */
   var FARMACOS = [
   {
     id: "adr", nome: "Adrenalina", grupo: "vasoativos", apresentacao: "1 mg/mL (1:1.000), ampola de 1 mL",
@@ -2477,20 +2536,26 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   var ELETROLITOS = {
     kcl: { rotulo: "KCl 19,1%", mEqPorMl: 2.5 },
     vias: [
-      { id: "avp", rotulo: "Veia periferica", mEqPorL: 40, mlPorKg: 50 },
+      { id: "avp", rotulo: "Veia periférica", mEqPorL: 40, mlPorKg: 50 },
       { id: "cvc", rotulo: "Cateter central", mEqPorL: 80, mlPorKg: 25 }
     ],
     duracoesK: [4, 6, 8],
     /* O limite da reposicao NAO e o fluxo do cateter (um 24G comporta ~1.200 mL/h)
-       e sim a velocidade de entrega de potassio. Usual abaixo de 0,25 mEq/kg/h;
-       nao exceder 0,5. Acima de 0,25 exige monitor cardiaco. */
+       e sim a velocidade de entrega de potássio. Usual abaixo de 0,25 mEq/kg/h;
+       não exceder 0,5. Acima de 0,25 exige monitor cardíaco. */
     kMEqKgHUsual: 0.25,
     kMEqKgHMax: 0.5,
     sodio: {
       tbwFracao: 0.6,
       quedaMaxPorHora: 0.5,
       quedaMax24h: 12,
-      naPorLitro045: 77
+      naPorLitro045: 77,
+      /* Como obter glicose 5% com NaCl 0,45% tendo so SG5%, SG10%, SF0,9%, NaCl 20% e AD.
+         Proporcoes conferidas: 0,9 x 250/500 = 0,45% e 10 x 250/500 = 5%. */
+      receitas: [
+        { rotulo: "SG 10% 250 mL + SF 0,9% 250 mL", nota: "500 mL prontos, sem aditivo nenhum" },
+        { rotulo: "SG 5% 500 mL + NaCl 20% 11,2 mL", nota: "mesma solução; exige pipetar volume pequeno" }
+      ]
     }
   };
 
@@ -2750,20 +2815,20 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       r.quedaPorHora = r.queda / horas;
       r.deficitMl = peso * s.tbwFracao * ((naAtual / naAlvo) - 1) * 1000;
       r.mlPorHora = r.deficitMl / horas;
-      if (r.queda <= 0) r.alertas.push("o alvo nao e menor que o sodio atual: nada a corrigir por agua livre");
+      if (r.queda <= 0) r.alertas.push("o alvo não é menor que o sódio atual: nada a corrigir por água livre");
       if (r.quedaPorHora > s.quedaMaxPorHora + EPS)
         r.alertas.push("queda de " + fmtBR(r.quedaPorHora) + " mEq/L/h excede o limite de " + fmtBR(s.quedaMaxPorHora) + ": estenda o tempo ou eleve o alvo");
       if (r.queda > s.quedaMax24h + EPS && horas <= 24 + EPS)
-        r.alertas.push("queda de " + fmtBR(r.queda) + " mEq/L em " + fmtBR(horas) + " h passa do maximo de " + fmtBR(s.quedaMax24h) + " mEq/L em 24 h");
+        r.alertas.push("queda de " + fmtBR(r.queda) + " mEq/L em " + fmtBR(horas) + " h passa do máximo de " + fmtBR(s.quedaMax24h) + " mEq/L em 24 h");
       /* alvo que respeita o limite de 24 h, para orientar quem digitou demais */
       r.alvoSeguro24h = naAtual - s.quedaMax24h;
       return r;
     }
 
-    /* Reposicao de potassio. O volume sai do TETO DE CONCENTRACAO da via, nao de
-       uma escolha livre: 40 mEq/L em veia periferica, 80 mEq/L em cateter central.
-       Quando o volume resulta alto, a duracao e estendida de 4 h para 6 h e, no
-       maximo, 8 h -- nunca convertida em infusao continua. */
+    /* Reposição de potássio. O volume sai do TETO DE CONCENTRAÇÃO da via, não de
+       uma escolha livre: 40 mEq/L em veia periférica, 80 mEq/L em cateter central.
+       A duração é escolhida por quem prescreve: 4 h, 6 h ou 8 h — nunca convertida
+       em infusão contínua. */
     function reporPotassio(peso, mEqPorKg, viaId, duracaoH){
       var r = { valido: false, alertas: [] };
       if (!(peso > 0) || !(mEqPorKg > 0)) return r;
@@ -2772,7 +2837,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       if (!via) return r;
       r.valido = true; r.via = via;
       r.mEq = mEqPorKg * peso;
-      /* eletrolito concentrado se mede em 0,1 mL: nao passa por arredondarBolus,
+      /* eletrólito concentrado se mede em 0,1 mL: não passa por arredondarBolus,
          que arredondaria 12,8 para 13 acima de 1 mL */
       r.mlKCl = Math.round(r.mEq / ELETROLITOS.kcl.mEqPorMl * 10 + EPS) / 10;
       r.volumeDiluente = peso * via.mlPorKg;         /* peso x 50 (AVP) ou x 25 (CVC) */
@@ -2787,11 +2852,11 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       r.mEqKgH = r.mEq / r.duracaoH / peso;
       r.mlPorHora = r.volumeTotal / r.duracaoH;
       if (r.concentracao > via.mEqPorL + EPS)
-        r.alertas.push("concentracao de " + fmtBR(r.concentracao) + " mEq/L passa do teto de " + fmtBR(via.mEqPorL) + " para " + via.rotulo.toLowerCase());
+        r.alertas.push("concentração de " + fmtBR(r.concentracao) + " mEq/L passa do teto de " + fmtBR(via.mEqPorL) + " para " + via.rotulo.toLowerCase());
       if (r.mEqKgH > L.kMEqKgHMax + EPS)
-        r.alertas.push("mesmo em " + fmtBR(r.duracaoH) + " h a entrega e de " + fmtBR(r.mEqKgH) + " mEq/kg/h, acima do maximo de " + fmtBR(L.kMEqKgHMax) + ": fracione a dose e reavalie o potassio");
+        r.alertas.push("mesmo em " + fmtBR(r.duracaoH) + " h a entrega e de " + fmtBR(r.mEqKgH) + " mEq/kg/h, acima do máximo de " + fmtBR(L.kMEqKgHMax) + ": fracione a dose e reavalie o potássio");
       else if (r.mEqKgH > L.kMEqKgHUsual + EPS)
-        r.alertas.push("entrega de " + fmtBR(r.mEqKgH) + " mEq/kg/h: acima do usual de " + fmtBR(L.kMEqKgHUsual) + " -- exige monitor cardiaco");
+        r.alertas.push("entrega de " + fmtBR(r.mEqKgH) + " mEq/kg/h: acima do usual de " + fmtBR(L.kMEqKgHUsual) + " — exige monitor cardíaco");
       return r;
     }
 
@@ -3296,6 +3361,63 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     $(id).addEventListener("input", h); $(id).addEventListener("change", h);
   });
   fcRenderLista();
+
+  /* ---------- eletrólitos ---------- */
+  (function(){
+    var elP = $("elPeso"); if (!elP) return;
+    var L = CALC.ELETROLITOS, trancado = false;
+    /* fmtBR zera as casas acima de 100, por decisão do próprio app. Aqui o total é
+       instrução de preparo e a fração importa: 812,8 mL, não 813. */
+    function mL1(v){ return (Math.round(v * 10) / 10).toFixed(1).replace(".", ","); }
+    function lista(ul, itens){
+      ul.innerHTML = "";
+      for (var i = 0; i < itens.length; i++){ var li = document.createElement("li"); li.textContent = itens[i]; ul.appendChild(li); }
+      ul.hidden = !itens.length;
+    }
+    function marcado(nome){ var e = document.querySelector('input[name="' + nome + '"]:checked'); return e ? e.value : null; }
+    function calcK(){
+      var r = CALC.reporPotassio(num(elP.value), num($("elKDose").value), marcado("elKVia"), Number(marcado("elKDur")));
+      if (!r.valido){ $("elKRx").textContent = "Informe peso e dose."; lista($("elKAl"), []); return; }
+      $("elKRx").textContent = [
+        "KCl 19,1% " + CALC.fmtBR(r.mlKCl) + " mL + SF 0,9% " + CALC.fmtBR(r.volumeDiluente) + " mL = " + mL1(r.volumeTotal) + " mL",
+        CALC.fmtBR(r.mEq) + " mEq \u00b7 " + CALC.fmtBR(r.concentracao) + " mEq/L (teto " + CALC.fmtBR(r.via.mEqPorL) + " em " + r.via.rotulo.toLowerCase() + ")",
+        "Correr em " + CALC.fmtBR(r.duracaoH) + " h = " + CALC.fmtBR(r.mlPorHora) + " mL/h \u00b7 entrega " + CALC.fmtBR(r.mEqKgH) + " mEq/kg/h"
+      ].join("\n");
+      lista($("elKAl"), r.alertas);
+    }
+    function calcNa(){
+      var r = CALC.corrigirSodio(num(elP.value), num($("elNaAtual").value), num($("elNaAlvo").value), num($("elNaHoras").value));
+      if (!r.valido){ $("elNaRx").textContent = "Informe peso, s\u00f3dio atual, alvo e tempo."; lista($("elNaAl"), []); $("elNaRec").hidden = true; return; }
+      $("elNaRx").textContent = [
+        "\u00c1gua livre: " + CALC.fmtBR(r.deficitMl) + " mL em " + CALC.fmtBR(num($("elNaHoras").value)) + " h = " + CALC.fmtBR(r.mlPorHora) + " mL/h",
+        "Queda de " + CALC.fmtBR(r.queda) + " mEq/L = " + CALC.fmtBR(r.quedaPorHora) + " mEq/L/h (m\u00e1ximo " + CALC.fmtBR(L.sodio.quedaMaxPorHora) + ")",
+        "Alvo que respeita o limite de 24 h: " + CALC.fmtBR(r.alvoSeguro24h) + " mEq/L"
+      ].join("\n");
+      lista($("elNaAl"), r.alertas);
+      var rec = L.sodio.receitas.map(function(x){ return "\u2022 " + x.rotulo + " \u2014 " + x.nota; }).join("\n");
+      $("elNaRec").textContent = "Glicose 5% com NaCl 0,45% (Na\u207a " + L.sodio.naPorLitro045 + " mEq/L), a partir do estoque b\u00e1sico:\n" + rec;
+      $("elNaRec").hidden = false;
+    }
+    function tudo(){ calcK(); calcNa(); }
+    /* o peso e digitado uma vez: os dois campos se acompanham */
+    function espelha(de, para){ if (trancado) return; trancado = true; para.value = de.value; trancado = false; }
+    var pesoCalc = $("peso");
+    if (pesoCalc){
+      elP.value = pesoCalc.value;
+      pesoCalc.addEventListener("input", function(){ espelha(pesoCalc, elP); tudo(); });
+      elP.addEventListener("input", function(){ espelha(elP, pesoCalc); });
+    }
+    ["elPeso","elKDose","elNaAtual","elNaAlvo","elNaHoras"].forEach(function(id){
+      var e = $(id); if (e) e.addEventListener("input", tudo);
+    });
+    document.querySelectorAll('input[name="elKVia"], input[name="elKDur"]').forEach(function(r){ r.addEventListener("change", calcK); });
+    function vaiPara(id){ var s = document.getElementById(id); if (s) s.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    $("elParaCalc").addEventListener("click", function(){ vaiPara("calc"); });
+    var bCalc = $("calcParaEl");
+    if (bCalc) bCalc.addEventListener("click", function(){ vaiPara("eletrolitos"); });
+    tudo();
+  })();
+
 
   /* ---------- cronograma de desmame ---------- */
   function sched(){
