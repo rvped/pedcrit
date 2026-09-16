@@ -777,8 +777,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <div class="drug-h"><h3>Cetamina</h3><span class="tag t-brand">antagonista NMDA</span><span class="tag t-warn">3º agente</span></div>
     <div class="drug-b">
       <div class="doses">
-        <div class="dbox"><div class="k">Bolus</div><div class="v">0,5–1 mg/kg</div></div>
-        <div class="dbox"><div class="k">Infusão</div><div class="v">0,5–2 mg/kg/h <small>8,3–33 mcg/kg/min</small></div></div>
+        <div class="dbox"><div class="k">Bolus</div><div class="v">0,5–2 mg/kg</div></div>
+        <div class="dbox"><div class="k">Infusão</div><div class="v">0,5–2 mg/kg/h <small>8,3–33 mcg/kg/min · teto 60 mcg/kg/min</small></div></div>
         <div class="dbox"><div class="k">Poupar opioide</div><div class="v">0,1–0,5 mg/kg/h</div></div>
         <div class="dbox cap"><div class="k">Broncoespasmo</div><div class="v">1–2 mg/kg/h</div></div>
       </div>
@@ -1801,7 +1801,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     id: "cet", nome: "Cetamina", grupo: "sedacao", apresentacao: "50 mg/mL (racêmica), frasco de 10 mL",
     ic: {
       unidade: "mcg/kg/min", conc: { valor: 50, massa: "mg", rotulo: "50 mg/mL" },
-      faixa: [5, 100], teto: 100, padrao: 8, passo: 1,
+      faixa: [5, 60], teto: 60, padrao: 8, passo: 1,
       diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
       notas: [
         "para poupar opioide, a faixa é menor: cerca de 2–8 mcg/kg/min (0,1–0,5 mg/kg/h)",
