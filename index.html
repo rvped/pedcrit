@@ -1837,7 +1837,17 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         "somar o volume e as calorias ao balanço — 1 mL entrega 1,1 kcal"
       ]
     },
-    bolus: [], enteral: null,
+    bolus: [
+      { rotulo: "Bólus", unidade: "mg/kg", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+        faixa: [1, 2], padrao: 1, max: null, min: null, diluicao: null,
+        via: "EV lento, título pelo efeito",
+        notas: [
+          "regra de cabeceira: a 10 mg/mL, 1 mg/kg = PESO ÷ 10 em mL (10 kg → 1 mL; 25 kg → 2,5 mL)",
+          "apneia e queda de pressão são dose-dependentes: injetar devagar e ter via aérea pronta",
+          "evitar no choque e na instabilidade hemodinâmica"
+        ] }
+    ],
+    enteral: null,
     ajustes: { neo: { ic: null, bolus: null, nota: "menores de 12 meses têm risco maior de síndrome da infusão do propofol" }, lra: null },
     info: {
       indicacoes: [
@@ -1861,19 +1871,19 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   {
     id: "cet", nome: "Cetamina", grupo: "sedacao", apresentacao: "50 mg/mL (racêmica), frasco de 10 mL",
     ic: {
-      unidade: "mg/kg/h", conc: { valor: 50, massa: "mg", rotulo: "50 mg/mL" },
-      faixa: [0.5, 2], teto: 2, padrao: 0.5, passo: 0.1,
+      unidade: "mcg/kg/min", conc: { valor: 50, massa: "mg", rotulo: "50 mg/mL" },
+      faixa: [5, 100], teto: 100, padrao: 8, passo: 1,
       diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
       notas: [
-        "para poupar opioide, a faixa é menor: 0,1–0,5 mg/kg/h",
-        "no broncoespasmo grave, 1–2 mg/kg/h",
+        "para poupar opioide, a faixa é menor: cerca de 2–8 mcg/kg/min (0,1–0,5 mg/kg/h)",
+        "no broncoespasmo grave, cerca de 17–33 mcg/kg/min (1–2 mg/kg/h)",
         "chave \"cetamina S(+)\": divide faixas, padrão e teto por 2, porque a escetamina é cerca de 2 vezes mais potente",
         "a razão 2:1 vem da potência anestésica em adultos: titule sempre por escore de sedação"
       ]
     },
     bolus: [
       { rotulo: "Bólus", unidade: "mg/kg", conc: { valor: 50, massa: "mg", rotulo: "50 mg/mL" },
-        faixa: [0.5, 1], padrao: 0.5, max: null, min: null, diluicao: { mlMed: 1, mlSF: 4 },
+        faixa: [0.5, 2], padrao: 0.5, max: null, min: null, diluicao: { mlMed: 1, mlSF: 4 },
         via: "EV lento",
         notas: ["hipersecreção em cerca de 29%: considerar antissialagogo se abundante"] }
     ],
@@ -2081,11 +2091,13 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     id: "roc", nome: "Rocurônio", grupo: "outros", apresentacao: "10 mg/mL, frasco de 5 mL",
     ic: {
       unidade: "mcg/kg/min", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
-      faixa: [7, 12], teto: null, padrao: 7, passo: 0.5,
+      faixa: [6, 12], teto: 16, padrao: 7, passo: 0.5,
       diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
       notas: [
         "titular pelo TOF, com alvo de 1 a 3 respostas de 4",
         "7–10 mcg/kg/min no reaparecimento de T2, ou 12 mcg/kg/min com T1 a 10%",
+        "a faixa registrada em bula vai de 4 a 16 mcg/kg/min: 6–12 é o uso usual e 16 é o teto",
+        "a necessidade por quilo NÃO acompanha o peso: é maior em crianças de 2 a 11 anos e menor em neonatos, por diferença de clearance — adolescentes se aproximam do adulto",
         "o uso prolongado em UTI não foi estudado: risco de tolerância e de miopatia, sobretudo associado a corticoide",
         "bloqueio neuromuscular NÃO é sedação: garanta sedativo e analgésico em dose plena"
       ]
@@ -2650,7 +2662,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     function enteral(e, doseKg, peso, intervaloH){
       var u = partesDose(e.unidade);
       var dose = doseKg * peso, porDia = 24 / intervaloH;
-      var r = { dose: dose, doseDia: dose * porDia, doseKgDia: doseKg * porDia, comprimidos: [], alertas: [] };
+      var r = { dose: dose, doseDia: dose * porDia, doseKgDia: doseKg * porDia, comprimidos: [], diluicoes: [], alertas: [] };
       (e.alertasDose || []).forEach(function(a){
         if (dose > a.acima * massaFator(a.massa, u.massa) + EPS) r.alertas.push(a.texto);
       });
@@ -2660,6 +2672,15 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       (e.apresentacoes || []).forEach(function(a){
         var n = dose * massaFator(u.massa, a.massa) / a.valor;
         r.comprimidos.push({ apresentacao: a, quantidade: Math.round(n * 4 + EPS) / 4, exato: n });
+        /* Diluir em água destilada em vez de partir comprimido: fracionar é impreciso e inviável
+           por sonda gástrica. Dilui-se o número INTEIRO de comprimidos que cobre a dose e
+           administra-se o volume proporcional. */
+        var forca = a.valor * massaFator(a.massa, u.massa);
+        var nCp = Math.max(1, Math.ceil(n - EPS));
+        [5, 10].forEach(function(mlAD){
+          var concPorMl = nCp * forca / mlAD;
+          r.diluicoes.push({ apresentacao: a, comprimidos: nCp, mlAD: mlAD, concPorMl: concPorMl, mL: arredondarBolus(dose / concPorMl) });
+        });
       });
       return r;
     }
@@ -3004,6 +3025,13 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   function fcModos(f){ var m = []; if (f.ic) m.push(["ic", "Infusão contínua"]); if (f.bolus && f.bolus.length) m.push(["bolus", "Bólus / intervalada"]); if (f.enteral) m.push(["enteral", "Enteral"]); return m; }
   function fcTagClasse(c){ return c === "faixa" ? "t-ok" : (c === "teto" ? "t-danger" : "t-warn"); }
   function fcTagTexto(c){ return { faixa: "na faixa", abaixo: "abaixo da faixa usual", acima: "acima da faixa usual", teto: "acima do teto" }[c]; }
+  /* Diluir e medir volume, em vez de partir comprimido: serve por sonda e é mais preciso. */
+  function fcDiluicoes(re){
+    if (!re.diluicoes || !re.diluicoes.length) return "";
+    return "Por diluição (preferível, e a única via possível por sonda):\n" + re.diluicoes.map(function(d){
+      return "  • " + d.comprimidos + " comprimido(s) de " + d.apresentacao.rotulo + " em " + d.mlAD + " mL de água destilada → administrar " + CALC.fmtBR(d.mL) + " mL";
+    }).join("\n");
+  }
   /* Preserva qualificadores do rótulo da apresentação (ex.: "de base" na noradrenalina) mesmo quando o
      valor da concentração muda: pega tudo depois de "/mL" no rótulo cadastrado em FARMACOS. */
   function fcSufixoConc(conc){
@@ -3099,6 +3127,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
           "Exposição " + (rm.faixa === "alta" ? "alta (>15 dias ou cumulativa ≥2.500 mcg/kg)" : "baixa (5–15 dias ou cumulativa 1.500–2.499 mcg/kg)"),
           "Metadona " + CALC.fmtBR(rm.mgKgDose) + " mg/kg/dose = " + CALC.fmtBR(rm.mgDose) + " mg VO/SNG de 6/6 h (" + CALC.fmtBR(rm.mgDia) + " mg/dia)",
           cp.comprimidos.map(function(c){ return "≈ " + CALC.fmtBR(c.quantidade) + " comprimido(s) de " + c.apresentacao.rotulo + " (exato " + CALC.fmtBR(c.exato) + ")"; }).join("\n"),
+          fcDiluicoes(cp),
           "Dose PBPK proporcional: " + CALC.fmtBR(rm.pbpk.mgKgDose) + " mg/kg/dose = " + CALC.fmtBR(rm.pbpk.mgDose) + " mg de 6/6 h" + (rm.divergente ? "  ← diverge mais de 50% da regra" : "")
         ].join("\n");
       }
@@ -3111,6 +3140,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       q("lorRx").textContent = [
         "Lorazepam " + CALC.fmtBR(rl.mgKgDose) + " mg/kg/dose = " + CALC.fmtBR(rl.mgDose6h) + " mg VO/SNG de 6/6 h (" + CALC.fmtBR(rl.mgDia) + " mg/dia)",
         cl.comprimidos.map(function(c){ return "≈ " + CALC.fmtBR(c.quantidade) + " comprimido(s) de " + c.apresentacao.rotulo + " (exato " + CALC.fmtBR(c.exato) + ")"; }).join("\n"),
+        fcDiluicoes(cl),
         "Desmame: −10% da dose inicial (" + CALC.fmtBR(rl.mgDose6h * 0.1) + " mg) a cada 24–48 h."
       ].join("\n");
       fcLista2(q("lorAl"), rl.alertas);
@@ -3204,7 +3234,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         var re = CALC.enteral(e, ed, peso, st.intervalo), em = CALC.partesDose(e.unidade).massa;
         q("entRx").textContent = [
           f.nome + " " + CALC.fmtBR(re.dose) + " " + em + " VO/SNG de " + st.intervalo + "/" + st.intervalo + " h (" + CALC.fmtBR(re.doseDia) + " " + em + "/dia)",
-          re.comprimidos.map(function(c){ return "≈ " + CALC.fmtBR(c.quantidade) + " comprimido(s) de " + c.apresentacao.rotulo + " (exato " + CALC.fmtBR(c.exato) + ")"; }).join("\n")
+          re.comprimidos.map(function(c){ return "≈ " + CALC.fmtBR(c.quantidade) + " comprimido(s) de " + c.apresentacao.rotulo + " (exato " + CALC.fmtBR(c.exato) + ")"; }).join("\n"),
+          fcDiluicoes(re)
         ].join("\n");
         var ale = re.alertas.slice(), ce = CALC.classificar(ed, e.faixa, null); if (ce !== "faixa") ale.unshift(fcTagTexto(ce));
         fcLista2(q("entAl"), ale);
