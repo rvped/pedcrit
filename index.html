@@ -401,7 +401,6 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   .sc-opt:has(input:checked){background:none}
   .sc-opt:has(input:checked) .pt{background:none;color:inherit;border-color:#999}
   .seg label:has(input:checked){background:none;color:inherit;font-weight:normal}
-  input[data-total="1"]{color:transparent;-webkit-text-fill-color:transparent}
 }
 </style>
 </head>
@@ -3205,6 +3204,20 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     document.querySelectorAll("details:not([open])").forEach(function(d){ d.open = true; opened.push(d); });
   });
   window.addEventListener("afterprint", function(){ opened.forEach(function(d){ d.open = false; }); opened = []; });
+
+  /* ---------- impressão: esvaziar os totais das escalas (não reter escore em PDF) ---------- */
+  var totaisImpressao = [];
+  window.addEventListener("beforeprint", function(){
+    var campos = document.querySelectorAll('input[data-total="1"]');
+    for (var i = 0; i < campos.length; i++){
+      totaisImpressao.push({ el: campos[i], val: campos[i].value });
+      campos[i].value = "";
+    }
+  });
+  window.addEventListener("afterprint", function(){
+    for (var i = 0; i < totaisImpressao.length; i++){ totaisImpressao[i].el.value = totaisImpressao[i].val; }
+    totaisImpressao = [];
+  });
 })();
 </script>
 </body>
