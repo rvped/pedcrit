@@ -907,10 +907,10 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
 <!-- ================= CALCULADORA ================= -->
 <section class="sec noprint" id="calc">
-  <div class="sec-head"><span class="n">05</span><h2>Calculadora de infusão</h2></div>
-  <p class="sec-lead">Converte dose em mL/h nas diluições padrão. Confira sempre o resultado antes de programar a bomba.</p>
+  <div class="sec-head"><span class="n">05</span><h2>Calculadora de doses</h2></div>
+  <p class="sec-lead">Dose por peso. Infusão contínua preparada para 24 h, em múltiplos de 12 mL, com a medicação em até 50% do volume. Bólus e doses enterais.</p>
 
-  <div class="call c-danger"><b>Ferramenta de apoio, não de prescrição</b>Os números saem das concentrações digitadas. Se a farmácia usar outra diluição, altere a concentração no campo correspondente. Dupla checagem continua obrigatória.</div>
+  <div class="call c-danger"><b>Ferramenta de apoio, não de prescrição</b>Os números saem do peso, da dose e da apresentação informados. Se a farmácia usar outra apresentação, altere o campo. Dupla checagem continua obrigatória.</div>
 
   <div class="card">
     <div class="calc-top">
@@ -918,9 +918,17 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       <label class="chk"><input type="checkbox" id="ctxNeo"> Neonato (&lt;28 dias)</label>
       <label class="chk"><input type="checkbox" id="ctxLRA"> Lesão renal aguda / diálise</label>
     </div>
+    <div class="field"><span>Mostrar</span>
+      <div class="seg" role="radiogroup" id="fcGrupos">
+        <label><input type="radio" name="fcgrupo" value="todos" checked>Todos</label>
+        <label><input type="radio" name="fcgrupo" value="vasoativos">Vasoativos</label>
+        <label><input type="radio" name="fcgrupo" value="sedacao">Analgossedação</label>
+        <label><input type="radio" name="fcgrupo" value="outros">BNM e diurético</label>
+      </div>
+    </div>
   </div>
 
-  <div id="calcRows"></div>
+  <div id="fcLista"></div>
 
   <div class="card">
     <h3>Total das infusões marcadas</h3>
@@ -929,19 +937,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       <div class="dbox"><div class="k">mL/kg/dia</div><div class="v" id="totMlkg">–</div></div>
       <div class="dbox"><div class="k">kcal/dia (propofol)</div><div class="v" id="totKcal">–</div></div>
     </div>
-    <p class="small muted" style="margin:8px 0 0">Some ao balanço hídrico. Em crianças maiores o volume das diluições padrão cresce rápido — discuta concentração maior com a farmácia.</p>
+    <p class="small muted" style="margin:8px 0 0">Some ao balanço hídrico. Marque "Incluir no total" em cada infusão.</p>
   </div>
-  <details class="card"><summary>Concentração dupla para crianças maiores</summary><div class="dx">
-    <p><span class="tag t-prop">proposta</span> Mesmos 50 mL com o dobro de fármaco: metade do volume infundido. Validar estabilidade e rotulagem com a farmácia antes de adotar.</p>
-    <div class="tbl-wrap"><table><thead><tr><th>Fármaco</th><th>Preparo</th><th>Final</th></tr></thead><tbody>
-      <tr><td>Fentanil</td><td>1.000 mcg (20 mL) + 30 mL SF 0,9%</td><td><b>20 mcg/mL</b></td></tr>
-      <tr><td>Cetamina</td><td>1.000 mg (20 mL) + 30 mL SF 0,9%</td><td><b>20 mg/mL</b></td></tr>
-      <tr><td>Dexmedetomidina</td><td>400 mcg (4 mL) + 46 mL SF 0,9%</td><td><b>8 mcg/mL</b></td></tr>
-      <tr><td>Clonidina</td><td>300 mcg (2 mL) + 48 mL SF 0,9%</td><td><b>6 mcg/mL</b></td></tr>
-      <tr><td>Midazolam</td><td>100 mg (20 mL) + 30 mL SF 0,9%</td><td><b>2 mg/mL</b></td></tr>
-    </tbody></table></div>
-    <p class="small muted">Na calculadora, basta trocar o campo “Concentração”.</p>
-  </div></details>
 </section>
 
 <!-- ================= SITUAÇÕES ESPECIAIS ================= -->
@@ -2885,108 +2882,238 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   }
   scRender();
 
-  /* ---------- calculadora ----------
-     mL/h = dose (unid/kg/h) × peso × fator / concentração
-     fator converte a unidade da dose para a da concentração (midazolam: mcg → mg). */
-  var DRUGS = [
-    {id:"fen", nome:"Fentanil", du:"mcg/kg/h", cu:"mcg/mL", conc:10, fator:1, def:1, lo:1, hi:5, teto:10, step:0.5, on:true,
-     bolus:{lo:1, hi:2, u:"mcg", txt:"Bolus 1–2 mcg/kg em ≥1 min"}},
-    {id:"dex", nome:"Dexmedetomidina", du:"mcg/kg/h", cu:"mcg/mL", conc:4, fator:1, def:0.3, lo:0.2, hi:1.4, teto:1.5, step:0.1, on:true,
-     bolusTxt:"Sem bolus"},
-    {id:"cet", nome:"Cetamina", du:"mg/kg/h", cu:"mg/mL", conc:10, fator:1, def:0.5, lo:0.1, hi:2, teto:2, step:0.1, on:false,
-     bolus:{lo:0.5, hi:1, u:"mg", txt:"Bolus 0,5–1 mg/kg"}, nota:"0,1–0,5 poupadora de opioide · 0,5–2 sedoanalgesia"},
-    {id:"clo", nome:"Clonidina", du:"mcg/kg/h", cu:"mcg/mL", conc:3, fator:1, def:0.5, lo:0.5, hi:2, teto:3, step:0.25, on:false,
-     bolus:{lo:1, hi:2, u:"mcg", txt:"Ataque 1–2 mcg/kg em 15–30 min"}, nota:"Nunca junto com dexmedetomidina"},
-    {id:"mid", nome:"Midazolam", du:"mcg/kg/h", cu:"mg/mL", conc:1, fator:0.001, def:50, lo:50, hi:200, teto:300, step:10, on:false,
-     bolus:{lo:0.05, hi:0.2, u:"mg", txt:"Bolus 0,05–0,2 mg/kg"}},
-    {id:"pro", nome:"Propofol 1%", du:"mg/kg/h", cu:"mg/mL", conc:10, fator:1, def:1, lo:1, hi:3.99, teto:3.99, step:0.5, on:false, fixo:true,
-     bolusTxt:"Limite: <4 mg/kg/h e <48 h · trocar frasco e equipo 12/12 h"}
-  ];
-
-  var rows = $("calcRows");
-  DRUGS.forEach(function(d){
-    var el = document.createElement("div");
-    el.className = "drow" + (d.on ? "" : " off");
-    el.id = "row-" + d.id;
-    el.innerHTML =
-      '<div class="nm"><label><input type="checkbox" data-k="on"' + (d.on ? " checked" : "") + '>' + d.nome + '</label><span class="tag" data-k="st"></span></div>' +
-      '<label class="field" style="margin:0"><span>Dose (' + d.du + ')</span><input type="number" data-k="dose" min="0" step="' + d.step + '" value="' + d.def + '" inputmode="decimal"></label>' +
-      '<label class="field" style="margin:0"><span>Concentração (' + d.cu + ')</span><input type="number" data-k="conc" min="0" step="any" value="' + d.conc + '" inputmode="decimal"' + (d.fixo ? " readonly" : "") + '></label>' +
-      '<div class="res"><span class="mlh" data-k="mlh">–</span><span class="abs" data-k="abs"></span><span class="fx" data-k="fx"></span></div>' +
-      '<div class="bol" data-k="bol"></div>';
-    rows.appendChild(el);
-    el.addEventListener("input", calc);
-    el.addEventListener("change", calc);
-  });
-
-  function limites(d){
-    var lo = d.lo, hi = d.hi, teto = d.teto, bol = d.bolus ? {lo:d.bolus.lo, hi:d.bolus.hi} : null, extra = [];
-    var neo = $("ctxNeo").checked, lra = $("ctxLRA").checked;
-    if (d.id === "clo") {
-      if (neo) { lo = 0.25; hi = 0.5; teto = 0.5; bol = {lo:1, hi:1}; extra.push("neonato: metade da dose"); }
-      if (lra) { hi = Math.min(hi, 1); teto = Math.min(teto, 1); if (lo > hi) lo = hi / 2; extra.push("LRA: −50%, teto 1 mcg/kg/h"); }
-    }
-    if (d.id === "mid" && lra) extra.push("LRA: metabólito ativo acumula — reduzir ou trocar");
-    return {lo:lo, hi:hi, teto:teto, bol:bol, extra:extra};
-  }
-
-  function calc(){
-    var peso = num($("peso").value);
-    var okPeso = isFinite(peso) && peso >= 0.4 && peso <= 150;
-    var totMlh = 0, kcal = 0;
-    DRUGS.forEach(function(d){
-      var el = $("row-" + d.id);
-      var q = function(k){ return el.querySelector('[data-k="' + k + '"]'); };
-      var on = q("on").checked;
-      el.classList.toggle("off", !on);
-      var dose = num(q("dose").value), conc = num(q("conc").value);
-      var L = limites(d);
-      var st = q("st"), mlhEl = q("mlh"), absEl = q("abs"), fx = q("fx"), bolEl = q("bol");
-
-      // estado da dose
-      var cls = "t-ok", txt = "na faixa";
-      if (!isFinite(dose) || dose < 0) { cls = "t-warn"; txt = "dose inválida"; }
-      else if (d.id === "pro" && dose >= 4) { cls = "t-danger"; txt = "≥4 mg/kg/h: risco de PRIS"; }
-      else if (dose > L.teto) { cls = "t-danger"; txt = "acima do teto (" + fmt(L.teto, L.teto < 1 ? 2 : 1).replace(/,0$/, "") + ")"; }
-      else if (dose > L.hi) { cls = "t-warn"; txt = "acima da faixa usual"; }
-      else if (dose > 0 && dose < L.lo) { cls = "t-warn"; txt = "abaixo da faixa usual"; }
-      st.className = "tag " + cls; st.textContent = txt;
-
-      var faixa = "Faixa " + String(L.lo).replace(".", ",") + "–" + String(d.id === "pro" ? 4 : L.hi).replace(".", ",") + " " + d.du;
-      fx.textContent = [faixa].concat(d.nota ? [d.nota] : [], L.extra).join(" · ");
-
-      if (!okPeso || !isFinite(conc) || conc <= 0 || !isFinite(dose) || dose < 0) {
-        mlhEl.innerHTML = "–"; absEl.textContent = okPeso ? "confira concentração/dose" : "informe o peso"; bolEl.textContent = d.bolusTxt || "";
-        return;
-      }
-      var amountH = dose * peso;               // unid da dose × h⁻¹ (sem /kg)
-      var mlh = amountH * d.fator / conc;
-      mlhEl.innerHTML = fmt(mlh, mlh < 1 ? 2 : 1) + ' <small>mL/h</small>';
-      var absU = d.du.split("/")[0];
-      absEl.textContent = "= " + fmt(amountH, amountH < 10 ? 2 : (amountH < 100 ? 1 : 0)) + " " + absU + "/h";
-
-      if (L.bol) {
-        var bLo = L.bol.lo * peso, bHi = L.bol.hi * peso;
-        var vLo = bLo / conc, vHi = bHi / conc;
-        var range = function(a, b, dd){ return a === b ? fmt(a, dd) : fmt(a, dd) + "–" + fmt(b, dd); };
-        var head = d.bolus.txt;
-        if (d.id === "clo" && $("ctxNeo").checked) head = "Ataque neonatal 1 mcg/kg em 15–30 min";
-        bolEl.innerHTML = "<b>" + head + ":</b> " + range(bLo, bHi, bHi < 10 ? 2 : 1) + " " + d.bolus.u +
-          " = <b>" + range(vLo, vHi, vHi < 1 ? 2 : 1) + " mL</b> da solução de " + fmt(conc, conc < 1 ? 2 : 0) + " " + d.cu;
-      } else {
-        bolEl.textContent = d.bolusTxt || "";
-      }
-      if (on) {
-        totMlh += mlh;
-        if (d.id === "pro") kcal = mlh * 24 * 1.1 * (conc / 10);
-      }
+  /* ---------- calculadora de doses ---------- */
+  var fcLista = $("fcLista"), FC_EST = {};
+  function fcCtx(){ return { neo: $("ctxNeo").checked, lra: $("ctxLRA").checked }; }
+  function fcPeso(){ var p = num($("peso").value); return isFinite(p) && p >= 0.4 && p <= 150 ? p : null; }
+  function fcModos(f){ var m = []; if (f.ic) m.push(["ic", "Infusão contínua"]); if (f.bolus && f.bolus.length) m.push(["bolus", "Bólus / intervalada"]); if (f.enteral) m.push(["enteral", "Enteral"]); return m; }
+  function fcTagClasse(c){ return c === "faixa" ? "t-ok" : (c === "teto" ? "t-danger" : "t-warn"); }
+  function fcTagTexto(c){ return { faixa: "na faixa", abaixo: "abaixo da faixa usual", acima: "acima da faixa usual", teto: "acima do teto" }[c]; }
+  function fcCard(f){
+    var modos = fcModos(f), st = FC_EST[f.id] = FC_EST[f.id] || { modo: modos[0][0], extra12: 0, bol: 0, intervalo: f.enteral ? f.enteral.intervalos[0] : null, incluir: false, cetS: false };
+    var d = document.createElement("details");
+    d.className = "card fc"; d.id = "fc-" + f.id; d.setAttribute("data-grupo", f.grupo);
+    var h = '<summary><span class="fc-nome">' + f.nome + '</span> <span class="muted small">' + f.apresentacao + '</span></summary><div class="fc-b">';
+    if (modos.length > 1) h += '<div class="seg fc-modos" role="radiogroup">' + modos.map(function(m){ return '<label><input type="radio" name="fcm-' + f.id + '" data-modo="1" value="' + m[0] + '"' + (st.modo === m[0] ? " checked" : "") + '>' + m[1] + '</label>'; }).join("") + '</div>';
+    if (f.id === "cet") h += '<label class="chk"><input type="checkbox" data-k="cetS"' + (st.cetS ? " checked" : "") + '> Cetamina <b>S(+)</b> (escetamina): faixas, padrão e teto divididos por 2</label>';
+    if (f.ic) h += '<div data-painel="ic"' + (st.modo === "ic" ? "" : " hidden") + '>' +
+      '<div class="grid g2"><label class="field"><span>Dose (' + f.ic.unidade + ')</span><input type="number" inputmode="decimal" min="0" step="' + f.ic.passo + '" data-k="icDose" value="' + f.ic.padrao + '"></label>' +
+      (f.ic.semDiluicao ? '' : '<label class="field"><span>Ampola (' + f.ic.conc.massa + '/mL)</span><input type="number" inputmode="decimal" min="0" step="any" data-k="icConc" value="' + f.ic.conc.valor + '"></label>') + '</div>' +
+      (f.ic.semDiluicao ? '' : '<div class="grid g2"><label class="field"><span>Diluente</span><select data-k="icDil">' + f.ic.diluentes.map(function(x){ return "<option>" + x + "</option>"; }).join("") + '</select></label>' +
+        '<div class="field"><span>Volume</span><div class="sc-acoes" style="margin:0"><button type="button" class="btn" data-acao="menos12">−12 mL</button><button type="button" class="btn" data-acao="mais12">+12 mL</button></div></div></div>') +
+      '<div data-k="icFaixa" class="small muted"></div><div class="rx" data-k="icRx"></div><ul class="fc-alertas" data-k="icAl"></ul>' +
+      '<label class="chk"><input type="checkbox" data-k="icInc"' + (st.incluir ? " checked" : "") + '> Incluir no total</label>' +
+      '<div class="sc-acoes"><button type="button" class="btn fill" data-acao="copiarIC">Copiar prescrição</button></div>' +
+      '<details><summary>Tabela de titulação (a cada 0,5 mL/h)</summary><div class="tbl-wrap"><table class="titul"><thead><tr><th>mL/h</th><th>' + f.ic.unidade + '</th><th>Leitura</th></tr></thead><tbody data-k="icTit"></tbody></table></div></details>' +
+      '</div>';
+    if (f.bolus && f.bolus.length) h += '<div data-painel="bolus"' + (st.modo === "bolus" ? "" : " hidden") + '>' +
+      (f.bolus.length > 1 ? '<div class="seg fc-modos" role="radiogroup">' + f.bolus.map(function(b, i){ return '<label><input type="radio" name="fcb-' + f.id + '" data-bol="1" value="' + i + '"' + (st.bol === i ? " checked" : "") + '>' + b.rotulo + '</label>'; }).join("") + '</div>' : '') +
+      '<div class="grid g2"><label class="field"><span data-k="bolUn"></span><input type="number" inputmode="decimal" min="0" step="any" data-k="bolDose"></label>' +
+      '<label class="field"><span data-k="bolConcUn"></span><input type="number" inputmode="decimal" min="0" step="any" data-k="bolConc"></label></div>' +
+      '<div data-k="bolFaixa" class="small muted"></div><div class="rx" data-k="bolRx"></div><ul class="fc-alertas" data-k="bolAl"></ul></div>';
+    if (f.enteral) h += '<div data-painel="enteral"' + (st.modo === "enteral" ? "" : " hidden") + '>' +
+      '<div class="grid g2"><label class="field"><span>Dose (' + f.enteral.unidade + ')</span><input type="number" inputmode="decimal" min="0" step="any" data-k="entDose" value="' + f.enteral.padrao + '"></label>' +
+      '<div class="field"><span>Intervalo</span><div class="rx" style="margin:0">de 6/6 h (fixo)</div></div></div>' +
+      '<div class="rx" data-k="entRx"></div><ul class="fc-alertas" data-k="entAl"></ul>' +
+      fcPainelEspecial(f) +
+      (f.enteral.notas && f.enteral.notas.length ? '<ul class="small">' + f.enteral.notas.map(function(n){ return "<li>" + n + "</li>"; }).join("") + '</ul>' : '') +
+      '</div>';
+    h += '<details><summary>Indicações e ação farmacológica</summary><div class="dx"><p><b>Indicações</b></p><ul>' + f.info.indicacoes.map(function(x){ return "<li>" + x + "</li>"; }).join("") + '</ul><p><b>Ação farmacológica</b></p><ul>' + f.info.acao.map(function(x){ return "<li>" + x + "</li>"; }).join("") + '</ul>' +
+      (f.info.refs && f.info.refs.length ? '<p class="small muted">Fontes: ' + f.info.refs.map(function(n){ return '<a class="cite" href="#ref-' + n + '">' + n + '</a>'; }).join("") + '</p>' : '') + '</div></details>';
+    h += '</div>';
+    d.innerHTML = h;
+    d.addEventListener("change", function(ev){
+      var t = ev.target;
+      if (t.getAttribute("data-modo")) { st.modo = t.value; d.querySelectorAll("[data-painel]").forEach(function(pn){ pn.hidden = pn.getAttribute("data-painel") !== st.modo; }); }
+      if (t.getAttribute("data-bol")) { st.bol = Number(t.value); fcPreencherBolus(f, d, true); }
+      if (t.getAttribute("data-int")) st.intervalo = Number(t.value);
+      if (t.getAttribute("data-k") === "icInc") st.incluir = t.checked;
+      if (t.getAttribute("data-k") === "cetS") st.cetS = t.checked;
+      fcCalc(f, d); fcTotais();
     });
-    $("totMlh").textContent = okPeso ? fmt(totMlh, totMlh < 1 ? 2 : 1) : "–";
-    $("totMlkg").textContent = okPeso ? fmt(totMlh * 24 / peso, 0) : "–";
-    $("totKcal").textContent = okPeso ? fmt(kcal, 0) : "–";
+    d.addEventListener("input", function(){ fcCalc(f, d); fcTotais(); });
+    d.addEventListener("click", function(ev){
+      var a = ev.target.getAttribute && ev.target.getAttribute("data-acao");
+      if (a === "mais12") { st.extra12++; fcCalc(f, d); fcTotais(); }
+      if (a === "menos12" && st.extra12 > 0) { st.extra12--; fcCalc(f, d); fcTotais(); }
+      if (a === "copiarIC") copiarTexto(d.querySelector('[data-k="icRx"]').textContent);
+    });
+    if (f.bolus && f.bolus.length) fcPreencherBolus(f, d, true);
+    return d;
   }
-  ["peso", "ctxNeo", "ctxLRA"].forEach(function(id){ $(id).addEventListener("input", calc); $(id).addEventListener("change", calc); });
-  calc();
+  /* Painéis especiais de desmame: metadona, lorazepam e clonidina. Sempre de 6/6 h. */
+  function fcPainelEspecial(f){
+    if (f.id === "met") return '<details open><summary><b>Converter o fentanil em metadona</b></summary><div class="dx">' +
+      '<div class="grid g2"><label class="field"><span>Dias de fentanil</span><input type="number" inputmode="numeric" min="0" step="1" data-k="metDias" value="7"></label>' +
+      '<label class="field"><span>Fentanil atual (mcg/kg/h)</span><input type="number" inputmode="decimal" min="0" step="0.1" data-k="metFent" value="2"></label></div>' +
+      '<label class="field"><span>Dose cumulativa de fentanil (mcg/kg) — opcional</span><input type="number" inputmode="decimal" min="0" step="10" data-k="metCum" placeholder="vazio: usa só os dias"></label>' +
+      '<div class="rx" data-k="metRx"></div><ul class="fc-alertas" data-k="metAl"></ul>' +
+      '<p class="small muted">Regra de exposição de Steineck 2014<a class="cite" href="#ref-75">75</a>, com a dose PBPK proporcional (razão 1:10) de Hoop-Sommen 2026<a class="cite" href="#ref-76">76</a> ao lado. <span class="tag t-prop">proposta</span> Não existe fórmula única validada: a razão de conversão varia até 26 vezes na literatura<a class="cite" href="#ref-77">77</a>. Decidir com a farmácia clínica.</p></div></details>';
+    if (f.id === "lor") return '<details open><summary><b>Converter o midazolam IV em lorazepam</b></summary><div class="dx">' +
+      '<label class="field"><span>Midazolam atual (mg/kg/h)</span><input type="number" inputmode="decimal" min="0" step="0.01" data-k="lorMid" value="0.2"></label>' +
+      '<div class="rx" data-k="lorRx"></div><ul class="fc-alertas" data-k="lorAl"></ul>' +
+      '<p class="small muted"><span class="tag t-prop">proposta</span> Lorazepam VO/dia = midazolam IV/dia ÷ 12, em 4 tomadas de 6/6 h<a class="cite" href="#ref-38">38</a>. O midazolam cai à metade após a 2ª e a 3ª dose e é suspenso após a 4ª. Vigiar supersedação nas 24 h seguintes.</p></div></details>';
+    if (f.id === "clo") return '<details open><summary><b>Transição da dexmedetomidina e cronograma de desmame</b></summary><div class="dx">' +
+      '<div class="grid g2"><label class="field"><span>Idade (meses)</span><input type="number" inputmode="numeric" min="0" step="1" data-k="cloIdade" value="12"></label>' +
+      '<label class="field"><span>Dexmedetomidina atual (mcg/kg/h)</span><input type="number" inputmode="decimal" min="0" step="0.1" data-k="cloDex" value="0.8"></label></div>' +
+      '<div class="rx" data-k="cloRx"></div><ul class="fc-alertas" data-k="cloAl"></ul>' +
+      '<div class="tbl-wrap"><table class="titul"><thead><tr><th>Dose</th><th>Quando</th><th>Intervalo</th><th>Quantidade</th></tr></thead><tbody data-k="cloCron"></tbody></table></div>' +
+      '<p class="small muted">Dose inicial por idade (Liu 2020<a class="cite" href="#ref-80">80</a>, Heifner 2026<a class="cite" href="#ref-81">81</a>, Kelner 2026<a class="cite" href="#ref-83">83</a>); dose proporcional à dexmedetomidina 1:10 (Phillips 2025)<a class="cite" href="#ref-82">82</a>. Retirada da dexmedetomidina: −25% da dose inicial 1 h após cada dose de clonidina. Cronograma de desmame de Liu 2020.</p></div></details>';
+    return "";
+  }
+  function fcEspecialCalc(f, d, peso){
+    var q = function(k){ return d.querySelector('[data-k="' + k + '"]'); };
+    if (f.id === "met" && q("metRx")) {
+      var dias = num(q("metDias").value), fent = num(q("metFent").value);
+      var cumTxt = q("metCum").value, cum = cumTxt === "" ? null : num(cumTxt);
+      if (!peso || !(dias >= 0) || !(fent >= 0)) { q("metRx").textContent = "Informe peso, dias de fentanil e fentanil atual."; fcLista2(q("metAl"), []); return; }
+      var rm = CALC.metadonaInicial(dias, cum, fent, peso);
+      if (rm.faixa === "nao-converter") {
+        q("metRx").textContent = "NÃO CONVERTER para metadona.\nMenos de 5 dias de fentanil, sem dose cumulativa que justifique: desmame a própria infusão de fentanil.";
+      } else {
+        var cp = CALC.enteral(f.enteral, rm.mgKgDose, peso, 6);
+        q("metRx").textContent = [
+          "Exposição " + (rm.faixa === "alta" ? "alta (>15 dias ou cumulativa ≥2.500 mcg/kg)" : "baixa (5–15 dias ou cumulativa 1.500–2.499 mcg/kg)"),
+          "Metadona " + CALC.fmtBR(rm.mgKgDose) + " mg/kg/dose = " + CALC.fmtBR(rm.mgDose) + " mg VO/SNG de 6/6 h (" + CALC.fmtBR(rm.mgDia) + " mg/dia)",
+          cp.comprimidos.map(function(c){ return "≈ " + CALC.fmtBR(c.quantidade) + " comprimido(s) de " + c.apresentacao.rotulo + " (exato " + CALC.fmtBR(c.exato) + ")"; }).join("\n"),
+          "Dose PBPK proporcional: " + CALC.fmtBR(rm.pbpk.mgKgDose) + " mg/kg/dose = " + CALC.fmtBR(rm.pbpk.mgDose) + " mg de 6/6 h" + (rm.divergente ? "  ← diverge mais de 50% da regra" : "")
+        ].join("\n");
+      }
+      fcLista2(q("metAl"), rm.alertas);
+    }
+    if (f.id === "lor" && q("lorRx")) {
+      var mid = num(q("lorMid").value);
+      if (!peso || !(mid > 0)) { q("lorRx").textContent = "Informe peso e dose de midazolam."; fcLista2(q("lorAl"), []); return; }
+      var rl = CALC.lorazepamDeMidazolam(mid, peso), cl = CALC.enteral(f.enteral, rl.mgKgDose, peso, 6);
+      q("lorRx").textContent = [
+        "Lorazepam " + CALC.fmtBR(rl.mgKgDose) + " mg/kg/dose = " + CALC.fmtBR(rl.mgDose6h) + " mg VO/SNG de 6/6 h (" + CALC.fmtBR(rl.mgDia) + " mg/dia)",
+        cl.comprimidos.map(function(c){ return "≈ " + CALC.fmtBR(c.quantidade) + " comprimido(s) de " + c.apresentacao.rotulo + " (exato " + CALC.fmtBR(c.exato) + ")"; }).join("\n"),
+        "Desmame: −10% da dose inicial (" + CALC.fmtBR(rl.mgDose6h * 0.1) + " mg) a cada 24–48 h."
+      ].join("\n");
+      fcLista2(q("lorAl"), rl.alertas);
+    }
+    if (f.id === "clo" && q("cloRx")) {
+      var idade = num(q("cloIdade").value), dex = num(q("cloDex").value);
+      if (!peso || !(idade >= 0) || !(dex >= 0)) { q("cloRx").textContent = "Informe peso, idade e dose de dexmedetomidina."; fcLista2(q("cloAl"), []); q("cloCron").innerHTML = ""; return; }
+      var rc = CALC.clonidinaInicial(idade, dex, peso);
+      q("cloRx").textContent = [
+        "Dose inicial por idade: " + CALC.fmtBR(rc.mcgKgDose) + " mcg/kg/dose = " + CALC.fmtBR(rc.mcgDose) + " mcg VO/SNG de 6/6 h",
+        "Dose proporcional à dexmedetomidina: " + CALC.fmtBR(rc.proporcional.mcgKgDose) + " mcg/kg/dose = " + CALC.fmtBR(rc.proporcional.mcgDose) + " mcg de 6/6 h" + (rc.proporcional.acimaDoTeto ? "  ← acima do teto de 3 mcg/kg/dose" : ""),
+        "Escalonar de 0,5 em 0,5 mcg/kg/dose se houver agitação ou WAT-A2A em ascensão, até o teto de " + CALC.fmtBR(rc.teto) + " mcg/kg/dose."
+      ].join("\n");
+      fcLista2(q("cloAl"), rc.alertas);
+      q("cloCron").innerHTML = CALC.cronogramaClonidina(rc.mcgDose).map(function(l){
+        var quando = l.horaInicio === 0 ? "agora" : (l.horaInicio % 24 === 0 ? "dia " + (l.horaInicio / 24) : l.horaInicio + " h");
+        return "<tr><td>" + l.n + "</td><td>" + quando + "</td><td>" + l.intervaloH + "/" + l.intervaloH + " h</td><td>" + CALC.fmtBR(l.mcg) + " mcg</td></tr>";
+      }).join("") + '<tr class="teto"><td>–</td><td>' + CALC.fmtBR(90 + 24) + " h</td><td>–</td><td>suspender (vigiar hipertensão de rebote)</td></tr>";
+    }
+  }
+  function fcPreencherBolus(f, d, reset){
+    var st = FC_EST[f.id], b = f.bolus[st.bol], q = function(k){ return d.querySelector('[data-k="' + k + '"]'); };
+    q("bolUn").textContent = "Dose (" + b.unidade + ")";
+    q("bolConcUn").textContent = "Ampola (" + b.conc.massa + "/mL)";
+    if (reset) { q("bolDose").value = b.padrao; q("bolConc").value = b.conc.valor; }
+  }
+  function fcLista2(ul, arr){ ul.innerHTML = arr.map(function(a){ return "<li>" + a + "</li>"; }).join(""); }
+  function fcCalc(f, d){
+    var peso = fcPeso(), ctx = fcCtx(), st = FC_EST[f.id], q = function(k){ return d.querySelector('[data-k="' + k + '"]'); };
+    var notasCtx = [];
+    ["neo", "lra"].forEach(function(c){ if (ctx[c] && f.ajustes && f.ajustes[c] && f.ajustes[c].nota) notasCtx.push(f.ajustes[c].nota); });
+    if (f.ic) {
+      var ic = CALC.aplicarAjustes(f.ic, f.ajustes && { neo: f.ajustes.neo && f.ajustes.neo.ic, lra: f.ajustes.lra && f.ajustes.lra.ic }, ctx);
+      if (f.id === "cet" && st.cetS) ic = fcMeia(ic);
+      var dose = num(q("icDose").value), conc = f.ic.semDiluicao ? f.ic.conc.valor : num(q("icConc").value);
+      q("icFaixa").textContent = "Faixa usual " + CALC.fmtBR(ic.faixa[0]) + "–" + CALC.fmtBR(ic.faixa[1]) + " " + ic.unidade + (ic.teto != null ? " · teto " + CALC.fmtBR(ic.teto) : "") + (notasCtx.length ? " · " + notasCtx.join(" · ") : "");
+      if (!peso || !(dose > 0) || !(conc > 0)) { q("icRx").textContent = peso ? "Informe dose e apresentação." : "Informe o peso."; fcLista2(q("icAl"), []); q("icTit").innerHTML = ""; st.ultimo = null; }
+      else {
+        var r = CALC.diluirIC(ic, dose, peso, { conc: conc, extra12: st.extra12 });
+        st.ultimo = r;
+        var dil = f.ic.semDiluicao ? "" : q("icDil").value;
+        q("icRx").textContent = CALC.textoPrescricaoIC(f.nome, { unidade: ic.unidade, conc: { valor: conc, massa: f.ic.conc.massa, rotulo: CALC.fmtBR(conc) + " " + f.ic.conc.massa + "/mL" } }, r, dil);
+        var al = r.alertas.slice();
+        if (r.classe !== "faixa") al.unshift(fcTagTexto(r.classe));
+        (f.ic.notas || []).forEach(function(n){ al.push(n); });
+        fcLista2(q("icAl"), al);
+        q("icTit").innerHTML = CALC.titulacao(r, ic, 0.5).map(function(l){
+          return '<tr class="' + l.classe + (Math.abs(l.vazao - r.vazao) < 1e-9 ? " atual" : "") + '"><td>' + CALC.fmtBR(l.vazao) + '</td><td>' + CALC.fmtBR(l.dose) + '</td><td>' + fcTagTexto(l.classe) + '</td></tr>';
+        }).join("");
+      }
+    }
+    if (f.bolus && f.bolus.length) {
+      var b = f.bolus[st.bol], bd = num(q("bolDose").value), bc = num(q("bolConc").value);
+      var bAj = CALC.aplicarAjustes(b, f.ajustes && { neo: f.ajustes.neo && f.ajustes.neo.bolus, lra: f.ajustes.lra && f.ajustes.lra.bolus }, ctx);
+      if (f.id === "cet" && st.cetS) bAj = fcMeia(bAj);
+      q("bolFaixa").textContent = "Faixa " + CALC.fmtBR(bAj.faixa[0]) + (bAj.faixa[1] !== bAj.faixa[0] ? "–" + CALC.fmtBR(bAj.faixa[1]) : "") + " " + b.unidade + (b.max ? " · máx " + CALC.fmtBR(b.max.valor) + " " + b.max.massa : "") + " · " + b.via;
+      if (!peso || !(bd > 0) || !(bc > 0)) { q("bolRx").textContent = peso ? "Informe dose e apresentação." : "Informe o peso."; fcLista2(q("bolAl"), []); }
+      else {
+        var rb = CALC.bolus(bAj, bd, peso, { conc: bc }), massa = CALC.partesDose(b.unidade).massa;
+        var linhas = [];
+        if (rb.diluicao) linhas.push("Diluir " + CALC.fmtBR(rb.diluicao.mlMed) + " mL da ampola + " + CALC.fmtBR(rb.diluicao.mlSF) + " mL de SF 0,9% → " + CALC.fmtBR(rb.concUso) + " " + b.conc.massa + "/mL");
+        linhas.push("Dose: " + CALC.fmtBR(rb.dose) + " " + massa + (rb.limitada ? " (" + (rb.limitada === "max" ? "limitada ao máximo" : "elevada ao mínimo") + ")" : "") + " = " + CALC.fmtBR(rb.mL) + " mL" + (rb.diluicao ? " da diluição" : " da ampola"));
+        if (Math.abs(rb.doseReal - rb.dose) / rb.dose > 0.02) linhas.push("Dose real no volume arredondado: " + CALC.fmtBR(rb.doseReal) + " " + massa);
+        linhas.push("Via: " + b.via);
+        q("bolRx").textContent = linhas.join("\n");
+        var alb = rb.alertas.slice(); (b.notas || []).forEach(function(n){ alb.push(n); });
+        var cb = CALC.classificar(bd, bAj.faixa, null); if (cb !== "faixa") alb.unshift(fcTagTexto(cb));
+        fcLista2(q("bolAl"), alb);
+      }
+    }
+    if (f.enteral) {
+      var e = f.enteral, ed = num(q("entDose").value);
+      if (!peso || !(ed > 0)) { q("entRx").textContent = peso ? "Informe a dose." : "Informe o peso."; fcLista2(q("entAl"), []); }
+      else {
+        var re = CALC.enteral(e, ed, peso, st.intervalo), em = CALC.partesDose(e.unidade).massa;
+        q("entRx").textContent = [
+          f.nome + " " + CALC.fmtBR(re.dose) + " " + em + " VO/SNG de " + st.intervalo + "/" + st.intervalo + " h (" + CALC.fmtBR(re.doseDia) + " " + em + "/dia)",
+          re.comprimidos.map(function(c){ return "≈ " + CALC.fmtBR(c.quantidade) + " comprimido(s) de " + c.apresentacao.rotulo + " (exato " + CALC.fmtBR(c.exato) + ")"; }).join("\n")
+        ].join("\n");
+        var ale = re.alertas.slice(), ce = CALC.classificar(ed, e.faixa, null); if (ce !== "faixa") ale.unshift(fcTagTexto(ce));
+        fcLista2(q("entAl"), ale);
+      }
+      fcEspecialCalc(f, d, peso);
+    }
+  }
+  /* Cetamina S(+): a escetamina é cerca de 2 vezes mais potente que a racêmica. */
+  function fcMeia(o){
+    var r = {}, k;
+    for (k in o) r[k] = o[k];
+    r.faixa = [o.faixa[0] / 2, o.faixa[1] / 2];
+    if (o.teto != null) r.teto = o.teto / 2;
+    if (o.padrao != null) r.padrao = o.padrao / 2;
+    return r;
+  }
+  function fcTotais(){
+    var peso = fcPeso(), tot = 0, kcal = 0;
+    FARMACOS.forEach(function(f){
+      var st = FC_EST[f.id];
+      if (!st || !st.incluir || !st.ultimo) return;
+      tot += st.ultimo.vazao;
+      if (f.id === "pro") kcal = st.ultimo.vazao * 24 * 1.1;
+    });
+    $("totMlh").textContent = peso ? CALC.fmtBR(tot) : "–";
+    $("totMlkg").textContent = peso ? CALC.fmtBR(tot * 24 / peso) : "–";
+    $("totKcal").textContent = peso ? CALC.fmtBR(kcal) : "–";
+  }
+  function fcRenderLista(){
+    fcLista.innerHTML = "";
+    FARMACOS.forEach(function(f){ var d = fcCard(f); fcLista.appendChild(d); fcCalc(f, d); });
+    fcFiltrar(); fcTotais();
+  }
+  function fcFiltrar(){
+    var g = document.querySelector('input[name="fcgrupo"]:checked').value;
+    fcLista.querySelectorAll(".fc").forEach(function(d){ d.hidden = g !== "todos" && d.getAttribute("data-grupo") !== g; });
+  }
+  function abrirFarmaco(id){
+    var d = $("fc-" + id); if (!d) return;
+    document.querySelector('input[name="fcgrupo"][value="todos"]').checked = true; fcFiltrar();
+    d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  document.querySelectorAll('input[name="fcgrupo"]').forEach(function(r){ r.addEventListener("change", fcFiltrar); });
+  ["peso", "ctxNeo", "ctxLRA"].forEach(function(id){
+    var h = function(){ FARMACOS.forEach(function(f){ var d = $("fc-" + f.id); if (d) fcCalc(f, d); }); fcTotais(); };
+    $(id).addEventListener("input", h); $(id).addEventListener("change", h);
+  });
+  fcRenderLista();
 
   /* ---------- cronograma de desmame ---------- */
   function sched(){
