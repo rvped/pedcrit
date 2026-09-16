@@ -2015,6 +2015,340 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     }
   }
   ];
+  /* Textos copiados de docs/pesquisas/2026-09-15/pesquisa_D_escalas.md (blocos "TEXTO PRONTO").
+     WAT-1 e WAT-A2A têm licença ND: reproduzidos sem alteração, inclusive os erros da fonte.
+     RASS, CAPD e COMFORT-B são CC BY / CC BY-NC: só a grafia listada no desenho §4 foi atualizada. */
+  var ESCALAS = [
+  {
+    id: "comfortb", nome: "Escala COMFORT-B", curto: "COMFORT-B", sinal: false,
+    variantes: { rotulo: "O paciente está em ventilação mecânica?", sim: "Em VM", nao: "Sem VM" },
+    instrucoes: [
+      "Observe a criança por 2 minutos, sem tocá-la, antes de pontuar.",
+      "Pontue cada um dos 6 itens de 1 a 5. Em ventilação mecânica, pontue \"Resposta respiratória\"; em respiração espontânea, pontue \"Choro\".",
+      "O total vai de 6 a 30 e alimenta o interpretador da seção 02.",
+      "Na faixa de 11 a 22 o escore não distingue bem sedação insuficiente de excessiva: a interpretação da enfermagem (NISS) é obrigatória."
+    ],
+    itens: [
+      { id: "alerta", nome: "Nível de consciência: alerta", curto: "consc", opcoes: [
+        { pontos: 1, texto: "Sono profundo" }, { pontos: 2, texto: "Sono superficial" }, { pontos: 3, texto: "Letárgico" },
+        { pontos: 4, texto: "Acordado e alerta" }, { pontos: 5, texto: "Hiperalerta" } ] },
+      { id: "calma", nome: "Calma / Agitação", curto: "calma", opcoes: [
+        { pontos: 1, texto: "Calma" }, { pontos: 2, texto: "Ansiedade leve" }, { pontos: 3, texto: "Ansioso" },
+        { pontos: 4, texto: "Muito ansioso" }, { pontos: 5, texto: "Amedrontado" } ] },
+      { id: "resp", nome: "Resposta respiratória", curto: "resp", dica: "apenas se paciente em ventilação mecânica", somenteSe: { vm: true }, opcoes: [
+        { pontos: 1, texto: "Ausência de tosse e de respiração espontânea" },
+        { pontos: 2, texto: "Respiração espontânea com pouca ou nenhuma resposta a ventilação" },
+        { pontos: 3, texto: "Tosse ou resistência ocasional ao ventilador" },
+        { pontos: 4, texto: "Respirações ativas contra o ventilador ou tosse regular" },
+        { pontos: 5, texto: "Compete com o ventilador, tosse" } ] },
+      { id: "choro", nome: "Choro", curto: "choro", dica: "apenas se paciente com respiração espontânea", somenteSe: { vm: false }, opcoes: [
+        { pontos: 1, texto: "Respiração silenciosa, sem som de choro" },
+        { pontos: 2, texto: "Resmungando / choramingando" },
+        { pontos: 3, texto: "Reclamando (monotônico)" },
+        { pontos: 4, texto: "Choro" },
+        { pontos: 5, texto: "Gritando" } ] },
+      { id: "mov", nome: "Movimento físico", curto: "mov", opcoes: [
+        { pontos: 1, texto: "Ausência de movimento" },
+        { pontos: 2, texto: "Movimento leve ocasional" },
+        { pontos: 3, texto: "Movimento leve frequente" },
+        { pontos: 4, texto: "Movimento vigoroso limitado às extremidades" },
+        { pontos: 5, texto: "Movimento vigoroso que inclui tronco e cabeça" } ] },
+      { id: "tonus", nome: "Tônus muscular", curto: "tônus", opcoes: [
+        { pontos: 1, texto: "Totalmente relaxado" }, { pontos: 2, texto: "Hipotônico" }, { pontos: 3, texto: "Normotônico" },
+        { pontos: 4, texto: "Hipertônico com flexão dos dedos e artelhos" },
+        { pontos: 5, texto: "Rigidez extrema com flexão de dedos e artelhos" } ] },
+      { id: "face", nome: "Tensão facial", curto: "face", opcoes: [
+        { pontos: 1, texto: "Músculos faciais totalmente relaxados" },
+        { pontos: 2, texto: "Tônus facial normal, sem tensão evidente" },
+        { pontos: 3, texto: "Tensão evidente em alguns músculos faciais" },
+        { pontos: 4, texto: "Tensão evidente em toda a face" },
+        { pontos: 5, texto: "Músculos faciais contorcidos" } ] }
+    ],
+    niss: { nome: "NISS — interpretação da enfermagem sobre a sedação", de: 11, ate: 22, opcoes: [
+      { valor: "insuficiente", sigla: "1", texto: "Sedação insuficiente" },
+      { valor: "adequada", sigla: "2", texto: "Sedação adequada" },
+      { valor: "excessiva", sigla: "3", texto: "Sedação excessiva" } ] },
+    faixas: [
+      { min: 6, max: 10, classe: "alerta", rotulo: "hipersedação", texto: "Reduza a sedação e reavalie o alvo." },
+      { min: 11, max: 16, classe: "ok", rotulo: "sedação moderada", texto: "Confirme com a interpretação da enfermagem (NISS)." },
+      { min: 17, max: 22, classe: "aviso", rotulo: "sedação leve", texto: "Confirme com a interpretação da enfermagem (NISS)." },
+      { min: 23, max: 30, classe: "alerta", rotulo: "sedação insuficiente", texto: "Procure dor, delirium, hipoxemia e abstinência antes de escalar a sedação." }
+    ],
+    fonte: "Amoretti CF et al., Rev Bras Ter Intensiva 2008, Anexo 1 (grafia atualizada: \"freqüente\" → \"frequente\"). Pontos de corte: Ista E et al. 2005. NISS: tradução livre, não validada.",
+    licenca: "Texto do artigo em CC BY-NC 4.0. Não há declaração de licença do instrumento (Erasmus MC): autorização de uso pendente.",
+    traducao: "adaptada", seloTraducao: "tradução sem adaptação transcultural formal",
+    selo: "NISS em tradução livre", refs: [23, 93]
+  },
+  {
+    id: "rass", nome: "Escala de agitação e sedação de Richmond (RASS)", curto: "RASS", sinal: true,
+    instrucoes: [
+      "1. Observe o paciente. Se estiver alerta e calmo, atribua escore 0. Se houver inquietação ou agitação, atribua de +1 a +4 pela coluna de descrição.",
+      "2. Se o paciente não estiver alerta, chame-o pelo nome, em voz alta, mande-o abrir os olhos e olhar para você. Repita uma vez, se necessário. Você pode estimulá-lo verbalmente a continuar olhando, mas não pode tocá-lo. Atribua −1, −2 ou −3 conforme a resposta.",
+      "3. Se o paciente não responder ao comando verbal, estimule-o fisicamente sacudindo seu ombro e, se não houver resposta, friccionando o esterno. Atribua −4 se houver qualquer movimento e −5 se não houver resposta alguma.",
+      "Se o paciente não estava alerta antes do comando ou do estímulo, atribua de −1 a −5 mesmo que fique agitado depois.",
+      "Limitação conhecida em lactentes: o escore +4 é pouco aplicável e o passo 2 depende de contato visual."
+    ],
+    itens: [
+      { id: "nivel", nome: "Escore, termo e descrição", curto: "nível", opcoes: [
+        { pontos: 4, texto: "Combativo — claramente combativo ou violento: perigo imediato para a equipe" },
+        { pontos: 3, texto: "Muito agitado — puxa ou remove tubo(s) ou cateter(es) ou apresenta comportamento agressivo com a equipe" },
+        { pontos: 2, texto: "Agitado — movimentos frequentes sem objetivo ou assincronia paciente-ventilador" },
+        { pontos: 1, texto: "Inquieto — ansioso ou apreensivo, porém sem movimentos agressivos ou vigorosos" },
+        { pontos: 0, texto: "Alerta e calmo" },
+        { pontos: -1, texto: "Sonolento — não totalmente alerta ao comando verbal, mas mantém despertar sustentado (mais de 10 segundos), com contato visual" },
+        { pontos: -2, texto: "Sedação leve — ao comando verbal, desperta brevemente (menos de 10 segundos), com contato visual" },
+        { pontos: -3, texto: "Sedação moderada — qualquer movimento ao comando verbal (mas sem contato visual)" },
+        { pontos: -4, texto: "Sedação profunda — sem resposta ao comando verbal, mas com qualquer movimento ao estímulo físico" },
+        { pontos: -5, texto: "Não responde a estímulos — sem resposta ao comando verbal ou ao estímulo físico" } ] }
+    ],
+    faixas: [
+      { min: -5, max: -4, classe: "alerta", rotulo: "sedação profunda", texto: "Reavalie a necessidade. Com −4 ou −5 a CAPD não pode ser aplicada." },
+      { min: -3, max: -1, classe: "ok", rotulo: "sedação leve a moderada", texto: "Compare com o alvo definido na visita." },
+      { min: 0, max: 0, classe: "ok", rotulo: "alerta e calmo", texto: "Compare com o alvo definido na visita." },
+      { min: 1, max: 4, classe: "aviso", rotulo: "agitação", texto: "Procure dor, delirium, hipoxemia e abstinência antes de escalar a sedação." }
+    ],
+    fonte: "Massaud-Ribeiro L et al., Rev Bras Ter Intensiva 2021, Figura 1 (grafia atualizada: \"Não reponde\" → \"Não responde\").",
+    licenca: "Artigo em CC BY 4.0. Instrumento com copyright registrado pela VCU (2012); uso livre por clínicos e serviços de saúde.",
+    traducao: "validada", seloTraducao: "adaptação transcultural completa", refs: [31]
+  },
+  {
+    id: "wat1", nome: "Ferramenta de avaliação de sintomas de abstinência versão 1 (WAT-1)", curto: "WAT-1", sinal: false,
+    instrucoes: [
+      "Inicie a aplicação da escala WAT-1 no primeiro dia de desmame, nos pacientes que tenham recebido opióides e/ou benzodiazepínicos por infusão ou em bolus regularmente por um período prolongado (p.ex., > 5 dias). Avalie a pontuação duas vezes ao dia até 72 h após a última dose dos medicamentos.",
+      "A Ferramenta de Avaliação de Sintomas de Abstinência (WAT-1) deve ser preenchida junto com a SBS pelo menos uma vez a cada 12 horas (p. ex., às 8:00 e às 20:00 ± 2 horas). O estímulo progressivo usado na avaliação da SBS fornece um estímulo padrão para observar os sinais de abstinência.",
+      "Obtenha as informações do prontuário (isso pode ser feito antes ou depois da observação).",
+      "Observação de 2 minutos pré-estímulo: pontue estado comportamental, tremor, sudorese, movimentos descoordenados/repetitivos e bocejos/espirros.",
+      "Observação de 1 minuto durante o estímulo: pontue a reação ao estímulo tátil e o tônus muscular.",
+      "Recuperação após estímulo: pontue o tempo para retornar a tranquilidade (SBS ≤ 0).",
+      "Somar os 11 números das colunas para obter a pontuação total WAT-1 (0-12)."
+    ],
+    itens: [
+      { id: "fezes", grupo: "Informações das últimas 12 horas", nome: "Algum episódio de fezes amolecidas / líquidas", curto: "fezes",
+        opcoes: [{ pontos: 0, texto: "Não" }, { pontos: 1, texto: "Sim" }] },
+      { id: "vomito", grupo: "Informações das últimas 12 horas", nome: "Algum vômito/alguma náusea/regurgitações", curto: "vômito",
+        opcoes: [{ pontos: 0, texto: "Não" }, { pontos: 1, texto: "Sim" }] },
+      { id: "temp", grupo: "Informações das últimas 12 horas", nome: "Temperatura > 37,8°C", curto: "temp",
+        dica: "moda da temperatura documentada nas últimas 12 horas",
+        opcoes: [{ pontos: 0, texto: "Não" }, { pontos: 1, texto: "Sim" }] },
+      { id: "estado", grupo: "Observação por 2 minutos antes do estímulo", nome: "Estado comportamental", curto: "estado",
+        opcoes: [{ pontos: 0, texto: "SBS ≤ 0 ou adormecido/acordado calmo" }, { pontos: 1, texto: "SBS ≥ +1 ou acordado agitado" }] },
+      { id: "tremor", grupo: "Observação por 2 minutos antes do estímulo", nome: "Tremor", curto: "tremor",
+        opcoes: [{ pontos: 0, texto: "Nenhum/leve" }, { pontos: 1, texto: "Moderado/intenso" }] },
+      { id: "sudorese", grupo: "Observação por 2 minutos antes do estímulo", nome: "Alguma sudorese", curto: "sudorese",
+        opcoes: [{ pontos: 0, texto: "Não" }, { pontos: 1, texto: "Sim" }] },
+      { id: "movimentos", grupo: "Observação por 2 minutos antes do estímulo", nome: "Movimentos descoordenados/repetitivos", curto: "mov",
+        opcoes: [{ pontos: 0, texto: "Nenhum/leves" }, { pontos: 1, texto: "Moderados/graves" }] },
+      { id: "bocejos", grupo: "Observação por 2 minutos antes do estímulo", nome: "Bocejos ou espirros", curto: "bocejos",
+        opcoes: [{ pontos: 0, texto: "Nenhum ou 1" }, { pontos: 1, texto: "> 2" }] },
+      { id: "tatil", grupo: "Observação de 1 minuto durante estímulo", nome: "Reação ao estímulo tátil", curto: "tátil",
+        opcoes: [{ pontos: 0, texto: "Nenhuma/leve" }, { pontos: 1, texto: "Moderada/intensa" }] },
+      { id: "tonus", grupo: "Observação de 1 minuto durante estímulo", nome: "Tônus muscular", curto: "tônus",
+        opcoes: [{ pontos: 0, texto: "Normal" }, { pontos: 1, texto: "Aumentado" }] },
+      { id: "recuperacao", grupo: "Recuperação após estímulo", nome: "Tempo para retornar a tranquilidade (SBS ≤ 0)", curto: "recup",
+        opcoes: [{ pontos: 0, texto: "< 2 minutos" }, { pontos: 1, texto: "2-5 minutos" }, { pontos: 2, texto: "> 5 minutos" }] }
+    ],
+    faixas: [
+      { min: 0, max: 2, classe: "ok", rotulo: "negativo", texto: "Siga o desmame programado." },
+      { min: 3, max: 12, classe: "alerta", rotulo: "positivo", texto: "Abstinência provável: interrompa o passo do desmame e trate." }
+    ],
+    fonte: "Formulário oficial em português do Brasil da Curley lab (tradução certificada, Corporate Translations, 29/05/2014). Reproduzido sem modificação.",
+    licenca: "CC BY-ND 2.0 — proibido modificar e proibido uso comercial sem permissão escrita.",
+    copyright: "© 2007 Linda S. Franck and Martha A.Q. Curley. Made available under a Creative Commons Attribution-No Derivatives License (CC BY-ND 2.0). A republicação fora da instituição exige permissão dos detentores.",
+    traducao: "validada", seloTraducao: "tradução certificada", refs: [24, 94]
+  },
+  {
+    id: "wata2a", nome: "Ferramenta de avaliação de abstinência — alfa-2 agonista (WAT-A2A)", curto: "WAT-A2A", sinal: false,
+    instrucoes: [
+      "Inicie a pontuação da WAT-A2A a partir do primeiro dia do desmame em pacientes que receberam doses de dexmedetomidina e/ou clonidina, incluindo adesivo transdérmico por > 5 dias. Continue a pontuar duas vezes por dia até 24 horas após a última dose de dexmedetomidina ou 72 horas após a última dose de clonidina.",
+      "Antes de iniciar o desmame do A2A, documente a FC e PAD basais do paciente utilizando os dados dos últimos 5 dias do prontuário. Este é o valor mais frequente de FC e PAD. Elimine períodos de dor, agitação ou eventos que alteram os sinais vitais.",
+      "Observe o intervalo de valores +20% e +50% (valor basal × 1,2 = +20%; valor basal × 1,5 = +50%).",
+      "Antes de estimular o paciente, observe-o por 2 minutos e registre a FC atual, a PAD atual, o comportamento e o tremor.",
+      "Some os quatro itens para a pontuação total WAT-A2A (0-6). Observe as tendências numéricas ao longo do tempo."
+    ],
+    itens: [
+      { id: "fc", nome: "FC comparada à basal", curto: "FC", auto: "variacao",
+        rotuloBasal: "FC basal (bpm)", rotuloAtual: "FC atual (bpm)",
+        opcoes: [{ pontos: 0, texto: "Igual ou próxima à basal" }, { pontos: 1, texto: "≥ 20%" }, { pontos: 2, texto: "≥ 50%" }] },
+      { id: "pad", nome: "PA diastólica comparada à basal", curto: "PAD", auto: "variacao",
+        rotuloBasal: "PAD basal (mmHg)", rotuloAtual: "PAD atual (mmHg)",
+        opcoes: [{ pontos: 0, texto: "Igual ou próxima à basal" }, { pontos: 1, texto: "≥ 20%" }, { pontos: 2, texto: "≥ 50%" }] },
+      { id: "comportamento", nome: "Comportamento", curto: "comport",
+        opcoes: [{ pontos: 0, texto: "Dormindo/acordado/calmo ou SBS = 0" }, { pontos: 1, texto: "Acordado/agitado ou SBS ≥ +1" }] },
+      { id: "tremor", nome: "Tremor", curto: "tremor",
+        opcoes: [{ pontos: 0, texto: "Nenhum/leve" }, { pontos: 1, texto: "Moderado/intenso" }] }
+    ],
+    faixas: [
+      { min: 0, max: 6, classe: "", rotulo: "tendência", texto: "Não há ponto de corte publicado: compare com as avaliações anteriores do mesmo paciente." }
+    ],
+    fonte: "Colleti Junior J, de Castro REV, Crit Care Sci 2026, Tabela 1. Traduzida do original de Solodiuk JC et al. 2025. Reproduzida sem modificação.",
+    licenca: "CC BY-NC-ND 4.0 — proibido modificar e proibido uso comercial.",
+    copyright: "© 2023 Jean C. Solodiuk and Martha A.Q. Curley. Traduzida por Roberta Esteves Vieira de Castro e José Colleti Jr. (fevereiro de 2025). Disponibilizada sob CC BY-NC-ND 4.0.",
+    traducao: "adaptada", seloTraducao: "tradução sem pré-teste",
+    selo: "validação preliminar (2025)", refs: [95, 96]
+  },
+  {
+    id: "capd", nome: "Cornell Assessment of Pediatric Delirium (CAPD)", curto: "CAPD", sinal: false,
+    requer: { escala: "rass", inaptos: [-4, -5], texto: "Com RASS −4 ou −5 a CAPD não deve ser aplicada. Reavalie quando a sedação for aliviada." },
+    idades: [
+      { id: "rn", rotulo: "Recém-nascido" }, { id: "s4", rotulo: "4 semanas" }, { id: "s6", rotulo: "6 semanas" },
+      { id: "s8", rotulo: "8 semanas" }, { id: "s28", rotulo: "28 semanas" }, { id: "a1", rotulo: "1 ano" }, { id: "a2", rotulo: "2 anos" }
+    ],
+    instrucoes: [
+      "Registre primeiro a pontuação RASS. Se for −4 ou −5, não vá adiante.",
+      "Responda às perguntas com base em suas interações com o paciente durante o seu plantão.",
+      "Os itens 1 a 4 são invertidos: Nunca vale 4 e Sempre vale 0. Os itens 5 a 8 são diretos: Nunca vale 0 e Sempre vale 4.",
+      "Use o seletor de idade para ver os pontos-âncora do desenvolvimento esperado. A tabela de âncoras foi feita para crianças menores de 24 meses.",
+      "Total de 0 a 32. Um total ≥ 9 indica delirium e dispara a investigação do BRAIN MAPS."
+    ],
+    itens: [
+      { id: "q1", nome: "1. A criança faz contato visual com o cuidador?", curto: "q1",
+        ancoras: {
+          rn: "Fixa o olhar no rosto",
+          s4: "Fixa o olhar por pouco tempo. Acompanha movimentos em até 90 graus",
+          s6: "Fixa o olhar",
+          s8: "Mantém atenção, segue objetos/cuidador em movimento além da linha média",
+          s28: "Fixa o olhar. Prefere os pais. Olha para quem está falando",
+          a1: "Fixa o olhar. Prefere os pais. Olha para quem está falando",
+          a2: "Fixa o olhar. Prefere os pais. Olha para quem está falando"
+        },
+        opcoes: [{ pontos: 4, texto: "Nunca" }, { pontos: 3, texto: "Raramente" }, { pontos: 2, texto: "Às vezes" }, { pontos: 1, texto: "Frequentemente" }, { pontos: 0, texto: "Sempre" }] },
+      { id: "q2", nome: "2. As ações da criança são propositais?", curto: "q2",
+        ancoras: {
+          rn: "Move a cabeça para o lado, dominado/a por reflexos primitivos",
+          s4: "Sim, com alguma descoordenação",
+          s6: "Sim",
+          s8: "Movimentos simétricos, consegue agarrar passivamente um objeto dado",
+          s28: "Sim, com movimentos suaves coordenados",
+          a1: "Alcança e manipula objetos. Tenta mudar de posição. Se mexe para tentar se levantar",
+          a2: "Alcança e manipula objetos, tenta mudar de posição, se móvel pode tentar levantar-se e andar."
+        },
+        opcoes: [{ pontos: 4, texto: "Nunca" }, { pontos: 3, texto: "Raramente" }, { pontos: 2, texto: "Às vezes" }, { pontos: 1, texto: "Frequentemente" }, { pontos: 0, texto: "Sempre" }] },
+      { id: "q3", nome: "3. A criança está consciente do que a cerca?", curto: "q3",
+        ancoras: {
+          rn: "Calmo enquanto está acordado",
+          s4: "Acordado e alerta. Vira-se em direção a voz e ao sentir o cheiro do principal cuidador/a",
+          s6: "Permanece mais tempo em alerta. Vira-se em direção a voz e ao sentir o cheiro do principal cuidador/a",
+          s8: "Sorri ou feições positivas em resposta ao balançar a cabeça, franze o rosto e faz careta",
+          s28: "Prefere fortemente a mãe a outros familiares. Diferencia objetos novos a objetos familiares",
+          a1: "Prefere cuidadores diretos aos demais. Chateia-se ao ser separado do principal cuidador. É confortado por objetos familiares como um cobertor ou pelúcia favorito",
+          a2: "Prefere cuidadores diretos aos demais. Chateia-se ao ser separado do principal cuidador. É confortado por objetos familiares como um cobertor ou pelúcia favorito"
+        },
+        opcoes: [{ pontos: 4, texto: "Nunca" }, { pontos: 3, texto: "Raramente" }, { pontos: 2, texto: "Às vezes" }, { pontos: 1, texto: "Frequentemente" }, { pontos: 0, texto: "Sempre" }] },
+      { id: "q4", nome: "4. A criança comunica necessidades e desejos?", curto: "q4",
+        ancoras: {
+          rn: "Chora quando sente fome ou quando está desconfortável",
+          s4: "Chora quando sente fome ou quando está desconfortável",
+          s6: "Chora quando sente fome ou quando está desconfortável",
+          s8: "Chora quando sente fome ou quando está desconfortável.",
+          s28: "Vocaliza/indica suas necessidades, ex: fome, desconforto, curiosidade ao seu redor ou objetos",
+          a1: "Usa palavras soltas ou sinais",
+          a2: "Fala frases com 3 a 4 palavras ou sinais. Pode indicar necessidades fisiológicas, usa \"eu\" ou \"mim\""
+        },
+        opcoes: [{ pontos: 4, texto: "Nunca" }, { pontos: 3, texto: "Raramente" }, { pontos: 2, texto: "Às vezes" }, { pontos: 1, texto: "Frequentemente" }, { pontos: 0, texto: "Sempre" }] },
+      { id: "q5", nome: "5. A criança está agitada/inquieta?", curto: "q5",
+        ancoras: {
+          rn: "Nenhum estado de alerta de forma sustentada",
+          s4: "Não se mantém calmo de forma sustentada",
+          s6: "Não se mantém calmo de forma sustentada",
+          s8: "Não se mantém calmo de forma sustentada.",
+          s28: "Não se mantém calmo de forma sustentada",
+          a1: "Não se mantém calmo de forma sustentada",
+          a2: "Não se mantém calmo de forma sustentada"
+        },
+        opcoes: [{ pontos: 0, texto: "Nunca" }, { pontos: 1, texto: "Raramente" }, { pontos: 2, texto: "Às vezes" }, { pontos: 3, texto: "Frequentemente" }, { pontos: 4, texto: "Sempre" }] },
+      { id: "q6", nome: "6. A criança está inconsolável?", curto: "q6",
+        ancoras: {
+          rn: "Não é acalmado pelos pais com ações reconfortantes como: balançar no colo, cantar, ser alimentado",
+          s4: "Não é acalmado pelos pais com ações reconfortantes como: balançar no colo, cantar, ser alimentado",
+          s6: "Não é acalmado pelos pais com ações reconfortantes como: balançar no colo, cantar, ser alimentado",
+          s8: "Não é acalmado pelos pais com ações reconfortantes como: balançar no colo, cantar, ser alimentado",
+          s28: "Não é acalmado por métodos habituais, como: cantando, segurando no colo ou falando",
+          a1: "Não é acalmado por métodos habituais, como: cantando, segurando no colo, falando e lendo",
+          a2: "Não é acalmado por métodos habituais, como: cantando, segurando no colo, falando e lendo (pode fazer birra, mas consegue organizar-se)"
+        },
+        opcoes: [{ pontos: 0, texto: "Nunca" }, { pontos: 1, texto: "Raramente" }, { pontos: 2, texto: "Às vezes" }, { pontos: 3, texto: "Frequentemente" }, { pontos: 4, texto: "Sempre" }] },
+      { id: "q7", nome: "7. A criança está hipoativa - muito pouco movimento durante a vigília?", curto: "q7",
+        ancoras: {
+          rn: "Pouca ou nenhuma flexão, estado de relaxamento com reflexos primitivos",
+          s4: "Pouca ou nenhuma tentativa de alcançar, chutar, agarrar (ainda um pouco descoordenado)",
+          s6: "Pouca ou nenhuma tentativa de alcançar, chutar, agarrar (mais coordenado)",
+          s8: "Pouco ou nenhum controle de cabeça e dos braços como empurrar coisas que a incomodam",
+          s28: "Pouca ou nenhuma ação de alcançar, agarrar, mover-se pela cama e empurrar",
+          a1: "Pouco ou nenhum esforço para brincar, sentar, levantar, engatinhar ou andar",
+          a2: "Pouco ou nenhum esforço para brincar, sentar, se movimentar, ficar de pé, andar ou pular"
+        },
+        opcoes: [{ pontos: 0, texto: "Nunca" }, { pontos: 1, texto: "Raramente" }, { pontos: 2, texto: "Às vezes" }, { pontos: 3, texto: "Frequentemente" }, { pontos: 4, texto: "Sempre" }] },
+      { id: "q8", nome: "8. A criança leva muito tempo para responder às interações?", curto: "q8",
+        ancoras: {
+          rn: "Não emite sons ou reflexos ativos como se espera (preensão, sucção, Moro)",
+          s4: "Não emite sons ou reflexos ativos como se espera (preensão, sucção, Moro)",
+          s6: "Não chuta ou chora com estímulos desconfortáveis",
+          s8: "Não responde, não sorri e não fixa o olhar em resposta a interações",
+          s28: "Não balbucia ou sorri/gargalha em interações sociais (ou rejeita a interação)",
+          a1: "Não obedece a comandos simples. Se verbal, não inicia diálogos simples com palavras ou jargões",
+          a2: "Não obedece a comandos de 2 passos. Se verbal, não inicia diálogos mais complexos"
+        },
+        opcoes: [{ pontos: 0, texto: "Nunca" }, { pontos: 1, texto: "Raramente" }, { pontos: 2, texto: "Às vezes" }, { pontos: 3, texto: "Frequentemente" }, { pontos: 4, texto: "Sempre" }] }
+    ],
+    faixas: [
+      { min: 0, max: 8, classe: "ok", rotulo: "negativo", texto: "Reavalie pelo menos uma vez por turno." },
+      { min: 9, max: 32, classe: "alerta", rotulo: "positivo", texto: "Delirium provável: rode o BRAIN MAPS e revise sedativos, sobretudo benzodiazepínicos." }
+    ],
+    fonte: "Itens: Barbosa MDSR et al., Rev Bras Ter Intensiva 2018, Tabela 2 (grafia atualizada: \"não sorrir\" → \"não sorri\"). Âncoras: Barbosa MSR et al., Crit Care Sci 2023, Tabela 3 da versão em português.",
+    licenca: "Artigos em CC BY 4.0. Traduções autorizadas por Chane Traube; confirmação formal de uso em aplicativo pendente.",
+    traducao: "validada", seloTraducao: "adaptação transcultural com pré-teste", refs: [29, 35, 97]
+  },
+  {
+    id: "flacc", nome: "FLACC — Face, Legs, Activity, Cry, Consolability", curto: "FLACC", sinal: false, tipo: "total",
+    instrucoes: [
+      "O que avalia: cinco categorias de comportamento — face, pernas, atividade, choro e consolabilidade —, cada uma pontuada de 0 a 2, para um total de 0 a 10.",
+      "Indicação: dor em crianças pré-verbais ou não verbais. A validação original foi feita dos 2 meses aos 7 anos. Para crianças com comprometimento cognitivo existe a versão revisada, a FLACCr.",
+      "Como aplicar: observe a criança acordada por 1 a 2 minutos, com pernas e corpo descobertos; se estiver dormindo, observe por 2 minutos ou mais. Reposicione-a, avalie tônus e tensão corporal e inicie medidas de conforto se necessário.",
+      "Marque o total obtido no formulário impresso ou no prontuário e lance-o no campo abaixo para obter a leitura e o texto para copiar.",
+      "Este aplicativo não reproduz os descritores do instrumento: a FLACC é licenciada pela Universidade de Michigan e o uso clínico contínuo exige licença paga."
+    ],
+    faixas: [
+      { min: 0, max: 0, classe: "ok", rotulo: "sem dor" },
+      { min: 1, max: 3, classe: "ok", rotulo: "dor leve", texto: "Medidas não farmacológicas e reavaliação." },
+      { min: 4, max: 6, classe: "aviso", rotulo: "dor moderada", texto: "Tratar (proposta do serviço: tratar se ≥ 4) e reavaliar em 30 a 60 minutos." },
+      { min: 7, max: 10, classe: "alerta", rotulo: "dor intensa", texto: "Tratar imediatamente e reavaliar em 15 a 30 minutos." }
+    ],
+    links: [
+      { rotulo: "Abrir FLACCr (BR)", href: "https://www.scielo.br/j/rlae/a/9cvLjk5YBbBz49cbZJjQzTL/?lang=pt" },
+      { rotulo: "Licença (Univ. Michigan)", href: "https://available-inventions.umich.edu/product/face-legs-activity-cry-consolability-observational-tool-as-a-measure-of-pain" }
+    ],
+    fonte: "Descrição, indicação e modo de aplicar em redação própria. A versão brasileira da FLACCr está em Bussotti EA et al., Rev Latino-Am Enfermagem 2015; a da FLACC, em Silva FC e Thuler LCS, J Pediatr (Rio J) 2008.",
+    licenca: "Instrumento licenciado. Os limiares de leitura são proposta do serviço, aguardando validação da coordenação.",
+    copyright: "FLACC © 2002 The Regents of the University of Michigan. O uso em operações clínicas contínuas requer licença comercial paga, inclusive para serviços sem fins lucrativos. Por isso os descritores não são reproduzidos aqui.",
+    traducao: "livre", seloTraducao: "cartão informativo, não interativo",
+    selo: "limiares em proposta", refs: [98, 99, 100]
+  },
+  {
+    id: "numerica", nome: "Escala numérica de dor (0 a 10)", curto: "Numérica", sinal: false,
+    instrucoes: [
+      "Para crianças capazes de autorrelato, em geral a partir dos 7 a 8 anos.",
+      "Peça que a criança dê uma nota para a dor, em que 0 é nenhuma dor e 10 é a pior dor possível.",
+      "Registre a nota informada pela criança, sem interpretá-la nem ajustá-la.",
+      "Reavalie depois de cada intervenção analgésica."
+    ],
+    itens: [
+      { id: "nota", nome: "Nota da dor informada pela criança", curto: "nota", opcoes: [
+        { pontos: 0, texto: "0 — nenhuma dor" }, { pontos: 1, texto: "1" }, { pontos: 2, texto: "2" }, { pontos: 3, texto: "3" },
+        { pontos: 4, texto: "4" }, { pontos: 5, texto: "5" }, { pontos: 6, texto: "6" }, { pontos: 7, texto: "7" },
+        { pontos: 8, texto: "8" }, { pontos: 9, texto: "9" }, { pontos: 10, texto: "10 — a pior dor possível" } ] }
+    ],
+    faixas: [
+      { min: 0, max: 0, classe: "ok", rotulo: "sem dor" },
+      { min: 1, max: 3, classe: "ok", rotulo: "dor leve", texto: "Medidas não farmacológicas e reavaliação." },
+      { min: 4, max: 6, classe: "aviso", rotulo: "dor moderada", texto: "Tratar (proposta do serviço: tratar se ≥ 4) e reavaliar em 30 a 60 minutos." },
+      { min: 7, max: 10, classe: "alerta", rotulo: "dor intensa", texto: "Tratar imediatamente e reavaliar em 15 a 30 minutos." }
+    ],
+    fonte: "Instrumento de domínio público. Os limiares de leitura acompanham os da FLACC e são proposta do serviço.",
+    licenca: "Domínio público.",
+    traducao: "livre", seloTraducao: "domínio público",
+    selo: "limiares em proposta", refs: [1]
+  }
+  ];
   /* ===== DADOS:END ===== */
   /* ===== CALC-CORE:BEGIN ===== */
   var CALC = (function(){
