@@ -1332,6 +1332,690 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   }
   function num(v){ return parseFloat(String(v).replace(",", ".")); }
 
+  /* ===== DADOS:BEGIN ===== */
+  /* Valores conferidos nas pesquisas A (ressuscitação), B (vasoativos) e C (desmame)
+     de docs/pesquisas/2026-09-15/. As referências são os <li id="ref-N"> da seção 14. */
+  var FARMACOS = [
+  {
+    id: "adr", nome: "Adrenalina", grupo: "vasoativos", apresentacao: "1 mg/mL (1:1.000), ampola de 1 mL",
+    ic: {
+      unidade: "mcg/kg/min", conc: { valor: 1, massa: "mg", rotulo: "1 mg/mL" },
+      faixa: [0.05, 1], teto: null, padrao: 0.1, passo: 0.05,
+      diluentes: ["SG 5%", "SF 0,9% (protegido da luz)"], semDiluicao: false,
+      notas: [
+        "faixa de prática: nem a AHA 2025 nem a Surviving Sepsis 2026 publicam faixa de dose pediátrica",
+        "iniciar em 0,05–0,1 e titular; acima de ~0,3 mcg/kg/min, considerar vasopressina ou nova titulação sob supervisão",
+        "a bula dá 4 h de estabilidade da diluição em temperatura ambiente; preparar para 24 h é decisão institucional apoiada em estudos de estabilidade"
+      ]
+    },
+    bolus: [
+      { rotulo: "PCR (IV/IO)", unidade: "mg/kg", conc: { valor: 1, massa: "mg", rotulo: "1 mg/mL" },
+        faixa: [0.01, 0.01], padrao: 0.01, max: { valor: 1, massa: "mg" }, min: null,
+        diluicao: { mlMed: 1, mlSF: 9 }, via: "IV/IO em push, a cada 3–5 min até o retorno da circulação",
+        notas: ["a via endotraqueal saiu dos algoritmos de 2025: prefira IV/IO", "no ritmo não chocável, a 1ª dose deve ser o mais precoce possível"] },
+      { rotulo: "Bradicardia com má perfusão", unidade: "mg/kg", conc: { valor: 1, massa: "mg", rotulo: "1 mg/mL" },
+        faixa: [0.01, 0.01], padrao: 0.01, max: { valor: 1, massa: "mg" }, min: null,
+        diluicao: { mlMed: 1, mlSF: 9 }, via: "IV/IO",
+        notas: ["indicada quando a bradicardia com comprometimento persiste após corrigir hipóxia e ventilação", "iniciar RCP se FC <60/min com comprometimento apesar de ventilação eficaz"] },
+      { rotulo: "Anafilaxia (IM)", unidade: "mg/kg", conc: { valor: 1, massa: "mg", rotulo: "1 mg/mL" },
+        faixa: [0.01, 0.01], padrao: 0.01, max: { valor: 0.5, massa: "mg" }, min: null,
+        diluicao: null, via: "IM na face anterolateral da coxa, repetir a cada 5–15 min se necessário",
+        notas: ["criança pré-púbere ou <30 kg: considerar teto de 0,3 mg", "na parada por anafilaxia, usar a dose IV/IO do PALS, não a IM"] }
+    ],
+    enteral: null, ajustes: null,
+    info: {
+      indicacoes: [
+        "Parada cardiorrespiratória, em qualquer ritmo.",
+        "Bradicardia com má perfusão que persiste após ventilação e oxigenação adequadas.",
+        "Anafilaxia: é a primeira linha, por via intramuscular.",
+        "Choque séptico refratário a volume, como vasoativo inicial junto da noradrenalina.",
+        "Choque com débito cardíaco baixo e resistência vascular baixa."
+      ],
+      acao: [
+        "Agonista alfa-1, beta-1 e beta-2 não seletivo.",
+        "Em dose baixa (<0,1 mcg/kg/min) predomina o efeito beta: inotropismo, cronotropismo e vasodilatação muscular.",
+        "Em dose alta predomina o alfa-1: vasoconstrição e aumento da pressão diastólica.",
+        "Início em segundos e meia-vida de 2–3 minutos: a titulação tem efeito quase imediato.",
+        "Metabolizada por COMT e MAO; não depende do rim.",
+        "Riscos: taquiarritmia, isquemia miocárdica, hiperlactatemia, hiperglicemia e necrose se extravasar."
+      ],
+      refs: [55, 56, 57, 58, 61, 66]
+    }
+  },
+  {
+    id: "nor", nome: "Noradrenalina", grupo: "vasoativos", apresentacao: "hemitartarato 2 mg/mL = 1 mg/mL de base, ampola de 4 mL",
+    ic: {
+      unidade: "mcg/kg/min", conc: { valor: 1, massa: "mg", rotulo: "1 mg/mL de base" },
+      faixa: [0.05, 1], teto: 2, padrao: 0.1, passo: 0.05,
+      diluentes: ["SG 5%", "SF 0,9% (protegido da luz)"], semDiluicao: false,
+      notas: [
+        "o cálculo é pela BASE: 1 mg/mL de base = hemitartarato 2 mg/mL. Calcular pelo sal entrega metade da dose pretendida",
+        "nenhuma diretriz pediátrica publica faixa de dose; a faixa vem de farmacocinética populacional em crianças",
+        "a bula manda diluir em SG 5%; o SF 0,9% protegido da luz é alternativa apoiada em estudos de estabilidade"
+      ]
+    },
+    bolus: [], enteral: null,
+    ajustes: { neo: { ic: null, bolus: null, nota: "neonato: os ensaios usaram faixa menor, de 0,2 a 0,3 mcg/kg/min" }, lra: null },
+    info: {
+      indicacoes: [
+        "Choque séptico com resistência vascular sistêmica baixa (choque quente).",
+        "Choque vasoplégico do pós-operatório cardíaco ou pós-circulação extracorpórea.",
+        "Hipotensão com pressão de pulso alargada e extremidades quentes.",
+        "Pode ser iniciada por veia periférica diluída, para não atrasar o vasoativo.",
+        "Alternativa à adrenalina no choque séptico refratário a volume."
+      ],
+      acao: [
+        "Agonista alfa-1 potente, com efeito beta-1 modesto.",
+        "Aumenta a resistência vascular sistêmica e a pressão diastólica, elevando a perfusão coronariana.",
+        "Aumenta pouco a frequência cardíaca; pode até haver bradicardia reflexa.",
+        "Início em 1–2 minutos e meia-vida de 2–3 minutos.",
+        "Metabolizada por COMT e MAO.",
+        "Riscos: isquemia de extremidades e mesentérica, necrose por extravasamento, bradiarritmia."
+      ],
+      refs: [61, 62, 63, 64, 65, 74]
+    }
+  },
+  {
+    id: "dob", nome: "Dobutamina", grupo: "vasoativos", apresentacao: "12,5 mg/mL, ampola de 20 mL",
+    ic: {
+      unidade: "mcg/kg/min", conc: { valor: 12.5, massa: "mg", rotulo: "12,5 mg/mL" },
+      faixa: [2, 20], teto: null, padrao: 5, passo: 0.5,
+      diluentes: ["SG 5%", "SF 0,9%"], semDiluicao: false,
+      notas: [
+        "não misturar com bicarbonato de sódio nem com soluções fortemente alcalinas",
+        "a bula de adulto usa 2,5–15 mcg/kg/min (raramente até 40); a faixa pediátrica é de prática",
+        "em neonatos, taquicardia e arritmia aparecem sobretudo acima de 7,5 mcg/kg/min"
+      ]
+    },
+    bolus: [], enteral: null, ajustes: null,
+    info: {
+      indicacoes: [
+        "Baixo débito cardíaco com pressão arterial preservada.",
+        "Disfunção miocárdica do choque séptico (choque frio com pressão adequada).",
+        "Pós-operatório de cirurgia cardíaca com síndrome de baixo débito.",
+        "Miocardite e cardiomiopatia descompensada.",
+        "Extremidades frias, enchimento capilar lento e lactato alto com pressão normal."
+      ],
+      acao: [
+        "Agonista beta-1 predominante, com efeito beta-2 leve e alfa-1 discreto.",
+        "Aumenta a contratilidade e o débito cardíaco; reduz um pouco a pós-carga (inodilatador).",
+        "Pode baixar a pressão arterial pela vasodilatação beta-2, sobretudo se houver hipovolemia.",
+        "Início em 1–2 minutos, efeito máximo em 10 minutos, meia-vida de 2 minutos.",
+        "Metabolizada por COMT no fígado; não depende do rim.",
+        "Riscos: taquicardia, arritmia, aumento do consumo miocárdico de oxigênio e tolerância após 72 h."
+      ],
+      refs: [61, 67]
+    }
+  },
+  {
+    id: "mil", nome: "Milrinona", grupo: "vasoativos", apresentacao: "1 mg/mL, ampola de 20 mL",
+    ic: {
+      unidade: "mcg/kg/min", conc: { valor: 1, massa: "mg", rotulo: "1 mg/mL" },
+      faixa: [0.25, 0.75], teto: 0.75, padrao: 0.5, passo: 0.05,
+      diluentes: ["SG 5%", "SF 0,9%", "NaCl 0,45%"], semDiluicao: false,
+      notas: [
+        "NUNCA correr em Y com furosemida: o precipitado é imediato. Use linha própria",
+        "o total diário da bula é 1,13 mg/kg/dia, o que equivale a cerca de 0,78 mcg/kg/min: 1 mcg/kg/min excede a bula",
+        "eliminada inalterada na urina e pouco removida por diálise"
+      ]
+    },
+    bolus: [
+      { rotulo: "Ataque (opcional)", unidade: "mcg/kg", conc: { valor: 1, massa: "mg", rotulo: "1 mg/mL" },
+        faixa: [25, 50], padrao: 50, max: null, min: null, diluicao: null,
+        via: "EV em 10–60 min",
+        notas: ["reduzir para 25 mcg/kg ou omitir se houver hipotensão ou lesão renal aguda", "a bula indica 50 mcg/kg em 10 min; a literatura pediátrica usa 15–60 min"] }
+    ],
+    enteral: null,
+    ajustes: {
+      neo: { ic: { faixa: [0.2, 0.25], teto: 0.25 }, bolus: null, nota: "neonato nas primeiras 12–24 h após circulação extracorpórea: 0,2–0,25 mcg/kg/min e reavaliar" },
+      lra: { ic: { faixa: [0.25, 0.25], teto: 0.25 }, bolus: { padrao: 25 }, nota: "ClCr ≤30 mL/min/1,73 m²: teto de 0,25 mcg/kg/min e ataque de 25 mcg/kg ou omitido" }
+    },
+    info: {
+      indicacoes: [
+        "Síndrome de baixo débito após cirurgia cardíaca com circulação extracorpórea.",
+        "Disfunção ventricular com resistência vascular sistêmica alta.",
+        "Hipertensão pulmonar com disfunção do ventrículo direito.",
+        "Insuficiência cardíaca descompensada refratária a catecolamina.",
+        "Útil quando há dessensibilização de receptores beta por catecolamina prolongada."
+      ],
+      acao: [
+        "Inibidor seletivo da fosfodiesterase 3: aumenta o AMP cíclico sem passar pelo receptor beta.",
+        "Inodilatador: aumenta a contratilidade e o relaxamento (lusitropismo) e reduz as resistências sistêmica e pulmonar.",
+        "Não aumenta o consumo miocárdico de oxigênio como as catecolaminas.",
+        "Meia-vida longa para um vasoativo (2–4 h em crianças): o efeito demora a entrar e a sair.",
+        "Eliminação renal da droga inalterada: acumula na lesão renal aguda.",
+        "Riscos: hipotensão (sobretudo com o ataque), taquiarritmia e plaquetopenia."
+      ],
+      refs: [61, 68, 69, 70]
+    }
+  },
+  {
+    id: "atr", nome: "Atropina", grupo: "vasoativos", apresentacao: "0,25 mg/mL, ampola de 1 mL",
+    ic: null,
+    bolus: [
+      { rotulo: "Bradicardia (vagal ou bloqueio AV)", unidade: "mg/kg", conc: { valor: 0.25, massa: "mg", rotulo: "0,25 mg/mL" },
+        faixa: [0.02, 0.02], padrao: 0.02, max: { valor: 0.5, massa: "mg" }, min: { valor: 0.1, massa: "mg" },
+        diluicao: null, via: "IV/IO, pode repetir 1 vez (total ≤1 mg)",
+        notas: [
+          "a dose mínima de 0,1 mg vale APENAS nesta indicação (algoritmo AHA 2025, igual ao de 2020)",
+          "o mínimo atua abaixo de 5 kg e o máximo a partir de 25 kg",
+          "indicada na bradicardia por tônus vagal ou bloqueio AV, não na bradicardia por hipóxia — nessa, ventile e oxigene"
+        ] },
+      { rotulo: "Pré-intubação", unidade: "mg/kg", conc: { valor: 0.25, massa: "mg", rotulo: "0,25 mg/mL" },
+        faixa: [0.02, 0.02], padrao: 0.02, max: { valor: 0.5, massa: "mg" }, min: null,
+        diluicao: null, via: "IV/IO antes da laringoscopia",
+        notas: [
+          "SEM dose mínima (texto da AHA 2025, §17.3): a antiga mínima de 0,1 mg vinha de um estudo de 1971 e não se confirmou",
+          "volumes muito pequenos aumentam o risco de erro de medida: considere diluição intermediária"
+        ] }
+    ],
+    enteral: null, ajustes: null,
+    info: {
+      indicacoes: [
+        "Bradicardia com comprometimento cardiopulmonar por tônus vagal aumentado.",
+        "Bradicardia por bloqueio atrioventricular primário.",
+        "Pré-medicação para prevenir bradicardia na intubação de emergência.",
+        "Bradicardia por intoxicação colinérgica (organofosforados).",
+        "Não é a primeira medida na bradicardia hipóxica: ventilação e oxigenação vêm antes."
+      ],
+      acao: [
+        "Antagonista competitivo dos receptores muscarínicos da acetilcolina.",
+        "Bloqueia o efeito vagal sobre o nó sinusal e o nó atrioventricular, acelerando a frequência e a condução.",
+        "Início em 1 minuto por via IV e efeito máximo em 2–4 minutos.",
+        "Meia-vida de cerca de 2 h; eliminação hepática e renal.",
+        "Riscos: taquicardia, midríase e fotofobia, retenção urinária, hipertermia e delirium anticolinérgico.",
+        "Doses muito baixas podem ter efeito paradoxal em teoria, não confirmado em estudos recentes em lactentes."
+      ],
+      refs: [55, 59]
+    }
+  },
+  {
+    id: "ade", nome: "Adenosina", grupo: "vasoativos", apresentacao: "3 mg/mL, frasco de 2 mL",
+    ic: null,
+    bolus: [
+      { rotulo: "1ª dose", unidade: "mg/kg", conc: { valor: 3, massa: "mg", rotulo: "3 mg/mL" },
+        faixa: [0.1, 0.1], padrao: 0.1, max: { valor: 6, massa: "mg" }, min: null, diluicao: null,
+        via: "IV/IO em push muito rápido, seguido de flush de SF",
+        notas: ["usar o acesso mais próximo possível do coração, calibroso", "registrar ECG contínuo durante a administração"] },
+      { rotulo: "2ª dose", unidade: "mg/kg", conc: { valor: 3, massa: "mg", rotulo: "3 mg/mL" },
+        faixa: [0.2, 0.2], padrao: 0.2, max: { valor: 12, massa: "mg" }, min: null, diluicao: null,
+        via: "IV/IO em push muito rápido, seguido de flush de SF",
+        notas: ["doses acima de 12 mg não são recomendadas"] }
+    ],
+    enteral: null, ajustes: null,
+    info: {
+      indicacoes: [
+        "Taquicardia supraventricular com QRS estreito, após a manobra vagal.",
+        "Taquicardia de QRS largo regular e monomórfico, com consultoria especializada.",
+        "Também serve para desmascarar o ritmo atrial quando o diagnóstico está incerto.",
+        "NÃO usar em ritmo irregular com QRS largo: pode acelerar uma fibrilação atrial pré-excitada.",
+        "Se houver comprometimento importante, a cardioversão sincronizada tem prioridade."
+      ],
+      acao: [
+        "Agonista dos receptores A1 do nó atrioventricular.",
+        "Bloqueia transitoriamente a condução pelo nó AV e interrompe as taquicardias por reentrada nodal.",
+        "Meia-vida de menos de 10 segundos: por isso o push tem de ser muito rápido, com flush imediato.",
+        "Captada e degradada pelos eritrócitos e pelo endotélio; não depende do fígado nem do rim.",
+        "Efeitos transitórios esperados: pausa sinusal, rubor, dor torácica e sensação de morte iminente.",
+        "Riscos: broncoespasmo em asmáticos e fibrilação atrial de curta duração."
+      ],
+      refs: [55, 60]
+    }
+  },
+  {
+    id: "fen", nome: "Fentanil", grupo: "sedacao", apresentacao: "50 mcg/mL, ampola de 10 mL",
+    ic: {
+      unidade: "mcg/kg/h", conc: { valor: 50, massa: "mcg", rotulo: "50 mcg/mL" },
+      faixa: [1, 5], teto: 10, padrao: 1, passo: 0.5,
+      diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
+      notas: [
+        "dependência fisiológica a partir de 5 dias de dose regular: programe o desmame desde o início",
+        "acima de 5 dias, considerar rodízio para morfina ou hidromorfona, se o rim permitir",
+        "a dose e a exposição cumulativa de fentanil são os melhores preditores de abstinência"
+      ]
+    },
+    bolus: [
+      { rotulo: "Bólus", unidade: "mcg/kg", conc: { valor: 50, massa: "mcg", rotulo: "50 mcg/mL" },
+        faixa: [1, 2], padrao: 1, max: null, min: null, diluicao: { mlMed: 1, mlSF: 4 },
+        via: "EV em ≥1 min",
+        notas: ["bólus rápido em dose alta causa rigidez torácica: reverter com naloxona ou bloqueador neuromuscular"] }
+    ],
+    enteral: null,
+    ajustes: { neo: { ic: null, bolus: null, nota: "neonato: clearance imaturo, comece pela menor dose e titule devagar" }, lra: null },
+    info: {
+      indicacoes: [
+        "Opioide padrão da analgossedação da UTI pediátrica.",
+        "Analgesia durante ventilação mecânica, junto de um sedativo de base.",
+        "Preferido na lesão renal aguda, porque os metabólitos são inativos.",
+        "Procedimentos dolorosos e intubação.",
+        "Boa estabilidade hemodinâmica comparado à morfina, por não liberar histamina."
+      ],
+      acao: [
+        "Agonista puro do receptor opioide µ, 80 a 100 vezes mais potente que a morfina.",
+        "Muito lipofílico: entra rápido no sistema nervoso central, com início em 1–2 minutos.",
+        "Metabolismo hepático pelo CYP3A4 em norfentanil e hidroxifentanil, ambos inativos.",
+        "Meia-vida contexto-dependente: sobe muito na infusão prolongada, por redistribuição a partir do tecido adiposo.",
+        "Riscos: depressão respiratória, rigidez torácica com bólus rápido, bradicardia, íleo e retenção urinária.",
+        "Tolerância e abstinência iatrogênica são a regra depois de alguns dias."
+      ],
+      refs: [1, 25, 27, 53, 88]
+    }
+  },
+  {
+    id: "mid", nome: "Midazolam", grupo: "sedacao", apresentacao: "5 mg/mL, ampola de 10 mL",
+    ic: {
+      unidade: "mg/kg/h", conc: { valor: 5, massa: "mg", rotulo: "5 mg/mL" },
+      faixa: [0.05, 0.2], teto: 0.3, padrao: 0.1, passo: 0.01,
+      diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
+      notas: [
+        "zona de exceção entre 0,3 e 0,4 mg/kg/h: liberar apenas com justificativa registrada, escore documentado e associação de alfa-2 ou cetamina, em vez de escalar o benzodiazepínico; marcar o paciente como alto risco de abstinência",
+        "acima de 0,4 mg/kg/h está acima de qualquer faixa publicada: reavaliar dor, delirium, hipoxemia e abstinência antes de escalar",
+        "a bula inicia a infusão em 0,06–0,12 mg/kg/h, com ajustes de 25%"
+      ]
+    },
+    bolus: [
+      { rotulo: "Bólus", unidade: "mg/kg", conc: { valor: 5, massa: "mg", rotulo: "5 mg/mL" },
+        faixa: [0.05, 0.2], padrao: 0.1, max: null, min: null, diluicao: { mlMed: 1, mlSF: 4 },
+        via: "EV lento",
+        notas: ["não usar bólus de carga em neonatos (bula)"] }
+    ],
+    enteral: null,
+    ajustes: {
+      neo: { ic: { faixa: [0.03, 0.06], teto: 0.06, padrao: 0.03 }, bolus: null, nota: "neonato: 0,03 mg/kg/h se <32 semanas e 0,06 se >32 semanas, SEM bólus de carga" },
+      lra: { ic: null, bolus: null, nota: "lesão renal aguda: o alfa-hidroxi-midazolam-glicuronídeo é ativo e acumula — reduzir a dose e esperar despertar tardio" }
+    },
+    info: {
+      indicacoes: [
+        "Estado de mal epiléptico.",
+        "Amnésia durante bloqueio neuromuscular.",
+        "Instabilidade hemodinâmica que contraindica o propofol, com a cetamina já no teto.",
+        "Paciente já cronicamente exposto a benzodiazepínico.",
+        "É agente de resgate, não o eixo da sedação: 3ª a 4ª linha."
+      ],
+      acao: [
+        "Agonista alostérico do receptor GABA-A, aumentando a frequência de abertura do canal de cloro.",
+        "Produz sedação, amnésia anterógrada, ansiólise e efeito anticonvulsivante; não produz analgesia.",
+        "Metabolismo pelo CYP3A4 em alfa-hidroxi-midazolam, que é ativo, e depois no glicuronídeo, também ativo e de eliminação renal.",
+        "Início em 2–3 minutos por via IV; a meia-vida se prolonga muito na infusão contínua.",
+        "Fator de risco independente para delirium na criança grave.",
+        "Cargas cumulativas da ordem de 16–24 mg/kg antes do desmame associam-se a mais abstinência."
+      ],
+      refs: [1, 28, 88, 89]
+    }
+  },
+  {
+    id: "dex", nome: "Dexmedetomidina", grupo: "sedacao", apresentacao: "100 mcg/mL, ampola de 2 mL",
+    ic: {
+      unidade: "mcg/kg/h", conc: { valor: 100, massa: "mcg", rotulo: "100 mcg/mL" },
+      faixa: [0.2, 1.4], teto: 1.5, padrao: 0.3, passo: 0.1,
+      diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
+      notas: [
+        "não fazer bólus: causa hipertensão transitória, bradicardia e até parada sinusal",
+        "febre ou hipertermia que não cede ao resfriamento: suspeitar da dexmedetomidina e suspender",
+        "após 24 h há tolerância e taquifilaxia, com mais efeitos adversos dose-dependentes",
+        "nunca associar à clonidina, exceto durante a transição planejada"
+      ]
+    },
+    bolus: [], enteral: null,
+    ajustes: { neo: { ic: null, bolus: null, nota: "neonato: clearance imaturo; comece em 0,2 mcg/kg/h e titule devagar" }, lra: null },
+    info: {
+      indicacoes: [
+        "Sedativo de base junto do fentanil, na fase de estabilização e no desmame.",
+        "Preferida quando é preciso preservar o drive respiratório.",
+        "Alfa-2 de escolha na lesão renal aguda, porque o metabolismo é hepático.",
+        "Cobertura durante o desmame da ventilação, em 0,2–0,4 mcg/kg/h.",
+        "Pode reduzir delirium, com certeza baixa de evidência.",
+        "Sozinha costuma não bastar para sedação profunda na fase aguda."
+      ],
+      acao: [
+        "Agonista alfa-2 muito seletivo, com razão alfa-2 para alfa-1 de cerca de 1.600 para 1.",
+        "Age no locus coeruleus e produz um padrão eletroencefalográfico parecido com o sono não REM.",
+        "No corno dorsal da medula produz analgesia leve, poupando opioide.",
+        "Metabolismo hepático por glicuronidação direta e CYP2A6, com metabólitos inativos.",
+        "Riscos: bradicardia dose-dependente e hipotensão; abstinência própria com taquicardia, hipertensão e agitação.",
+        "Nunca suspender abruptamente: reduzir 10% a cada 12 h ou trocar por clonidina enteral."
+      ],
+      refs: [7, 10, 39, 42, 47, 88]
+    }
+  },
+  {
+    id: "pro", nome: "Propofol 1%", grupo: "sedacao", apresentacao: "10 mg/mL, frasco de 20 mL (não diluir)",
+    ic: {
+      unidade: "mg/kg/h", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+      faixa: [1, 3.99], teto: 3.99, padrao: 2, passo: 0.25,
+      diluentes: [], semDiluicao: true,
+      notas: [
+        "puro, sem diluição e sem a regra dos 12 mL: a bomba recebe a vazão calculada",
+        "limites rígidos: menos de 4 mg/kg/h e menos de 48 h de uso contínuo",
+        "trocar frasco e equipo a cada 12 h: a emulsão lipídica é meio de cultura",
+        "somar o volume e as calorias ao balanço — 1 mL entrega 1,1 kcal"
+      ]
+    },
+    bolus: [], enteral: null,
+    ajustes: { neo: { ic: null, bolus: null, nota: "menores de 12 meses têm risco maior de síndrome da infusão do propofol" }, lra: null },
+    info: {
+      indicacoes: [
+        "Sedação profunda de duração previsivelmente menor que 48 h.",
+        "Hipertensão intracraniana, por preservar o acoplamento entre fluxo e metabolismo.",
+        "Procedimentos curtos que exigem despertar rápido.",
+        "Ponte para extubação, pelo término de efeito muito rápido.",
+        "Evitar no choque e na instabilidade hemodinâmica."
+      ],
+      acao: [
+        "Agonista do receptor GABA-A, de início e término muito rápidos.",
+        "Reduz a pressão intracraniana e o consumo cerebral de oxigênio.",
+        "Deprime o drive respiratório e causa vasodilatação com queda da pressão arterial.",
+        "Metabolismo hepático e extra-hepático, com metabólitos inativos.",
+        "A síndrome da infusão do propofol é toxicidade mitocondrial: desacopla a cadeia respiratória e bloqueia o metabolismo de ácidos graxos.",
+        "Sinais em crianças: febre, hepatomegalia e lipemia, além de acidose, rabdomiólise e bradiarritmia refratária."
+      ],
+      refs: [22, 43, 44, 45]
+    }
+  },
+  {
+    id: "cet", nome: "Cetamina", grupo: "sedacao", apresentacao: "50 mg/mL (racêmica), frasco de 10 mL",
+    ic: {
+      unidade: "mg/kg/h", conc: { valor: 50, massa: "mg", rotulo: "50 mg/mL" },
+      faixa: [0.5, 2], teto: 2, padrao: 0.5, passo: 0.1,
+      diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
+      notas: [
+        "para poupar opioide, a faixa é menor: 0,1–0,5 mg/kg/h",
+        "no broncoespasmo grave, 1–2 mg/kg/h",
+        "chave \"cetamina S(+)\": divide faixas, padrão e teto por 2, porque a escetamina é cerca de 2 vezes mais potente",
+        "a razão 2:1 vem da potência anestésica em adultos: titule sempre por escore de sedação"
+      ]
+    },
+    bolus: [
+      { rotulo: "Bólus", unidade: "mg/kg", conc: { valor: 50, massa: "mg", rotulo: "50 mg/mL" },
+        faixa: [0.5, 1], padrao: 0.5, max: null, min: null, diluicao: { mlMed: 1, mlSF: 4 },
+        via: "EV lento",
+        notas: ["hipersecreção em cerca de 29%: considerar antissialagogo se abundante"] }
+    ],
+    enteral: null, ajustes: null,
+    info: {
+      indicacoes: [
+        "Choque ou uso de droga vasoativa, por sustentar a pressão arterial.",
+        "Broncoespasmo grave, pelo efeito broncodilatador.",
+        "Terceiro agente quando fentanil e alfa-2 não bastam, para poupar benzodiazepínico.",
+        "Preserva o drive respiratório e o tônus da via aérea.",
+        "Não depende da função renal.",
+        "Estratégia para poupar opioide em dose baixa, de 0,1 a 0,5 mg/kg/h."
+      ],
+      acao: [
+        "Antagonista não competitivo do receptor NMDA, com ação também em receptores opioides e monoaminérgicos.",
+        "Produz anestesia dissociativa, analgesia e amnésia.",
+        "Simpatomimética indireta: sustenta pressão e débito enquanto houver reserva de catecolaminas.",
+        "Tem inotropismo negativo direto, que pode aparecer no choque prolongado — daí a hipotensão descrita em 54% de uma série pediátrica.",
+        "Metabolismo hepático por CYP3A4 e CYP2B6 em norcetamina, que é ativa; o clearance é muito variável.",
+        "Riscos: taquicardia, hipersecreção, aumento da pressão intraocular e fenômeno de emergência em adolescentes."
+      ],
+      refs: [19, 20, 21, 86, 87]
+    }
+  },
+  {
+    id: "clo", nome: "Clonidina", grupo: "sedacao", apresentacao: "150 mcg/mL IV, ampola de 1 mL · comprimido de 0,1 mg",
+    ic: {
+      unidade: "mcg/kg/h", conc: { valor: 150, massa: "mcg", rotulo: "150 mcg/mL" },
+      faixa: [0.5, 2], teto: 3, padrao: 1, passo: 0.25,
+      diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
+      notas: [
+        "sem dose de ataque parece inerte: o equilíbrio leva cerca de 24 h",
+        "nunca associar à dexmedetomidina, exceto durante a transição planejada",
+        "retirada abrupta causa rebote hipertensivo e taquicardia: desmamar em 24–72 h, mais devagar se o uso passou de 7 dias",
+        "tende a ser subdosada, não superdosada"
+      ]
+    },
+    bolus: [
+      { rotulo: "Ataque IV", unidade: "mcg/kg", conc: { valor: 150, massa: "mcg", rotulo: "150 mcg/mL" },
+        faixa: [1, 2], padrao: 2, max: null, min: null, diluicao: null,
+        via: "EV em 15–30 min",
+        notas: ["neonato: metade da dose, 1 mcg/kg", "vigiar frequência cardíaca e pressão durante a infusão"] }
+    ],
+    enteral: {
+      unidade: "mcg/kg/dose", faixa: [1, 3], padrao: 2, intervalos: [6],
+      apresentacoes: [{ valor: 0.1, massa: "mg", rotulo: "0,1 mg" }],
+      alertasDose: [], alertasKgDia: [{ acima: 12, texto: "acima de 12 mcg/kg/dia: é o teto de 3 mcg/kg/dose de 6/6 h — não subir mais" }],
+      notas: [
+        "dose inicial por idade: menos de 6 meses 1 mcg/kg/dose; de 6 a 24 meses 2; acima de 24 meses 2 (até 3).",
+        "escalonar de 0,5 em 0,5 mcg/kg/dose se a WAT-A2A estiver em ascensão ou houver agitação, até o teto de 3 mcg/kg/dose.",
+        "retirada da dexmedetomidina: reduzir 25% da dose inicial 1 h após cada dose de clonidina, até suspender.",
+        "o comprimido de 0,1 mg só é fracionável até certo ponto: em lactentes, solicitar solução manipulada à farmácia.",
+        "alerta de hipertensão de rebote se a clonidina for suspensa abruptamente."
+      ]
+    },
+    ajustes: {
+      neo: { ic: { faixa: [0.25, 0.5], teto: 0.5 }, bolus: { padrao: 1, faixa: [1, 1] }, nota: "neonato: metade da dose — ataque de 1 mcg/kg e manutenção de 0,25–0,5 mcg/kg/h" },
+      lra: { ic: { teto: 1 }, bolus: null, nota: "lesão renal aguda: reduzir cerca de 50% e limitar a 1 mcg/kg/h. A hemodiálise remove só cerca de 5%" }
+    },
+    info: {
+      indicacoes: [
+        "Alternativa à dexmedetomidina quando ela está indisponível.",
+        "Ponte enteral na transição da dexmedetomidina, para prevenir abstinência de alfa-2.",
+        "Uso prolongado com necessidade de passar para a via enteral.",
+        "Costuma ser o último fármaco retirado no desmame.",
+        "Também trata a agitação depois da suspensão da dexmedetomidina."
+      ],
+      acao: [
+        "Agonista alfa-2 com seletividade de cerca de 200 para 1 sobre o alfa-1, bem menor que a da dexmedetomidina.",
+        "Reduz o tônus simpático central, com sedação, ansiólise e analgesia leve.",
+        "Biodisponibilidade oral de 70 a 80%.",
+        "Meia-vida de 12 a 16 h no adulto e mais curta na criança, de 5 a 6 h; a insuficiência renal prolonga para 17 a 41 h.",
+        "De 40 a 50% é excretada inalterada na urina; o metabólito principal é inativo.",
+        "Riscos: bradicardia, hipotensão e hipertensão de rebote na retirada abrupta."
+      ],
+      refs: [12, 13, 14, 15, 18, 80, 81, 82, 83]
+    }
+  },
+  {
+    id: "met", nome: "Metadona", grupo: "sedacao", apresentacao: "comprimidos de 5 e 10 mg",
+    ic: null, bolus: [],
+    enteral: {
+      unidade: "mg/kg/dose", faixa: [0.05, 0.2], padrao: 0.1, intervalos: [6],
+      apresentacoes: [{ valor: 5, massa: "mg", rotulo: "5 mg" }, { valor: 10, massa: "mg", rotulo: "10 mg" }],
+      alertasDose: [{ acima: 10, massa: "mg", texto: "acima de 10 mg/dose: teto publicado — conferir com a farmácia clínica" }],
+      alertasKgDia: [{ acima: 0.7, texto: "acima de 0,7 mg/kg/dia: teto do protocolo de Roterdã — vigiar sedação excessiva" }],
+      notas: [
+        "sempre de 6/6 h. O intervalo de 4/4 h não existe em nenhum protocolo pediátrico publicado e é injustificável pela meia-vida longa.",
+        "a resposta ao fentanil alto é AUMENTAR A DOSE mantendo 6/6 h, não encurtar o intervalo.",
+        "não converter se o fentanil correu por menos de 5 dias: desmamar a própria infusão.",
+        "ECG basal e em 48–72 h se houver fator de risco para QT longo: mais de 12 anos, antipsicótico atípico, ondansetrona, macrolídeo, azol, distúrbio eletrolítico ou cardiopatia.",
+        "não existe fórmula única validada: a razão de conversão varia até 26 vezes na literatura. Decidir com a farmácia clínica."
+      ]
+    },
+    ajustes: null,
+    info: {
+      indicacoes: [
+        "Conversão da infusão prolongada de fentanil para a via enteral, no desmame.",
+        "Prevenção da síndrome de abstinência iatrogênica por opioide.",
+        "Indicada a partir de 5 dias de opioide em dose regular.",
+        "Permite retirar a infusão contínua e liberar o acesso venoso.",
+        "Não há evidência suficiente para recomendar um esquema de desmame sobre outro."
+      ],
+      acao: [
+        "Agonista do receptor opioide µ e antagonista do receptor NMDA, o que reduz a tolerância cruzada.",
+        "Biodisponibilidade oral alta, de 70 a 90%.",
+        "Meia-vida longa e muito variável, de 15 a 60 h: o estado de equilíbrio só chega em 48 a 72 h.",
+        "Por isso o ajuste de dose deve ser espaçado, sob risco de acúmulo e sedação excessiva tardia.",
+        "Metabolismo hepático por CYP3A4, CYP2B6 e CYP2D6, com muita variabilidade individual.",
+        "Riscos: prolongamento do intervalo QT e torsades de pointes, sedação excessiva tardia e depressão respiratória."
+      ],
+      refs: [25, 26, 75, 76, 77, 78, 91]
+    }
+  },
+  {
+    id: "lor", nome: "Lorazepam", grupo: "sedacao", apresentacao: "comprimidos de 1 e 2 mg",
+    ic: null, bolus: [],
+    enteral: {
+      unidade: "mg/kg/dose", faixa: [0.05, 0.2], padrao: 0.1, intervalos: [6],
+      apresentacoes: [{ valor: 1, massa: "mg", rotulo: "1 mg" }, { valor: 2, massa: "mg", rotulo: "2 mg" }],
+      alertasDose: [
+        { acima: 2, massa: "mg", texto: "acima de 2 mg/dose: acima do usual — conferir" },
+        { acima: 4, massa: "mg", texto: "acima de 4 mg/dose: teto publicado — revisar com a farmácia clínica" }
+      ],
+      alertasKgDia: [],
+      notas: [
+        "sempre de 6/6 h. A dose sai de (midazolam mg/kg/dia ÷ 12) ÷ 4 tomadas.",
+        "a resposta ao midazolam alto é DOBRAR A DOSE mantendo 6/6 h: encurtar para 4/4 h sem recalcular reduz a dose diária.",
+        "retirada do midazolam IV em 24 h: metade após a 2ª e a 3ª dose e suspender após a 4ª.",
+        "desmame do lorazepam: reduzir 10% da dose inicial a cada 24 a 48 h.",
+        "resgate com midazolam 0,1 mg/kg se houver sinais de abstinência.",
+        "vigiar supersedação nas 24 h seguintes à substituição."
+      ]
+    },
+    ajustes: null,
+    info: {
+      indicacoes: [
+        "Conversão do midazolam intravenoso para benzodiazepínico enteral, no desmame.",
+        "Prevenção da abstinência iatrogênica por benzodiazepínico.",
+        "Indicado quando o midazolam correu por 5 dias ou mais.",
+        "Permite retirar a infusão contínua mantendo a cobertura benzodiazepínica.",
+        "A conversão padronizada mantém os escores de abstinência estáveis."
+      ],
+      acao: [
+        "Agonista alostérico do receptor GABA-A, como o midazolam.",
+        "Meia-vida de 10 a 20 h, bem mais longa que a do midazolam, o que permite 4 tomadas ao dia.",
+        "Metabolismo hepático por glicuronidação direta, sem passar pelo CYP: sofre menos interação.",
+        "O metabólito é inativo e não acumula na lesão renal, ao contrário do midazolam.",
+        "Biodisponibilidade oral de cerca de 90%.",
+        "Riscos: sedação excessiva, delirium e abstinência se a retirada for rápida."
+      ],
+      refs: [38, 54, 79]
+    }
+  },
+  {
+    id: "mor", nome: "Morfina", grupo: "sedacao", apresentacao: "10 mg/mL, ampola de 1 mL",
+    ic: {
+      unidade: "mcg/kg/h", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+      faixa: [10, 40], teto: null, padrao: 20, passo: 2.5,
+      diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
+      notas: [
+        "acima de 40 mcg/kg/h o ganho analgésico é improvável e o risco de sedação excessiva aumenta: considerar multimodal ou alfa-2",
+        "após circulação extracorpórea, iniciar em 20–40 mcg/kg/h e titular por COMFORT-B",
+        "uso pediátrico off-label: a bula declara que segurança e eficácia em menores de 18 anos não foram estabelecidas"
+      ]
+    },
+    bolus: [
+      { rotulo: "Analgesia", unidade: "mg/kg", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+        faixa: [0.05, 0.1], padrao: 0.05, max: { valor: 5, massa: "mg" }, min: null,
+        diluicao: { mlMed: 1, mlSF: 9 }, via: "EV lento, a cada 2–4 h",
+        notas: ["2/2 h para resgate; 4/4 h para analgesia programada"] },
+      { rotulo: "Crise hipoxêmica (Fallot)", unidade: "mg/kg", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+        faixa: [0.1, 0.1], padrao: 0.1, max: { valor: 5, massa: "mg" }, min: null,
+        diluicao: { mlMed: 1, mlSF: 9 }, via: "IV, IM ou SC, dose única, repetir conforme a resposta",
+        notas: [
+          "nível de evidência: opinião de especialista — não há ensaio nem coorte comparativa",
+          "a morfina isolada não é a intervenção principal: associe posição genupeitoral, oxigênio, expansão volêmica e, se preciso, fenilefrina ou betabloqueador"
+        ] }
+    ],
+    enteral: null,
+    ajustes: {
+      neo: { ic: null, bolus: null, nota: "neonato: clearance imaturo, iniciar pela menor dose" },
+      lra: { ic: null, bolus: null, nota: "lesão renal aguda: os metabólitos M3G e M6G são ativos e acumulam — prefira o fentanil" }
+    },
+    info: {
+      indicacoes: [
+        "Analgesia no pós-operatório de cirurgia cardíaca.",
+        "Crise hipoxêmica da tetralogia de Fallot, como parte do conjunto de medidas.",
+        "Alternativa ao fentanil no rodízio de opioide após 5 dias, se a função renal permitir.",
+        "Analgesia programada ou de resgate em bólus intermitente.",
+        "Evitar na lesão renal aguda, pelos metabólitos ativos."
+      ],
+      acao: [
+        "Agonista do receptor opioide µ, com afinidade menor e início mais lento que o fentanil.",
+        "Hidrofílica: o início leva de 5 a 10 minutos e o efeito dura de 3 a 4 h.",
+        "Metabolismo hepático por glicuronidação em M3G e M6G, ambos ativos e de eliminação renal.",
+        "Libera histamina: pode causar vasodilatação, hipotensão e prurido.",
+        "Concentrações acima de cerca de 45 ng/mL aumentam a probabilidade de sedação excessiva.",
+        "Riscos: depressão respiratória, hipotensão, íleo e abstinência iatrogênica."
+      ],
+      refs: [49, 84, 85, 90, 92]
+    }
+  },
+  {
+    id: "roc", nome: "Rocurônio", grupo: "outros", apresentacao: "10 mg/mL, frasco de 5 mL",
+    ic: {
+      unidade: "mcg/kg/min", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+      faixa: [7, 12], teto: null, padrao: 7, passo: 0.5,
+      diluentes: ["SF 0,9%", "SG 5%"], semDiluicao: false,
+      notas: [
+        "titular pelo TOF, com alvo de 1 a 3 respostas de 4",
+        "7–10 mcg/kg/min no reaparecimento de T2, ou 12 mcg/kg/min com T1 a 10%",
+        "o uso prolongado em UTI não foi estudado: risco de tolerância e de miopatia, sobretudo associado a corticoide",
+        "bloqueio neuromuscular NÃO é sedação: garanta sedativo e analgésico em dose plena"
+      ]
+    },
+    bolus: [
+      { rotulo: "Intubação", unidade: "mg/kg", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+        faixa: [0.45, 0.6], padrao: 0.6, max: null, min: null, diluicao: null,
+        via: "EV em push",
+        notas: ["a partir de 3 meses; abaixo disso a segurança não foi estabelecida", "a bula não recomenda o rocurônio para sequência rápida em crianças"] }
+    ],
+    enteral: null, ajustes: null,
+    info: {
+      indicacoes: [
+        "Intubação traqueal.",
+        "Assincronia grave com o ventilador que não cede à otimização da sedação.",
+        "Síndrome do desconforto respiratório agudo grave, por período curto.",
+        "Hipertensão intracraniana refratária e controle de tremor na hipotermia terapêutica.",
+        "Sempre com sedação e analgesia plenas, monitorizadas por escore antes do bloqueio."
+      ],
+      acao: [
+        "Bloqueador neuromuscular não despolarizante, antagonista competitivo do receptor nicotínico da placa motora.",
+        "Início rápido, de 60 a 90 segundos com 0,6 mg/kg; duração de 30 a 40 minutos.",
+        "Eliminação predominantemente hepática e biliar, com parcela renal.",
+        "Não tem efeito sedativo, analgésico nem amnéstico: mascara os sinais de dor e de despertar.",
+        "Pode ser revertido por sugamadex.",
+        "Riscos: miopatia do doente crítico, sobretudo com corticoide, e consciência sob bloqueio se a sedação for insuficiente."
+      ],
+      refs: [1, 2, 40, 52]
+    }
+  },
+  {
+    id: "fur", nome: "Furosemida", grupo: "outros", apresentacao: "10 mg/mL, ampola de 2 mL",
+    ic: {
+      unidade: "mg/kg/h", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+      faixa: [0.1, 0.4], teto: null, padrao: 0.1, passo: 0.05,
+      diluentes: ["SF 0,9%"], semDiluicao: false,
+      notas: [
+        "acima de 0,4 mg/kg/h a robustez é baixa: há relato de taquicardia supraventricular com 1 mg/kg/h",
+        "linha própria: NUNCA correr em Y com milrinona, e evitar Y com noradrenalina em concentração alta",
+        "diluir em SF: a solução precipita abaixo de pH 7, e o SG 5% só é aceito com pH ajustado acima de 5,5",
+        "proteger da luz no armazenamento; a seringa de 24 h sem proteção é aceitável",
+        "titular por diurese-alvo de 1 a 3 mL/kg/h, dobrando a dose a cada 2 h se necessário"
+      ]
+    },
+    bolus: [
+      { rotulo: "Bólus", unidade: "mg/kg", conc: { valor: 10, massa: "mg", rotulo: "10 mg/mL" },
+        faixa: [0.5, 1], padrao: 1, max: { valor: 2, massa: "mg" }, min: null, diluicao: null,
+        via: "EV lento, em 1–2 min, a cada 6–12 h",
+        notas: ["o máximo de 2 mg/kg/dose é o teto neonatal conservador; a bula permite até 6 mg/kg/dose em crianças", "velocidade de até 4 mg/min, e até 2,5 mg/min na insuficiência renal grave"] }
+    ],
+    enteral: null,
+    ajustes: {
+      neo: { ic: null, bolus: null, nota: "neonato: pré-termo no máximo 1 mg/kg/DIA e a cada 24 h; termo a cada 12 h. Risco de ototoxicidade e de nefrocalcinose" },
+      lra: { ic: null, bolus: null, nota: "lesão renal aguda: pode ser preciso dose maior para o mesmo efeito, mas sem ganho acima do teto — reavaliar a indicação" }
+    },
+    info: {
+      indicacoes: [
+        "Sobrecarga hídrica na criança grave, sobretudo no pós-operatório cardíaco.",
+        "Insuficiência cardíaca descompensada com congestão.",
+        "Edema agudo de pulmão.",
+        "Oligúria com sobrecarga de volume e função renal preservada.",
+        "A infusão contínua dá diurese mais previsível e usa menos fármaco por dia que o bólus."
+      ],
+      acao: [
+        "Diurético de alça: inibe o cotransportador sódio-potássio-2 cloreto no ramo ascendente espesso da alça de Henle.",
+        "Aumenta a excreção de sódio, cloro, potássio, cálcio e magnésio.",
+        "Tem efeito venodilatador precoce, que alivia a congestão antes mesmo da diurese.",
+        "Início em 5 minutos por via IV, com pico em 30 minutos.",
+        "Meia-vida de cerca de 2 h, que chega a 67 h nos prematuros mais imaturos.",
+        "Riscos: hipocalemia, alcalose metabólica hipoclorêmica, hipovolemia, ototoxicidade e nefrocalcinose no primeiro ano de vida."
+      ],
+      refs: [70, 71, 72, 73]
+    }
+  }
+  ];
+  /* ===== DADOS:END ===== */
   /* ===== CALC-CORE:BEGIN ===== */
   var CALC = (function(){
     var EPS = 1e-9;
