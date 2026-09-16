@@ -347,6 +347,46 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 .hero p{margin:.2em 0;font-size:.9rem}
 .legend-prop{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.84rem}
 
+/* ---------- escalas: pontuar agora ---------- */
+.sc-tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;margin-bottom:6px;-webkit-overflow-scrolling:touch}
+.sc-tab{font:inherit;font-size:.86rem;font-weight:650;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 14px;min-height:44px;white-space:nowrap;cursor:pointer}
+.sc-tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
+@media (prefers-color-scheme:dark){.sc-tab.on{color:#0f151b}}
+.sc-head{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0 6px}
+.sc-grupo{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:750;margin:14px 2px 4px}
+.sc-item{border:1px solid var(--line);border-radius:12px;padding:4px 8px 8px;margin:0 0 8px;min-width:0}
+.sc-item legend{font-weight:700;font-size:.95rem;padding:0 4px}
+.sc-opt{position:relative;display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:center;min-height:44px;padding:5px 6px;border-radius:9px;cursor:pointer;font-size:.9rem}
+.sc-opt input{position:absolute;opacity:0;pointer-events:none}
+.sc-opt .pt{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);font-weight:750;font-variant-numeric:tabular-nums}
+.sc-opt:has(input:checked){background:var(--brand-soft)}
+.sc-opt:has(input:checked) .pt{background:var(--brand);border-color:var(--brand);color:#fff}
+@media (prefers-color-scheme:dark){.sc-opt:has(input:checked) .pt{color:#0f151b}}
+.sc-opt:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:1px}
+.sc-opt:has(input:disabled){cursor:default}
+.sc-anc{font-size:.84rem;color:var(--muted);margin:0 4px 4px;padding:6px 8px;background:var(--surface2);border-radius:8px}
+.sc-fonte{margin:10px 2px 0;padding-top:8px;border-top:1px solid var(--line);font-size:.8rem;line-height:1.45}
+.sc-res{position:sticky;bottom:calc(var(--nav-h) + 8px);z-index:5;margin-top:10px}
+@media (min-width:1024px){.sc-res{bottom:12px}}
+.sc-acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.out.ok{border-color:var(--ok);background:var(--ok-soft)} .out.ok .zone{color:var(--ok)}
+.out.aviso{border-color:var(--warn);background:var(--warn-soft)} .out.aviso .zone{color:var(--warn)}
+.out.alerta{border-color:var(--danger);background:var(--danger-soft)} .out.alerta .zone{color:var(--danger)}
+/* ---------- calculadora de doses ---------- */
+.fc{padding:0}
+.fc>summary{padding:12px 15px;min-height:52px;color:var(--ink);flex-wrap:wrap}
+.fc>summary .muted{font-weight:500}
+.fc-b{padding:0 15px 14px}
+.fc-nome{font-weight:750;font-size:1.02rem}
+.fc-modos{margin:4px 0 10px}
+.rx{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86rem;line-height:1.5;background:var(--surface2);border-radius:10px;padding:10px 12px;white-space:pre-wrap;word-break:break-word;margin:8px 0}
+.fc-alertas{margin:6px 0 0;padding-left:1.1em;font-size:.88rem;color:var(--danger)}
+.titul td{font-variant-numeric:tabular-nums}
+.titul tr.abaixo td{color:var(--muted)}
+.titul tr.acima td{color:var(--warn);font-weight:650}
+.titul tr.teto td{color:var(--danger);font-weight:750}
+.titul tr.atual td{background:var(--brand-soft)}
+
 @media print{
   :root{--bg:#fff}
   .topbar{position:static;background:#fff;color:#000;border-bottom:2px solid #000}
@@ -355,6 +395,10 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   body{padding:0;font-size:11pt}
   .card,.stair,.rule{box-shadow:none;break-inside:avoid}
   section.sec{break-inside:auto}
+  .sc-tabs,.sc-acoes,.sc-res{display:none!important}
+  .sc-painel[hidden]{display:block!important}
+  .sc-opt:has(input:checked){background:none}
+  .sc-opt:has(input:checked) .pt{background:none;color:inherit;border-color:#999}
 }
 </style>
 </head>
