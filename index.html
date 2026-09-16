@@ -2540,7 +2540,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       { id: "cvc", rotulo: "Cateter central", mEqPorL: 80, mlPorKg: 25 }
     ],
     duracoesK: [4, 6, 8],
-    /* O limite da reposicao NAO e o fluxo do cateter (um 24G comporta ~1.200 mL/h)
+    /* O limite da reposição NÃO é o fluxo do cateter (um 24G comporta ~1.200 mL/h)
        e sim a velocidade de entrega de potássio. Usual abaixo de 0,25 mEq/kg/h;
        não exceder 0,5. Acima de 0,25 exige monitor cardíaco. */
     kMEqKgHUsual: 0.25,
@@ -2550,8 +2550,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       quedaMaxPorHora: 0.5,
       quedaMax24h: 12,
       naPorLitro045: 77,
-      /* Como obter glicose 5% com NaCl 0,45% tendo so SG5%, SG10%, SF0,9%, NaCl 20% e AD.
-         Proporcoes conferidas: 0,9 x 250/500 = 0,45% e 10 x 250/500 = 5%. */
+      /* Como obter glicose 5% com NaCl 0,45% tendo só SG5%, SG10%, SF0,9%, NaCl 20% e AD.
+         Proporções conferidas: 0,9 × 250/500 = 0,45% e 10 × 250/500 = 5%. */
       receitas: [
         { rotulo: "SG 10% 250 mL + SF 0,9% 250 mL", nota: "500 mL prontos, sem aditivo nenhum" },
         { rotulo: "SG 5% 500 mL + NaCl 20% 11,2 mL", nota: "mesma solução; exige pipetar volume pequeno" }
@@ -2803,9 +2803,9 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       return txt + " · " + dois(data.getDate()) + "/" + dois(data.getMonth() + 1) + " " + dois(data.getHours()) + ":" + dois(data.getMinutes());
     }
     /* ---------- eletrolitos ---------- */
-    /* Deficit de agua livre = peso x fracao de agua corporal x (Na atual / Na alvo - 1).
-       A queda segura e de 0,5 mEq/L/h, ou 10 a 12 mEq/L em 24 h: o alvo nunca deve
-       exigir queda maior, e a funcao avisa quando exige. */
+    /* Déficit de água livre = peso × fração de água corporal × (Na atual ÷ Na alvo − 1).
+       A queda segura é de 0,5 mEq/L/h, ou 10 a 12 mEq/L em 24 h: o alvo nunca deve
+       exigir queda maior, e a função avisa quando exige. */
     function corrigirSodio(peso, naAtual, naAlvo, horas){
       var r = { valido: false, alertas: [] };
       if (!(peso > 0) || !(naAtual > 0) || !(naAlvo > 0) || !(horas > 0)) return r;
@@ -2843,9 +2843,9 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       r.volumeDiluente = peso * via.mlPorKg;         /* peso x 50 (AVP) ou x 25 (CVC) */
       r.volumeTotal = r.volumeDiluente + r.mlKCl;    /* o KCl SOMA volume ao soro */
       r.concentracao = r.mEq / (r.volumeTotal / 1000);
-      /* A duracao e escolhida por quem prescreve: 4 h por padrao, 6 ou 8 h no seletor.
-         Nao ha extensao automatica -- para uma dose fixa em mEq/kg, tanto mEq/kg/h
-         quanto mL/kg/h independem do peso, entao um criterio por peso nunca dispararia. */
+      /* A duração é escolhida por quem prescreve: 4 h por padrão, 6 ou 8 h no seletor.
+         Não há extensão automática — para uma dose fixa em mEq/kg, tanto mEq/kg/h
+         quanto mL/kg/h independem do peso, então um critério por peso nunca dispararia. */
       var L = ELETROLITOS;
       r.duracaoH = (duracaoH > 0) ? duracaoH : L.duracoesK[0];
       r.duracoes = L.duracoesK;
