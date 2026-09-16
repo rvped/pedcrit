@@ -3347,6 +3347,21 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     for (var i = 0; i < totaisImpressao.length; i++){ totaisImpressao[i].el.value = totaisImpressao[i].val; }
     totaisImpressao = [];
   });
+
+  /* ---------- impressão: desmarcar o checklist da visita (o papel sai limpo) ---------- */
+  var checklistImpressao = [];
+  window.addEventListener("beforeprint", function(){
+    if (checklistImpressao.length) return; /* captura anterior ainda pendente */
+    var caixas = document.querySelectorAll('.cl input[type="checkbox"]');
+    for (var i = 0; i < caixas.length; i++){
+      checklistImpressao.push({ el: caixas[i], marcado: caixas[i].checked });
+      caixas[i].checked = false;
+    }
+  });
+  window.addEventListener("afterprint", function(){
+    for (var i = 0; i < checklistImpressao.length; i++){ checklistImpressao[i].el.checked = checklistImpressao[i].marcado; }
+    checklistImpressao = [];
+  });
 })();
 </script>
 </body>
