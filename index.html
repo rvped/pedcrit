@@ -1332,6 +1332,108 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   }
   function num(v){ return parseFloat(String(v).replace(",", ".")); }
 
+  /* ===== CALC-CORE:BEGIN ===== */
+  var CALC = (function(){
+    var EPS = 1e-9;
+    function massaFator(de, para){
+      if (de === para) return 1;
+      if (de === "mcg" && para === "mg") return 0.001;
+      if (de === "mg" && para === "mcg") return 1000;
+      throw new Error("unidade de massa desconhecida: " + de + " → " + para);
+    }
+    function partesDose(unidade){
+      var p = String(unidade).split("/");
+      return { massa: p[0], tempo: (p[2] === "min" || p[2] === "h") ? p[2] : null };
+    }
+    function arredondarVolume(v){
+      if (!(v > 0)) return 0;
+      var r = Math.round(v * 10 + EPS) / 10;
+      if (r >= 10) return Math.round(v + EPS);
+      return r < 0.1 ? 0.1 : r;
+    }
+    function arredondarBolus(v){
+      if (!(v > 0)) return 0;
+      if (v < 1) { var r = Math.round(v * 100 + EPS) / 100; return r < 0.01 ? 0.01 : r; }
+      return arredondarVolume(v);
+    }
+    function classificar(dose, faixa, teto){
+      if (teto != null && dose > teto + EPS) return "teto";
+      if (dose > faixa[1] + EPS) return "acima";
+      if (dose < faixa[0] - EPS) return "abaixo";
+      return "faixa";
+    }
+    function diluirIC(ic, dose, peso, opc){
+      opc = opc || {};
+      var u = partesDose(ic.unidade);
+      var fm = massaFator(u.massa, ic.conc.massa);
+      var porMin = u.tempo === "min";
+      var conc = opc.conc != null ? opc.conc : ic.conc.valor;
+      var r = { dose: dose, peso: peso, unidade: ic.unidade, alertas: [], classe: classificar(dose, ic.faixa, ic.teto) };
+      if (ic.semDiluicao) {
+        var mlh = dose * peso * fm * (porMin ? 60 : 1) / conc;
+        r.semDiluicao = true; r.vazao = mlh; r.doseReal = dose; r.desvio = 0;
+        r.porMlh = mlh > 0 ? dose / mlh : 0;
+        return r;
+      }
+      var vBruto = dose * peso * (porMin ? 1440 : 24) * fm / conc;
+      var vMed = arredondarVolume(vBruto);
+      var vTotal = Math.max(12, 12 * Math.ceil((2 * vMed - EPS) / 12)) + 12 * (opc.extra12 || 0);
+      var vazao = vTotal / 24;
+      var concFinal = vMed * conc / vTotal;
+      var doseReal = concFinal * vazao / fm / peso / (porMin ? 60 : 1);
+      r.vBruto = vBruto; r.vMed = vMed; r.vTotal = vTotal;
+      r.vDil = Math.round((vTotal - vMed) * 10) / 10;
+      r.vazao = vazao; r.soluto = vMed / vTotal; r.concFinal = concFinal;
+      r.doseReal = doseReal; r.desvio = dose > 0 ? (doseReal - dose) / dose : 0;
+      r.porMlh = doseReal / vazao;
+      if (vBruto > 0 && vBruto < 0.05) r.alertas.push("volume calculado muito pequeno (" + String(Math.round(vBruto * 1000) / 1000).replace(".", ",") + " mL): considere diluição intermediária");
+      if (Math.abs(r.desvio) > 0.10) r.alertas.push("arredondamento altera a dose em " + Math.round(r.desvio * 100) + "%");
+      return r;
+    }
+    function titulacao(r, ic, passo){
+      passo = passo || 0.5;
+      if (!(r.porMlh > 0)) return [];
+      var limite = ic.teto != null ? ic.teto : ic.faixa[1] * 1.5;
+      var qMax = Math.ceil((limite / r.porMlh) / passo - EPS) * passo;
+      var linhas = [];
+      for (var i = 1; i * passo <= qMax + EPS && linhas.length < 80; i++) {
+        var q = Math.round(i * passo * 100) / 100;
+        var d = r.porMlh * q;
+        linhas.push({ vazao: q, dose: d, classe: classificar(d, ic.faixa, ic.teto) });
+      }
+      return linhas;
+    }
+    function fmtBR(n){
+      if (!isFinite(n)) return "–";
+      var a = Math.abs(n), casas = a < 10 ? 2 : (a < 100 ? 1 : 0);
+      var s = n.toFixed(casas);
+      if (casas > 0) s = s.replace(/\.?0+$/, "");
+      return s.replace(".", ",");
+    }
+    function linhaPontilhada(esq, dir){
+      var n = Math.max(3, 30 - esq.length);
+      return esq + " " + new Array(n + 1).join(".") + " " + dir;
+    }
+    function textoPrescricaoIC(nome, ic, r, diluente){
+      var u = ic.unidade;
+      if (r.semDiluicao) {
+        return nome + " " + ic.conc.rotulo + " (sem diluir)\nInfundir EV em BIC a " + fmtBR(r.vazao) + " mL/h\n# Cada 1 mL/h = " + fmtBR(r.porMlh) + " " + u;
+      }
+      return [
+        linhaPontilhada(nome + " " + ic.conc.rotulo, fmtBR(r.vMed) + " mL"),
+        linhaPontilhada(diluente, fmtBR(r.vDil) + " mL"),
+        "Infundir EV em BIC a " + fmtBR(r.vazao) + " mL/h (" + fmtBR(r.vTotal) + " mL em 24 h)",
+        "# Cada " + fmtBR(r.vazao) + " mL/h = " + fmtBR(r.doseReal) + " " + u + " · cada 1 mL/h = " + fmtBR(r.porMlh) + " " + u
+      ].join("\n");
+    }
+    return {
+      massaFator: massaFator, partesDose: partesDose, arredondarVolume: arredondarVolume,
+      arredondarBolus: arredondarBolus, classificar: classificar, diluirIC: diluirIC,
+      titulacao: titulacao, fmtBR: fmtBR, textoPrescricaoIC: textoPrescricaoIC
+    };
+  })();
+  /* ===== CALC-CORE:END ===== */
+
   /* ---------- gaveta ---------- */
   var drawer = $("drawer");
   $("moreBtn").addEventListener("click", function(){ drawer.classList.add("open"); drawer.setAttribute("aria-hidden","false"); });
