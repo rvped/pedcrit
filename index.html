@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e5f78">
-<meta name="description" content="Protocolo de analgossedação da UTI Pediátrica do HGVC — versão de bolso para beira-leito">
+<meta name="description" content="PedCrit — ferramenta de beira-leito para UTI pediátrica, emergência e pronto-socorro: escalas, doses por peso e o Protocolo de Analgossedação da UTIP (HGVC v2.0)">
 <meta name="robots" content="noindex">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Analgossedação">
+<meta name="apple-mobile-web-app-title" content="PedCrit">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Analgossedação UTIP · HGVC</title>
+<title>PedCrit · UTI pediátrica e emergência</title>
 <style>
 :root{
   --bg:#f5f7fa; --surface:#fff; --surface2:#eef2f6; --ink:#17212b; --muted:#566271; --line:#d9e0e7;
@@ -408,8 +408,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
 <header class="topbar">
   <div class="grow">
-    <h1>Analgossedação na UTI Pediátrica</h1>
-    <div class="sub">HGVC · Protocolo v2.0 (set/2026) · versão de bolso</div>
+    <h1>PedCrit</h1>
+    <div class="sub">Protocolo de Analgossedação da UTIP (HGVC v2.0) · versão de bolso</div>
   </div>
   <span class="pill-top">Confira doses</span>
   <button type="button" class="topbtn" id="shareBtn" aria-label="Compartilhar ou instalar"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
@@ -1402,7 +1402,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       <img src="qr.svg" alt="QR code do endereço do protocolo" width="200" height="200">
       <div>
         <p class="small muted" style="margin:0">Endereço fixo</p>
-        <p class="urlbig">rvped.github.io/analgossedacao</p>
+        <p class="urlbig">rvped.github.io/pedcrit</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
           <button class="btn fill" type="button" id="copyBtn">Copiar link</button>
           <button class="btn" type="button" id="installBtn" hidden>Instalar app</button>
@@ -1414,7 +1414,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   <div class="grid g3">
     <div class="card"><h3>Android</h3><ol><li>Abra o link no <b>Chrome</b></li><li>Menu <b>⋮</b> → <b>Instalar app</b> (ou Adicionar à tela inicial)</li><li>Abre como aplicativo e funciona sem internet</li></ol></div>
     <div class="card"><h3>iPhone / iPad</h3><ol><li>Abra o link no <b>Safari</b></li><li>Botão <b>Compartilhar</b> (quadrado com seta)</li><li><b>Adicionar à Tela de Início</b></li></ol></div>
-    <div class="card"><h3>Computador Windows</h3><ol><li>Digite <b>rvped.github.io/analgossedacao</b></li><li>No Edge ou Chrome: ícone <b>Instalar</b> no fim da barra de endereço</li><li>Ou baixe o <a href="Analgossedacao-UTIP.url" download>atalho para a área de trabalho</a></li></ol></div>
+    <div class="card"><h3>Computador Windows</h3><ol><li>Digite <b>rvped.github.io/pedcrit</b></li><li>No Edge ou Chrome: ícone <b>Instalar</b> no fim da barra de endereço</li><li>Ou baixe o <a href="PedCrit.url" download>atalho para a área de trabalho</a></li></ol></div>
   </div>
   <p class="small muted">Sem internet, abre a última versão salva. Com internet, busca a versão mais recente e avisa no topo quando houver atualização.</p>
 </section>
@@ -3242,7 +3242,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   });
 
   /* ---------- compartilhar / instalar ---------- */
-  var URL_FIXA = "https://rvped.github.io/analgossedacao/";
+  var URL_FIXA = "https://rvped.github.io/pedcrit/";
   var toastEl = document.createElement("div"); toastEl.className = "toast"; toastEl.setAttribute("role", "status"); document.body.appendChild(toastEl);
   function toast(t){ toastEl.textContent = t; toastEl.classList.add("on"); setTimeout(function(){ toastEl.classList.remove("on"); }, 2200); }
   $("copyBtn").addEventListener("click", function(){
@@ -3250,7 +3250,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     else toast(URL_FIXA);
   });
   $("shareBtn").addEventListener("click", function(){
-    if (navigator.share) navigator.share({title:"Analgossedação UTIP · HGVC", url:URL_FIXA}).catch(function(){});
+    if (navigator.share) navigator.share({title:"PedCrit", url:URL_FIXA}).catch(function(){});
     else location.hash = "#instalar";
   });
   var adiado = null;

@@ -1,7 +1,7 @@
 {
-  "name": "Analgossedação UTIP · HGVC",
-  "short_name": "Analgossedação",
-  "description": "Protocolo de analgossedação da UTI Pediátrica do HGVC — versão de bolso para beira-leito",
+  "name": "PedCrit · UTI pediátrica e emergência",
+  "short_name": "PedCrit",
+  "description": "Escalas, calculadora de doses por peso e o Protocolo de Analgossedação da UTIP (HGVC v2.0)",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",

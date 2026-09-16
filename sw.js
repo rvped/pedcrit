@@ -1,7 +1,7 @@
 /* Service worker — funciona sem internet e avisa quando há versão nova.
    Troque VERSAO a cada publicação para invalidar o cache. */
-const VERSAO = "2026-09-15d";
-const CACHE = "analgo-" + VERSAO;
+const VERSAO = "2026-09-15e";
+const CACHE = "pedcrit-" + VERSAO;
 const ARQUIVOS = [
   "./",
   "./index.html",
@@ -20,7 +20,7 @@ self.addEventListener("install", (e) => {
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys()
-      .then((ks) => Promise.all(ks.filter((k) => k.startsWith("analgo-") && k !== CACHE).map((k) => caches.delete(k))))
+      .then((ks) => Promise.all(ks.filter((k) => (k.startsWith("pedcrit-") || k.startsWith("analgo-")) && k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });

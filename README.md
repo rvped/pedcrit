@@ -1,11 +1,11 @@
-# Analgossedação na UTI Pediátrica — HGVC
+# PedCrit — UTI pediátrica, emergência e pronto-socorro
 
-Edição web, para a beira-leito, do Protocolo de Analgossedação da UTI Pediátrica do Hospital Geral de Vitória da Conquista (v2.0, setembro/2026).
+Ferramenta de beira-leito. Inclui o Protocolo de Analgossedação da UTI Pediátrica do Hospital Geral de Vitória da Conquista (v2.0, setembro/2026), escalas para marcar e calculadora de doses por peso.
 
-**Acesso:** https://rvped.github.io/analgossedacao/
+**Acesso:** https://rvped.github.io/pedcrit/
 
 - Celular (Android e iPhone): leia o QR code do cartaz e use "Adicionar à tela inicial".
-- Computador (Windows): digite `rvped.github.io/analgossedacao` e instale pelo Edge ou Chrome, ou use o arquivo `Analgossedacao-UTIP.url`.
+- Computador (Windows): digite `rvped.github.io/pedcrit` e instale pelo Edge ou Chrome, ou use o arquivo `PedCrit.url`.
 - Depois do primeiro acesso, funciona sem internet.
 
 ## Arquivos
@@ -17,7 +17,7 @@ Edição web, para a beira-leito, do Protocolo de Analgossedação da UTI Pediá
 | `manifest.webmanifest`, `icons/` | Instalação como aplicativo |
 | `qr.svg`, `qr.png` | QR code do endereço fixo |
 | `cartaz.html`, `cartaz.pdf` | Cartaz A4 para afixar na unidade |
-| `Analgossedacao-UTIP.url` | Atalho de área de trabalho do Windows |
+| `PedCrit.url` | Atalho de área de trabalho do Windows |
 
 ## Para publicar uma atualização
 
