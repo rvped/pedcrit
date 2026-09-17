@@ -3375,8 +3375,10 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   (function(){
     var elP = $("elPeso"); if (!elP) return;
     var L = CALC.ELETROLITOS, trancado = false;
-    /* fmtBR zera as casas acima de 100, por decisão do próprio app. Aqui o total é
-       instrução de preparo e a fração importa: 812,8 mL, não 813. */
+    /* Volume de eletrólito se arredonda para 0,1 mL e NUNCA para mL inteiro:
+       12,83 vira 12,8, mas 12,8 jamais vira 13. O fmtBR do app zera as casas acima
+       de 100 — correto para dose, errado aqui, onde a fração é o próprio sal. Os três
+       números exibidos usam o mesmo formato para que somem entre si na tela. */
     function mL1(v){ return (Math.round(v * 10) / 10).toFixed(1).replace(".", ","); }
     function lista(ul, itens){
       ul.innerHTML = "";
@@ -3388,7 +3390,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       var r = CALC.reporPotassio(num(elP.value), num($("elKDose").value), marcado("elKVia"), Number(marcado("elKDur")));
       if (!r.valido){ $("elKRx").textContent = "Informe peso e dose."; lista($("elKAl"), []); return; }
       $("elKRx").textContent = [
-        "KCl 19,1% " + CALC.fmtBR(r.mlKCl) + " mL + SF 0,9% " + CALC.fmtBR(r.volumeDiluente) + " mL = " + mL1(r.volumeTotal) + " mL",
+        "KCl 19,1% " + mL1(r.mlKCl) + " mL + SF 0,9% " + mL1(r.volumeDiluente) + " mL = " + mL1(r.volumeTotal) + " mL",
         CALC.fmtBR(r.mEq) + " mEq \u00b7 " + CALC.fmtBR(r.concentracao) + " mEq/L (teto " + CALC.fmtBR(r.via.mEqPorL) + " em " + r.via.rotulo.toLowerCase() + ")",
         "Correr em " + CALC.fmtBR(r.duracaoH) + " h = " + CALC.fmtBR(r.mlPorHora) + " mL/h \u00b7 entrega " + CALC.fmtBR(r.mEqKgH) + " mEq/kg/h"
       ].join("\n");
