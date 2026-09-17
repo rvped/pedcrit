@@ -460,7 +460,14 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 .searchres a:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
 .searchres .cat{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:750;flex:none;min-width:70px}
 .searchres .sub{color:var(--muted);font-size:.8rem}
+.searchres a{flex-wrap:wrap}
+.searchres .trecho{flex-basis:100%;margin-top:3px;color:var(--muted);font-size:.8rem;line-height:1.4}
+.searchres .trecho b{color:var(--ink);font-weight:750}
 .searchvazio{padding:10px;color:var(--muted);font-size:.88rem}
+/* Destaque do trecho ao pular para ele: sem keyframes, a remoção da classe
+   já dissolve o fundo pela transição — funciona igual com movimento reduzido. */
+.searchhit{background:var(--warn-soft);border-radius:6px;box-shadow:0 0 0 4px var(--warn-soft)}
+.searchhit,.searchres a{transition:background .5s ease,box-shadow .5s ease}
 .btn:focus-visible,.drugnav a:focus-visible,.sc-tab:focus-visible,.side a:focus-visible,details>summary:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .sc-opt:has(input:disabled){cursor:default}
 /* Reserva para navegadores sem :has() (WebView Android antigo, Safari < 15.4). Sem ela o rádio
@@ -527,7 +534,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 </header>
 <div class="searchbar" id="searchBar" hidden>
   <div class="linha">
-    <input type="search" id="searchInput" autocomplete="off" placeholder="Buscar seção, fármaco ou escala" aria-label="Buscar no aplicativo" aria-controls="searchRes">
+    <input type="search" id="searchInput" autocomplete="off" placeholder="Buscar em todo o aplicativo" aria-label="Buscar no aplicativo" aria-controls="searchRes">
     <button type="button" class="searchfechar" id="searchClose" aria-label="Fechar busca"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
   <ul class="searchres" id="searchRes" role="listbox" aria-label="Resultados"></ul>
@@ -3009,16 +3016,62 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         .replace(/[óòôõö]/g, "o").replace(/[úùûü]/g, "u").replace(/ç/g, "c");
     }
 
-    /* O índice é montado do próprio DOM e dos dados: fármaco ou escala nova
-       entra sozinho, sem lista paralela para manter em dia. */
+    /* Sinônimos clínicos. Expandem o TERMO BUSCADO, não o índice: mais barato e
+       não incha a memória. Um termo casa se QUALQUER variante dele aparecer. */
+    var SINONIMOS = {
+      hipercalemia: ["hiperpotassemia", "potassio"],
+      hiperpotassemia: ["hipercalemia", "potassio"],
+      hipocalemia: ["hipopotassemia", "potassio"],
+      hipopotassemia: ["hipocalemia", "potassio"],
+      hiponatremia: ["sodio"],
+      hipernatremia: ["sodio"],
+      delirio: ["delirium"],
+      delirium: ["delirio"],
+      pris: ["infusao do propofol"],
+      bnm: ["bloqueio neuromuscular"],
+      retirada: ["abstinencia"],
+      abstinencia: ["retirada", "desmame"]
+    };
+
+    /* O índice tem duas camadas. A primeira são os alvos de navegação (seção,
+       fármaco, escala, calculadora) e pesa mais. A segunda é o corpo do texto,
+       bloco a bloco — é ela que faz "hipernatremia" e "rigidez torácica" serem
+       achados, coisa que a versão anterior não fazia, porque só indexava título.
+       A bibliografia (#refs) fica de fora: são 100 citações que só dariam ruído. */
     var indice = [];
     function add(cat, titulo, sub, alvo, acao){
       indice.push({ cat: cat, titulo: titulo, sub: sub || "", alvo: alvo, acao: acao || null,
-                    k: chave(titulo + " " + (sub || "")) });
+                    el: null, peso: 4, texto: "", k: chave(titulo + " " + (sub || "")) });
+    }
+    function addBloco(cat, titulo, texto, alvo, peso, el){
+      indice.push({ cat: cat, titulo: titulo, sub: "", alvo: alvo, acao: null,
+                    el: el, peso: peso, texto: texto, k: chave(texto) });
     }
     document.querySelectorAll("section.sec[id]").forEach(function(s){
       var h = s.querySelector(".sec-head h2");
       if (h) add("Seção", h.textContent.trim(), (s.querySelector(".sec-lead") || {}).textContent || "", "#" + s.id);
+    });
+
+    var SEL_BLOCO = "h3,h4,summary,p,li,td,.dbox,.call,.dil";
+    /* Fora: navegação (o texto dela duplica títulos), o cabeçalho da seção (já é
+       entrada de navegação) e a própria barra de busca. */
+    var SEL_FORA = ".atalhos,.searchbar,.drugnav,.bottomnav,.side,.drawer,.sec-head,.sec-lead";
+    var PESO_TAG = { H3: 3, H4: 3, SUMMARY: 3, P: 1, LI: 1, TD: 1, TH: 1 };
+    document.querySelectorAll("section.sec[id]").forEach(function(s){
+      if (s.id === "refs") return;
+      var nomeSec = ((s.querySelector(".sec-head h2") || {}).textContent || s.id).trim();
+      s.querySelectorAll(SEL_BLOCO).forEach(function(el){
+        if (el.closest(SEL_FORA)) return;
+        /* O nome do fármaco já é entrada de navegação, com as etiquetas dele como
+           subtítulo. Indexar o h3 de novo só produziria duas linhas iguais na lista. */
+        if (el.tagName === "H3" && el.closest("article.drug")) return;
+        var texto = (el.textContent || "").replace(/\s+/g, " ").trim();
+        if (texto.length < 4) return;
+        var dono = el.closest("article.drug, .sc-item, .card") || s;
+        var tit = dono.querySelector("h3, legend");
+        addBloco(nomeSec, tit ? tit.textContent.trim() : nomeSec, texto,
+                 "#" + s.id, PESO_TAG[el.tagName] || 2, el);
+      });
     });
     document.querySelectorAll("article.drug[id]").forEach(function(a){
       var h = a.querySelector(".drug-h h3");
@@ -3037,12 +3090,62 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     }
 
     var sel = -1, achados = [];
+
+    /* Cada termo digitado vira uma lista de variantes aceitas (a palavra + sinônimos).
+       Um item casa se TODOS os termos casarem — é isso que faz "correção sódio"
+       funcionar, coisa que o substring puro anterior não conseguia. */
+    function termos(q){
+      var brutos = chave(q).trim().split(/\s+/), out = [];
+      for (var i = 0; i < brutos.length; i++){
+        if (brutos[i]) out.push([brutos[i]].concat(SINONIMOS[brutos[i]] || []));
+      }
+      return out;
+    }
+    function casa(k, ts){
+      for (var i = 0; i < ts.length; i++){
+        var ok = false;
+        for (var j = 0; j < ts[i].length; j++){ if (k.indexOf(ts[i][j]) !== -1){ ok = true; break; } }
+        if (!ok) return false;
+      }
+      return true;
+    }
+    /* Recorta o texto em volta da primeira ocorrência. chave() troca um caractere por
+       um caractere, então a posição no texto normalizado vale no texto original. */
+    function trecho(texto, ts){
+      var k = chave(texto), pos = -1, tam = 0;
+      for (var i = 0; i < ts.length && pos < 0; i++){
+        for (var j = 0; j < ts[i].length; j++){
+          var p = k.indexOf(ts[i][j]);
+          if (p !== -1){ pos = p; tam = ts[i][j].length; break; }
+        }
+      }
+      if (pos < 0) return null;
+      var ini = Math.max(0, pos - 45), fim = Math.min(texto.length, pos + tam + 90);
+      return { antes: (ini > 0 ? "…" : "") + texto.slice(ini, pos),
+               hit: texto.slice(pos, pos + tam),
+               depois: texto.slice(pos + tam, fim) + (fim < texto.length ? "…" : "") };
+    }
+    function dono(it){
+      return it.el ? (it.el.closest("article.drug, .sc-item, .card") || it.alvo) : it.alvo;
+    }
     function render(q){
-      var qq = chave(q).trim();
-      achados = qq ? indice.filter(function(it){ return it.k.indexOf(qq) !== -1; }).slice(0, 12) : [];
+      var ts = termos(q);
       lista.innerHTML = "";
-      sel = -1;
-      if (!qq) return;
+      sel = -1; achados = [];
+      if (!ts.length) return;
+      var brutos = [];
+      for (var i = 0; i < indice.length; i++){ if (casa(indice[i].k, ts)) brutos.push(indice[i]); }
+      brutos.sort(function(a, b){ return b.peso - a.peso; });
+      /* No máximo 2 por cartão: sem teto, "midazolam" devolve o mesmo cartão doze vezes
+         e empurra para fora os achados de outras seções. */
+      var vistos = [];
+      for (var n = 0; n < brutos.length && achados.length < 12; n++){
+        var d = dono(brutos[n]), c = 0, vi = -1;
+        for (var m = 0; m < vistos.length; m++){ if (vistos[m].d === d){ vi = m; c = vistos[m].n; break; } }
+        if (c >= 2) continue;
+        if (vi < 0) vistos.push({ d: d, n: 1 }); else vistos[vi].n = c + 1;
+        achados.push(brutos[n]);
+      }
       if (!achados.length) {
         var vazio = document.createElement("li");
         vazio.className = "searchvazio";
@@ -3055,9 +3158,18 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         var a = document.createElement("a");
         a.href = it.alvo; a.setAttribute("role", "option"); a.setAttribute("data-i", i);
         var c = document.createElement("span"); c.className = "cat"; c.textContent = it.cat;
-        var n = document.createElement("span"); n.textContent = it.titulo;
-        a.appendChild(c); a.appendChild(n);
+        var nm = document.createElement("span"); nm.textContent = it.titulo;
+        a.appendChild(c); a.appendChild(nm);
         if (it.sub) { var s = document.createElement("span"); s.className = "sub"; s.textContent = it.sub; a.appendChild(s); }
+        var tr = it.texto ? trecho(it.texto, ts) : null;
+        if (tr && tr.hit !== it.titulo) {
+          var dv = document.createElement("span"); dv.className = "trecho";
+          var b = document.createElement("b"); b.textContent = tr.hit;
+          dv.appendChild(document.createTextNode(tr.antes));
+          dv.appendChild(b);
+          dv.appendChild(document.createTextNode(tr.depois));
+          a.appendChild(dv);
+        }
         li.appendChild(a); lista.appendChild(li);
       });
     }
@@ -3071,8 +3183,20 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       var it = achados[i]; if (!it) return;
       abrir(false);
       if (it.acao && typeof abrirFarmaco === "function") { abrirFarmaco(it.acao); return; }
-      var d = document.querySelector(it.alvo);
-      if (d) d.scrollIntoView({ behavior: "smooth", block: "start" });
+      var d = it.el || document.querySelector(it.alvo);
+      if (!d) return;
+      /* Sem isto, metade dos achados levaria a uma tela onde nada aparece: o trecho
+         mora dentro de um <details> fechado. Abre todos no caminho antes de rolar. */
+      var p = d;
+      while (p && p !== document.body){
+        if (p.tagName === "DETAILS" && !p.open) p.open = true;
+        p = p.parentNode;
+      }
+      d.scrollIntoView({ behavior: "smooth", block: it.el ? "center" : "start" });
+      if (it.el){
+        d.classList.add("searchhit");
+        setTimeout(function(){ d.classList.remove("searchhit"); }, 2400);
+      }
     }
     function abrir(v){
       barra.hidden = !v;
