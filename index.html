@@ -1025,7 +1025,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
   <p class="small muted" id="tblFarmLegenda" style="margin:6px 2px">Mostrando: <b id="tblFarmNome">todos os fármacos</b></p>
   <div class="tbl-wrap">
-    <table>
+    <table id="tblFarmacos">
       <thead><tr><th>Fármaco</th><th>Apresentação</th><th>Diluição padrão</th><th>Final</th></tr></thead>
       <tbody>
         <tr><td><b>Fentanil</b></td><td>50 mcg/mL · amp 10 mL</td><td>10 mL + 40 mL SF</td><td><b>10 mcg/mL</b></td></tr>
@@ -3687,11 +3687,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
      seção tem outras tabelas (Zorko, ajustes de clonidina) que não podem ser tocadas. */
   (function(){
     var nav = document.querySelector(".drugnav"); if (!nav) return;
-    var tabela = null;
-    document.querySelectorAll(".tbl-wrap table").forEach(function(t){
-      var th = t.querySelector("thead th");
-      if (th && th.textContent.trim() === "Fármaco") tabela = t;
-    });
+    var tabela = $("tblFarmacos");
     if (!tabela) return;
     var linhas = [].slice.call(tabela.querySelectorAll("tbody tr"));
     var legenda = $("tblFarmNome");
