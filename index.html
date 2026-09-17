@@ -514,6 +514,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   section.sec{break-inside:auto}
   .sc-tabs,.sc-acoes,.sc-res{display:none!important}
   .sc-painel[hidden]{display:block!important}
+  /* O roteador deixa uma tela visível; no papel sai o app inteiro, como antes. */
+  section.sec[hidden]{display:block!important}
   .sc-opt input,.seg input{display:none}
   .sc-opt:has(input:checked){background:none}
   .sc-opt:has(input:checked) .pt{background:none;color:inherit;border-color:#999}
@@ -3185,6 +3187,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       if (it.acao && typeof abrirFarmaco === "function") { abrirFarmaco(it.acao); return; }
       var d = it.el || document.querySelector(it.alvo);
       if (!d) return;
+      /* O achado pode morar numa tela escondida: revela antes de rolar. */
+      if (typeof revelarTela === "function") revelarTela(d);
       /* Sem isto, metade dos achados levaria a uma tela onde nada aparece: o trecho
          mora dentro de um <details> fechado. Abre todos no caminho antes de rolar. */
       var p = d;
@@ -3220,18 +3224,86 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     });
   })();
 
-  /* ---------- seção ativa ---------- */
-  var links = document.querySelectorAll(".side a, .bottomnav a");
-  if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if (!en.isIntersecting) return;
-        var id = en.target.id;
-        links.forEach(function(a){ a.classList.toggle("on", a.getAttribute("href") === "#" + id); });
-      });
-    }, {rootMargin:"-40% 0px -55% 0px"});
-    document.querySelectorAll("section.sec[id]").forEach(function(s){ io.observe(s); });
+  /* ---------- roteador: cada seção é uma tela ----------
+     Esconder é feito AQUI, por JavaScript, e NUNCA na marcação. Se este bloco não
+     rodar, o app degrada para a rolagem contínua antiga, com todo o conteúdo à
+     vista. Numa ferramenta de beira-leito o modo de falha tem que ser esse, e não
+     uma tela em branco.
+
+     O scroll-spy por IntersectionObserver que morava aqui saiu: com uma tela por
+     vez ele não tem o que espiar — quem sabe qual é a tela atual é o roteador.
+
+     Todo <a href="#..."> continua funcionando sem ouvinte de clique: o navegador
+     troca o hash, o hashchange dispara e o roteador reage. Isso cobre de uma vez
+     a barra inferior, o menu lateral, a gaveta, os atalhos da tela inicial e as
+     referências cruzadas espalhadas pelo texto. */
+  var TELAS = [].slice.call(document.querySelectorAll("section.sec[id]"));
+  var IDS = TELAS.map(function(s){ return s.id; });
+  var EH_TELA = {};
+  IDS.forEach(function(id){ EH_TELA[id] = true; });
+  var telaAtual = null;
+
+  /* aceita "#farmacos" (uma tela) ou "#d-fen" (um elemento dentro de uma tela) */
+  function telaDe(alvo){
+    var id = String(alvo == null ? "" : alvo).replace(/^#/, "");
+    if (!id) return null;
+    if (EH_TELA[id]) return id;
+    var el = document.getElementById(id);
+    var s = el && el.closest ? el.closest("section.sec[id]") : null;
+    return s ? s.id : null;
   }
+
+  function mostrarTela(id){
+    if (!EH_TELA[id]) return false;
+    for (var i = 0; i < TELAS.length; i++) TELAS[i].hidden = TELAS[i].id !== id;
+    telaAtual = id;
+    document.querySelectorAll(".side a, .bottomnav a, .drawer a").forEach(function(a){
+      var alvo = telaDe(a.getAttribute("href"));
+      a.classList.toggle("on", alvo === id);
+      if (alvo === id) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    return true;
+  }
+
+  /* Gancho de quem salta por JavaScript (busca, calculadora, eletrólitos):
+     garante que o elemento esteja numa tela visível antes de rolar até ele. */
+  function revelarTela(el){
+    var s = el && el.closest ? el.closest("section.sec[id]") : null;
+    if (s && s.id !== telaAtual) {
+      mostrarTela(s.id);
+      /* Mantém a URL honesta: sem isto o endereço continuaria apontando para a tela
+         anterior, e recarregar ou compartilhar o link abriria a tela errada.
+         replaceState em vez de trocar o hash porque trocar dispararia hashchange,
+         que rolaria ao topo e brigaria com o scrollIntoView de quem chamou. */
+      if (window.history && history.replaceState) history.replaceState(null, "", "#" + s.id);
+    }
+    return s;
+  }
+
+  function aplicarHash(){
+    var bruto = location.hash.replace(/^#/, "");
+    var id = telaDe(bruto) || IDS[0];
+    var trocou = id !== telaAtual;
+    mostrarTela(id);
+    if (typeof drawer !== "undefined" && drawer) {
+      drawer.classList.remove("open");
+      drawer.setAttribute("aria-hidden", "true");
+    }
+    if (bruto && bruto !== id) {
+      var el = document.getElementById(bruto);
+      if (el) { el.scrollIntoView({ block: "start" }); return; }
+    }
+    if (trocou) window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", aplicarHash);
+  /* Clicar no item da tela em que já se está não dispara hashchange; sem isto o
+     toque em "Fármacos" estando em Fármacos, rolado para baixo, não faria nada. */
+  document.addEventListener("click", function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (a && a.getAttribute("href") === location.hash) { e.preventDefault(); aplicarHash(); }
+  });
+  aplicarHash();
 
   /* ---------- COMFORT-B ---------- */
   var cbN = $("cbN"), cbR = $("cbR"), cbBNM = $("cbBNM"), cbOut = $("cbOut");
@@ -3692,6 +3764,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   function abrirFarmaco(id){
     var d = $("fc-" + id); if (!d) return;
     document.querySelector('input[name="fcgrupo"][value="todos"]').checked = true; fcFiltrar();
+    if (typeof revelarTela === "function") revelarTela(d);
     d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   document.querySelectorAll('input[name="fcgrupo"]').forEach(function(r){ r.addEventListener("change", fcFiltrar); });
@@ -3752,7 +3825,11 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       var e = $(id); if (e) e.addEventListener("input", tudo);
     });
     document.querySelectorAll('input[name="elKVia"], input[name="elKDur"]').forEach(function(r){ r.addEventListener("change", calcK); });
-    function vaiPara(id){ var s = document.getElementById(id); if (s) s.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    function vaiPara(id){
+      var s = document.getElementById(id); if (!s) return;
+      if (typeof revelarTela === "function") revelarTela(s);
+      s.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
     $("elParaCalc").addEventListener("click", function(){ vaiPara("calc"); });
     var bCalc = $("calcParaEl");
     if (bCalc) bCalc.addEventListener("click", function(){ vaiPara("eletrolitos"); });
