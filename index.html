@@ -3187,15 +3187,9 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       if (it.acao && typeof abrirFarmaco === "function") { abrirFarmaco(it.acao); return; }
       var d = it.el || document.querySelector(it.alvo);
       if (!d) return;
-      /* O achado pode morar numa tela escondida: revela antes de rolar. */
-      if (typeof revelarTela === "function") revelarTela(d);
-      /* Sem isto, metade dos achados levaria a uma tela onde nada aparece: o trecho
-         mora dentro de um <details> fechado. Abre todos no caminho antes de rolar. */
-      var p = d;
-      while (p && p !== document.body){
-        if (p.tagName === "DETAILS" && !p.open) p.open = true;
-        p = p.parentNode;
-      }
+      /* O achado pode estar numa tela escondida, dentro de um cartão que a aba
+         escondeu, dentro de um <details> fechado. revelarCaminho trata as três. */
+      if (typeof revelarCaminho === "function") revelarCaminho(d);
       d.scrollIntoView({ behavior: "smooth", block: it.el ? "center" : "start" });
       if (it.el){
         d.classList.add("searchhit");
@@ -3266,8 +3260,27 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     return true;
   }
 
-  /* Gancho de quem salta por JavaScript (busca, calculadora, eletrólitos):
-     garante que o elemento esteja numa tela visível antes de rolar até ele. */
+  /* Preenchido pela IIFE das abas de fármaco, mais abaixo. Declarado aqui porque
+     var é içado: quem chamar só executa depois, no clique. */
+  var revelarFarmaco = null;
+
+  /* Gancho único de quem salta por JavaScript (busca, calculadora, eletrólitos,
+     link direto). "Tornar este elemento visível" tem três camadas hoje: a tela,
+     a aba do fármaco e o bloco recolhido. Quem pula precisa das três, ou chega
+     numa tela onde não há nada para ver. */
+  function revelarCaminho(el){
+    if (!el || !el.closest) return null;
+    revelarTela(el);
+    var art = el.closest("article.drug[id]");
+    if (art && art.hidden && revelarFarmaco) revelarFarmaco(art);
+    var p = el;
+    while (p && p !== document.body){
+      if (p.tagName === "DETAILS" && !p.open) p.open = true;
+      p = p.parentNode;
+    }
+    return el;
+  }
+
   function revelarTela(el){
     var s = el && el.closest ? el.closest("section.sec[id]") : null;
     if (s && s.id !== telaAtual) {
@@ -3292,7 +3305,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     }
     if (bruto && bruto !== id) {
       var el = document.getElementById(bruto);
-      if (el) { el.scrollIntoView({ block: "start" }); return; }
+      if (el) { revelarCaminho(el); el.scrollIntoView({ block: "start" }); return; }
     }
     if (trocou) window.scrollTo(0, 0);
   }
@@ -3897,26 +3910,48 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       var nome = cel ? cel.textContent.trim().toLowerCase() : "";
       if (nomesCartao.indexOf(nome) === -1 && window.console) console.warn('Tabela de preparo: linha "' + nome + '" sem cartão de fármaco correspondente.');
     });
+    var cartoes = [].slice.call(document.querySelectorAll("article.drug[id]"));
     function marcar(ativo){
-      nav.querySelectorAll("a, button").forEach(function(el){ el.classList.toggle("on", el === ativo); });
+      nav.querySelectorAll("a, button").forEach(function(el){
+        var on = el === ativo;
+        el.classList.toggle("on", on);
+        if (el.tagName === "BUTTON") el.setAttribute("aria-pressed", String(on));
+      });
     }
+    /* nome === null mostra tudo ("Todos"); caso contrário a tela fica com um
+       fármaco só, que é o ponto do pedido: menos informação à vista de uma vez. */
     function filtrar(nome){
       linhas.forEach(function(tr){
         var cel = tr.querySelector("td");
-        var bate = nome === null || (cel && cel.textContent.trim().toLowerCase() === nome);
-        tr.hidden = !bate;
+        tr.hidden = !(nome === null || (cel && cel.textContent.trim().toLowerCase() === nome));
+      });
+      cartoes.forEach(function(art){
+        var h = art.querySelector(".drug-h h3");
+        art.hidden = !(nome === null || (h && h.textContent.trim().toLowerCase() === nome));
       });
       if (legenda) legenda.textContent = nome === null ? "todos os fármacos" : nome.charAt(0).toUpperCase() + nome.slice(1);
+    }
+    function nomeDe(art){
+      var h = art.querySelector(".drug-h h3");
+      return h ? h.textContent.trim().toLowerCase() : null;
     }
     var todosBtn = nav.querySelector("[data-todos]");
     if (todosBtn) todosBtn.addEventListener("click", function(){ filtrar(null); marcar(todosBtn); });
     nav.querySelectorAll("a[href^='#d-']").forEach(function(a){
       var alvo = document.querySelector(a.getAttribute("href"));
-      var h3 = alvo && alvo.querySelector(".drug-h h3");
-      if (!h3) return;
-      var nome = h3.textContent.trim().toLowerCase();
-      a.addEventListener("click", function(){ filtrar(nome); marcar(a); });
+      if (!alvo || !nomeDe(alvo)) return;
+      a.addEventListener("click", function(){ filtrar(nomeDe(alvo)); marcar(a); });
     });
+    /* Usado por revelarCaminho: a busca e os links diretos precisam trazer de volta
+       um cartão que a aba escondeu, senão saltam para um elemento invisível. */
+    revelarFarmaco = function(art){
+      var nome = nomeDe(art); if (!nome) return;
+      filtrar(nome);
+      marcar(nav.querySelector('a[href="#' + art.id + '"]'));
+    };
+    /* Abre no primeiro fármaco em vez de empilhar os seis. */
+    var primeira = nav.querySelector("a[href^='#d-']");
+    if (primeira) { filtrar(nomeDe(document.querySelector(primeira.getAttribute("href")))); marcar(primeira); }
   })();
 
   /* ---------- compartilhar / instalar ---------- */
