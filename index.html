@@ -26,6 +26,11 @@
   --z-leve:#2b7a3b; --z-leve-soft:#e4f3e6;
   --z-insuf:#b3261e; --z-insuf-soft:#fbe6e4;
   --prop:#6b4f9e; --prop-soft:#f0ebf8;
+  --cls-opioide:#2f6fed; --cls-opioide-soft:#e3ecfd;
+  --cls-alfa2:#0f8a7a; --cls-alfa2-soft:#dff3f0;
+  --cls-nmda:#c2670a; --cls-nmda-soft:#fbe9d2;
+  --cls-gaba:#7c3aed; --cls-gaba-soft:#ece3fc;
+  --cls-benzo:#c2277a; --cls-benzo-soft:#fbe1ee;
   --radius:14px; --shadow:0 1px 2px rgba(16,30,45,.06),0 2px 8px rgba(16,30,45,.05);
   --nav-h:62px;
 }
@@ -41,6 +46,11 @@
     --z-leve:#7ed492; --z-leve-soft:#193222;
     --z-insuf:#ff8a80; --z-insuf-soft:#3d1c1a;
     --prop:#c4a8f0; --prop-soft:#2b2340;
+    --cls-opioide:#8fb4ff; --cls-opioide-soft:#1c2b4d;
+    --cls-alfa2:#5fd9c4; --cls-alfa2-soft:#123330;
+    --cls-nmda:#ffb35c; --cls-nmda-soft:#3a2712;
+    --cls-gaba:#c9a6ff; --cls-gaba-soft:#2c2145;
+    --cls-benzo:#ff8fc0; --cls-benzo-soft:#3a1729;
     --shadow:none;
   }
 }
@@ -251,10 +261,29 @@ td.c{text-align:center}
 
 /* fármacos */
 .drugnav{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 8px;margin-bottom:6px;-webkit-overflow-scrolling:touch}
-.drugnav a{flex:none;text-decoration:none;font-size:.85rem;font-weight:650;padding:7px 12px;border-radius:99px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
-.drug{padding:0;overflow:hidden}
-.drug-h{padding:12px 15px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--brand-soft),transparent 80%)}
+.drugnav a,.drugnav button{flex:none;text-decoration:none;font:inherit;cursor:pointer;font-size:.85rem;font-weight:650;padding:7px 12px 7px 10px;border-radius:99px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);color:var(--ink)}
+.drugnav button{border-left-color:var(--brand)}
+.drugnav a.on,.drugnav button.on{background:var(--brand-soft);color:var(--brand);border-color:var(--brand)}
+.drugnav a[data-classe="opioide"]{border-left-color:var(--cls-opioide)}
+.drugnav a[data-classe="alfa2"]{border-left-color:var(--cls-alfa2)}
+.drugnav a[data-classe="nmda"]{border-left-color:var(--cls-nmda)}
+.drugnav a[data-classe="gaba"]{border-left-color:var(--cls-gaba)}
+.drugnav a[data-classe="benzo"]{border-left-color:var(--cls-benzo)}
+.drug{padding:0;overflow:hidden;transition:box-shadow .2s ease}
+@media (hover:hover){.drug:hover{box-shadow:0 4px 18px rgba(16,30,45,.14),0 2px 6px rgba(16,30,45,.08)}}
+.drug-h{padding:12px 15px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;border-bottom:2px solid var(--line);background:linear-gradient(90deg,var(--brand-soft),transparent 80%)}
+.drug[data-classe="opioide"] .drug-h{border-bottom-color:var(--cls-opioide);background:linear-gradient(90deg,var(--cls-opioide-soft),transparent 80%)}
+.drug[data-classe="alfa2"] .drug-h{border-bottom-color:var(--cls-alfa2);background:linear-gradient(90deg,var(--cls-alfa2-soft),transparent 80%)}
+.drug[data-classe="nmda"] .drug-h{border-bottom-color:var(--cls-nmda);background:linear-gradient(90deg,var(--cls-nmda-soft),transparent 80%)}
+.drug[data-classe="gaba"] .drug-h{border-bottom-color:var(--cls-gaba);background:linear-gradient(90deg,var(--cls-gaba-soft),transparent 80%)}
+.drug[data-classe="benzo"] .drug-h{border-bottom-color:var(--cls-benzo);background:linear-gradient(90deg,var(--cls-benzo-soft),transparent 80%)}
 .drug-h h3{font-size:1.2rem;margin:0}
+.tag.cls{font-weight:700}
+.drug[data-classe="opioide"] .tag.cls{background:var(--cls-opioide-soft);color:var(--cls-opioide)}
+.drug[data-classe="alfa2"] .tag.cls{background:var(--cls-alfa2-soft);color:var(--cls-alfa2)}
+.drug[data-classe="nmda"] .tag.cls{background:var(--cls-nmda-soft);color:var(--cls-nmda)}
+.drug[data-classe="gaba"] .tag.cls{background:var(--cls-gaba-soft);color:var(--cls-gaba)}
+.drug[data-classe="benzo"] .tag.cls{background:var(--cls-benzo-soft);color:var(--cls-benzo)}
 .drug-b{padding:12px 15px}
 .doses{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
 @media (min-width:640px){.doses{grid-template-columns:repeat(4,1fr)}}
@@ -266,9 +295,19 @@ td.c{text-align:center}
 .dbox.cap{background:var(--warn-soft)} .dbox.cap .v{color:var(--warn)}
 .two{display:grid;gap:10px}
 @media (min-width:700px){.two{grid-template-columns:1fr 1fr}}
-.lst h4{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;margin:4px 0 2px}
-.lst.good h4{color:var(--ok)} .lst.bad h4{color:var(--danger)}
-.lst ul{font-size:.92rem}
+.lst.good>summary{color:var(--ok)}
+.lst.bad>summary{color:var(--danger)}
+.lst .cnt{margin-left:auto;font-weight:600;opacity:.65;font-size:.78rem}
+.lst ul{font-size:.92rem;margin-top:0}
+@keyframes drugIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:no-preference){
+  #d-fen{animation:drugIn .4s ease both}
+  #d-dex{animation:drugIn .4s ease .05s both}
+  #d-cet{animation:drugIn .4s ease .1s both}
+  #d-clo{animation:drugIn .4s ease .15s both}
+  #d-pro{animation:drugIn .4s ease .2s both}
+  #d-mid{animation:drugIn .4s ease .25s both}
+}
 .dil{font-size:.88rem;background:var(--surface2);border-radius:9px;padding:7px 10px;margin-top:8px}
 
 details{border-top:1px solid var(--line);margin-top:10px}
@@ -753,12 +792,12 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   <div class="sec-head"><span class="n">04</span><h2>Fármacos</h2></div>
   <p class="sec-lead">Dose, quando preferir, quando evitar e diluição. O “porquê” fica recolhido no fim de cada cartão.</p>
   <nav class="drugnav" aria-label="Fármacos">
-    <a href="#d-fen">Fentanil</a><a href="#d-dex">Dexmedetomidina</a><a href="#d-cet">Cetamina</a><a href="#d-clo">Clonidina</a><a href="#d-pro">Propofol</a><a href="#d-mid">Midazolam</a>
+    <button type="button" class="on" data-todos>Todos</button><a href="#d-fen" data-classe="opioide">Fentanil</a><a href="#d-dex" data-classe="alfa2">Dexmedetomidina</a><a href="#d-cet" data-classe="nmda">Cetamina</a><a href="#d-clo" data-classe="alfa2">Clonidina</a><a href="#d-pro" data-classe="gaba">Propofol</a><a href="#d-mid" data-classe="benzo">Midazolam</a>
   </nav>
 
   <!-- Fentanil -->
-  <article class="card drug" id="d-fen">
-    <div class="drug-h"><h3>Fentanil</h3><span class="tag t-brand">opioide de eixo</span><span class="tag t-ok">1ª linha</span></div>
+  <article class="card drug" id="d-fen" data-classe="opioide">
+    <div class="drug-h"><h3>Fentanil</h3><span class="tag cls">opioide de eixo</span><span class="tag t-ok">1ª linha</span></div>
     <div class="drug-b">
       <div class="doses">
         <div class="dbox"><div class="k">Bolus</div><div class="v">1–2 mcg/kg <small>em ≥1 min</small></div></div>
@@ -767,16 +806,16 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         <div class="dbox cap"><div class="k">Tolerância</div><div class="v">até 10 mcg/kg/h</div></div>
       </div>
       <div class="two">
-        <div class="lst good"><h4>Prefira / use</h4><ul>
+        <details class="lst good"><summary>Prefira / use<span class="cnt"></span></summary><ul>
           <li>Opioide padrão da UTIP</li>
           <li><b>Lesão renal aguda</b>: metabólitos inativos (≠ morfina)</li>
-        </ul></div>
-        <div class="lst bad"><h4>Cuidado</h4><ul>
+        </ul></details>
+        <details class="lst bad"><summary>Cuidado<span class="cnt"></span></summary><ul>
           <li>Bolus rápido em dose alta → <b>rigidez torácica</b> (reverter com naloxona ou BNM)</li>
           <li><b>Dependência física em até 5 dias</b> de dose regular</li>
           <li>Principal indutor de abstinência prolongada</li>
           <li>&gt;5 dias: considerar rodízio para morfina ou hidromorfona, se rim permitir</li>
-        </ul></div>
+        </ul></details>
       </div>
       <div class="dil"><b>Fentanil 1 mL + SF 0,9% 4 mL</b> = <b>10 mcg/mL</b> de Fentanil em solução final</div>
       <details><summary>Por quê — farmacologia e evidência</summary><div class="dx">
@@ -788,8 +827,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   </article>
 
   <!-- Dexmedetomidina -->
-  <article class="card drug" id="d-dex">
-    <div class="drug-h"><h3>Dexmedetomidina</h3><span class="tag t-brand">alfa-2</span><span class="tag t-ok">1ª linha</span><span class="tag t-warn">off-label em UTIP</span></div>
+  <article class="card drug" id="d-dex" data-classe="alfa2">
+    <div class="drug-h"><h3>Dexmedetomidina</h3><span class="tag cls">alfa-2</span><span class="tag t-ok">1ª linha</span><span class="tag t-warn">off-label em UTIP</span></div>
     <div class="drug-b">
       <div class="doses">
         <div class="dbox no"><div class="k">Bolus</div><div class="v">Não fazer</div></div>
@@ -798,20 +837,20 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         <div class="dbox cap"><div class="k">Faixa / teto</div><div class="v">0,2–1,4 <small>teto 1,5 mcg/kg/h</small></div></div>
       </div>
       <div class="two">
-        <div class="lst good"><h4>Prefira / use</h4><ul>
+        <details class="lst good"><summary>Prefira / use<span class="cnt"></span></summary><ul>
           <li>Sedativo de base com fentanil</li>
           <li><b>Não deprime o drive respiratório</b></li>
           <li>Alfa-2 preferido na <b>LRA</b> (metabolismo hepático)</li>
           <li>Cobertura no desmame: <span class="dose">0,2–0,4 mcg/kg/h</span></li>
-        </ul></div>
-        <div class="lst bad"><h4>Cuidado</h4><ul>
+        </ul></details>
+        <details class="lst bad"><summary>Cuidado<span class="cnt"></span></summary><ul>
           <li><b>Bradicardia dose-dependente</b></li>
           <li>Bolus: hipertensão transitória, bradicardia, parada sinusal</li>
           <li><b>Abstinência própria</b> (taquicardia, hipertensão, agitação) → nunca suspender abruptamente: −10% a cada 12 h ou trocar para clonidina enteral</li>
           <li>Sozinha costuma não bastar para <b>sedação profunda</b><a class="cite" href="#ref-47">47</a> — na fase aguda, siga a escada</li>
           <li>Nunca junto com clonidina</li>
           <li><span class="tag t-prop">proposta</span> Febre ou hipertermia que não cede ao resfriamento: suspeitar da dexmedetomidina e suspender. Após 24 h há tolerância e taquifilaxia, com mais efeitos adversos dose-dependentes (bula FDA)<a class="cite" href="#ref-39">39</a></li>
-        </ul></div>
+        </ul></details>
       </div>
       <div class="dil"><b>Dexmedetomidina 1 mL + SF 0,9% 24 mL</b> = <b>4 mcg/mL</b> de Dexmedetomidina em solução final</div>
       <details><summary>Por quê — farmacologia e o que a evidência de 2025 mostra</summary><div class="dx">
@@ -839,8 +878,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   </article>
 
   <!-- Cetamina -->
-  <article class="card drug" id="d-cet">
-    <div class="drug-h"><h3>Cetamina</h3><span class="tag t-brand">antagonista NMDA</span><span class="tag t-warn">3º agente</span></div>
+  <article class="card drug" id="d-cet" data-classe="nmda">
+    <div class="drug-h"><h3>Cetamina</h3><span class="tag cls">antagonista NMDA</span><span class="tag t-warn">3º agente</span></div>
     <div class="drug-b">
       <div class="doses">
         <div class="dbox"><div class="k">Bolus</div><div class="v">0,5–2 mg/kg</div></div>
@@ -849,19 +888,19 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         <div class="dbox cap"><div class="k">Broncoespasmo</div><div class="v">1–2 mg/kg/h</div></div>
       </div>
       <div class="two">
-        <div class="lst good"><h4>Prefira / use</h4><ul>
+        <details class="lst good"><summary>Prefira / use<span class="cnt"></span></summary><ul>
           <li><b>Choque / droga vasoativa</b></li>
           <li><b>Broncoespasmo grave</b> (broncodilatadora)</li>
           <li>Preserva drive respiratório e tônus de via aérea</li>
           <li>Não depende do rim</li>
-        </ul></div>
-        <div class="lst bad"><h4>Cuidado</h4><ul>
+        </ul></details>
+        <details class="lst bad"><summary>Cuidado<span class="cnt"></span></summary><ul>
           <li><b>Taquicardia (63%) e hipotensão (54%)</b> na série pediátrica — “simpatomimética” não garante estabilidade</li>
           <li>Hipersecreção (29%): antissialagogo se abundante</li>
           <li>Fenômeno de emergência (13%), mais em adolescentes</li>
           <li>Aumenta pressão intraocular</li>
           <li>Clearance muito variável → titular por escore</li>
-        </ul></div>
+        </ul></details>
       </div>
       <div class="dil"><b>Cetamina 1 mL + SF 0,9% 4 mL</b> = <b>10 mg/mL</b> de Cetamina em solução final</div>
       <details><summary>Por quê — farmacologia e evidência</summary><div class="dx">
@@ -875,8 +914,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   </article>
 
   <!-- Clonidina -->
-  <article class="card drug" id="d-clo">
-    <div class="drug-h"><h3>Clonidina</h3><span class="tag t-brand">alfa-2</span><span class="tag">retaguarda · ponte enteral</span></div>
+  <article class="card drug" id="d-clo" data-classe="alfa2">
+    <div class="drug-h"><h3>Clonidina</h3><span class="tag cls">alfa-2</span><span class="tag">retaguarda · ponte enteral</span></div>
     <div class="drug-b">
       <div class="doses">
         <div class="dbox"><div class="k">Ataque</div><div class="v">1–2 mcg/kg <small>em 15–30 min</small></div></div>
@@ -894,17 +933,17 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         </tbody>
       </table></div>
       <div class="two">
-        <div class="lst good"><h4>Prefira / use</h4><ul>
+        <details class="lst good"><summary>Prefira / use<span class="cnt"></span></summary><ul>
           <li>Dexmedetomidina indisponível</li>
           <li>Uso prolongado com transição para via enteral</li>
           <li>Último fármaco do desmame</li>
-        </ul></div>
-        <div class="lst bad"><h4>Cuidado</h4><ul>
+        </ul></details>
+        <details class="lst bad"><summary>Cuidado<span class="cnt"></span></summary><ul>
           <li><b>Sem ataque parece inerte</b> (equilíbrio só em ~24 h)</li>
           <li><b>Retirada abrupta:</b> rebote hipertensivo e taquicardia → desmame em 24–72 h (mais lento se &gt;7 dias)</li>
           <li>Nunca junto com dexmedetomidina</li>
           <li>Tende a ser <b>subdosada</b>, não superdosada</li>
-        </ul></div>
+        </ul></details>
       </div>
       <div class="dil"><b>Clonidina 1 mL + SF 0,9% 49 mL</b> = <b>3 mcg/mL</b> de Clonidina em solução final</div>
       <details><summary>Por quê — farmacocinética e evidência</summary><div class="dx">
@@ -922,8 +961,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   </article>
 
   <!-- Propofol -->
-  <article class="card drug" id="d-pro">
-    <div class="drug-h"><h3>Propofol 1%</h3><span class="tag t-brand">GABA-A</span><span class="tag t-danger">janela curta</span></div>
+  <article class="card drug" id="d-pro" data-classe="gaba">
+    <div class="drug-h"><h3>Propofol 1%</h3><span class="tag cls">GABA-A</span><span class="tag t-danger">janela curta</span></div>
     <div class="drug-b">
       <div class="doses">
         <div class="dbox"><div class="k">Infusão</div><div class="v">1–4 mg/kg/h</div></div>
@@ -933,17 +972,17 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       </div>
       <div class="call c-danger"><b>Síndrome da infusão do propofol (PRIS)</b>A prevenção é respeitar dose e tempo. Exame laboratorial dá falsa segurança: a PRIS se instala rápido e é largamente irreversível.</div>
       <div class="two">
-        <div class="lst good"><h4>Prefira / use</h4><ul>
+        <details class="lst good"><summary>Prefira / use<span class="cnt"></span></summary><ul>
           <li>Necessidade de profundidade previsivelmente <b>&lt;48 h</b></li>
           <li>Hipertensão intracraniana (preserva acoplamento)</li>
-        </ul></div>
-        <div class="lst bad"><h4>Evite / vigie</h4><ul>
+        </ul></details>
+        <details class="lst bad"><summary>Evite / vigie<span class="cnt"></span></summary><ul>
           <li><b>Choque / instabilidade</b></li>
           <li>Risco maior: &gt;48 h, &gt;4 mg/kg/h, &lt;12 meses, doença crítica, pouca reserva de carboidrato, catecolamina ou corticoide</li>
           <li>Sinais: acidose com ânion-gap alto, lactato, CK, triglicerídeos, transaminases, lipase; ECG tipo Brugada em V1–V2; bradiarritmia refratária. Em crianças são mais comuns <b>febre, hepatomegalia e lipemia</b>; febre e hepatomegalia associam-se a óbito<a class="cite" href="#ref-45">45</a></li>
           <li><b>Trocar frasco e equipo a cada 12 h</b></li>
           <li>Somar o volume e as calorias ao balanço</li>
-        </ul></div>
+        </ul></details>
       </div>
       <div class="dil"><b>Propofol 1% não diluir</b> = <b>10 mg/mL</b> em solução final</div>
       <details><summary>Por quê — PRIS e risco real</summary><div class="dx">
@@ -954,8 +993,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   </article>
 
   <!-- Midazolam -->
-  <article class="card drug" id="d-mid">
-    <div class="drug-h"><h3>Midazolam</h3><span class="tag t-brand">benzodiazepínico</span><span class="tag t-danger">resgate, não eixo</span></div>
+  <article class="card drug" id="d-mid" data-classe="benzo">
+    <div class="drug-h"><h3>Midazolam</h3><span class="tag cls">benzodiazepínico</span><span class="tag t-danger">resgate, não eixo</span></div>
     <div class="drug-b">
       <div class="doses">
         <div class="dbox"><div class="k">Bolus</div><div class="v">0,05–0,2 mg/kg</div></div>
@@ -964,17 +1003,17 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         <div class="dbox"><div class="k">Posição</div><div class="v">3ª–4ª linha</div></div>
       </div>
       <div class="two">
-        <div class="lst good"><h4>Indicações que restam</h4><ul>
+        <details class="lst good"><summary>Indicações que restam<span class="cnt"></span></summary><ul>
           <li>Estado de mal epiléptico</li>
           <li>Amnésia sob bloqueio neuromuscular</li>
           <li>Instabilidade que contraindica propofol, com cetamina já no teto</li>
           <li>Paciente já cronicamente exposto</li>
-        </ul></div>
-        <div class="lst bad"><h4>Cuidado</h4><ul>
+        </ul></details>
+        <details class="lst bad"><summary>Cuidado<span class="cnt"></span></summary><ul>
           <li><b>Fator de risco independente para delirium</b></li>
           <li>Abstinência: alarme com carga cumulativa na ordem de <b>16–24 mg/kg</b></li>
           <li><b>LRA:</b> metabólito ativo acumula → reduzir dose, esperar despertar tardio, considerar trocar</li>
-        </ul></div>
+        </ul></details>
       </div>
       <div class="dil"><b>Midazolam 1 mL + SF 0,9% 4 mL</b> = <b>1 mg/mL</b> de Midazolam em solução final</div>
       <details><summary>Por quê — metabólitos e carga cumulativa</summary><div class="dx">
@@ -984,6 +1023,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     </div>
   </article>
 
+  <p class="small muted" id="tblFarmLegenda" style="margin:6px 2px">Mostrando: <b id="tblFarmNome">todos os fármacos</b></p>
   <div class="tbl-wrap">
     <table>
       <thead><tr><th>Fármaco</th><th>Apresentação</th><th>Diluição padrão</th><th>Final</th></tr></thead>
@@ -3633,6 +3673,55 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     b.addEventListener("click", function(){ abrirFarmaco(id); });
     dil.insertAdjacentElement("afterend", b);
   });
+
+  /* ---------- Prefira/Cuidado: contador de itens no cabeçalho do expansível ---------- */
+  document.querySelectorAll(".lst .cnt").forEach(function(cnt){
+    var lst = cnt.parentNode.parentNode, ul = lst.querySelector("ul");
+    cnt.textContent = ul ? "(" + ul.querySelectorAll("li").length + ")" : "";
+  });
+
+  /* ---------- tabela de apresentação/diluição: mostra só o fármaco selecionado ----------
+     Vínculo pelo NOME do cartão (h3), não por lista fixa: um fármaco novo entra sozinho,
+     desde que o nome na tabela coincida com o do cartão. Nenhum nome tem acento, então a
+     comparação em minúsculas basta. Ancorado na tabela cujo cabeçalho é "Fármaco" — a
+     seção tem outras tabelas (Zorko, ajustes de clonidina) que não podem ser tocadas. */
+  (function(){
+    var nav = document.querySelector(".drugnav"); if (!nav) return;
+    var tabela = null;
+    document.querySelectorAll(".tbl-wrap table").forEach(function(t){
+      var th = t.querySelector("thead th");
+      if (th && th.textContent.trim() === "Fármaco") tabela = t;
+    });
+    if (!tabela) return;
+    var linhas = [].slice.call(tabela.querySelectorAll("tbody tr"));
+    var legenda = $("tblFarmNome");
+    var nomesCartao = [].slice.call(document.querySelectorAll("article.drug .drug-h h3")).map(function(h){ return h.textContent.trim().toLowerCase(); });
+    linhas.forEach(function(tr){
+      var cel = tr.querySelector("td");
+      var nome = cel ? cel.textContent.trim().toLowerCase() : "";
+      if (nomesCartao.indexOf(nome) === -1 && window.console) console.warn('Tabela de preparo: linha "' + nome + '" sem cartão de fármaco correspondente.');
+    });
+    function marcar(ativo){
+      nav.querySelectorAll("a, button").forEach(function(el){ el.classList.toggle("on", el === ativo); });
+    }
+    function filtrar(nome){
+      linhas.forEach(function(tr){
+        var cel = tr.querySelector("td");
+        var bate = nome === null || (cel && cel.textContent.trim().toLowerCase() === nome);
+        tr.hidden = !bate;
+      });
+      if (legenda) legenda.textContent = nome === null ? "todos os fármacos" : nome.charAt(0).toUpperCase() + nome.slice(1);
+    }
+    var todosBtn = nav.querySelector("[data-todos]");
+    if (todosBtn) todosBtn.addEventListener("click", function(){ filtrar(null); marcar(todosBtn); });
+    nav.querySelectorAll("a[href^='#d-']").forEach(function(a){
+      var alvo = document.querySelector(a.getAttribute("href"));
+      var h3 = alvo && alvo.querySelector(".drug-h h3");
+      if (!h3) return;
+      var nome = h3.textContent.trim().toLowerCase();
+      a.addEventListener("click", function(){ filtrar(nome); marcar(a); });
+    });
+  })();
 
   /* ---------- compartilhar / instalar ---------- */
   var URL_FIXA = "https://rvped.github.io/pedcrit/";
