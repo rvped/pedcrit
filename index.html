@@ -514,8 +514,12 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   section.sec{break-inside:auto}
   .sc-tabs,.sc-acoes,.sc-res{display:none!important}
   .sc-painel[hidden]{display:block!important}
-  /* O roteador deixa uma tela visível; no papel sai o app inteiro, como antes. */
-  section.sec[hidden]{display:block!important}
+  /* O roteador deixa uma tela visível; no papel sai o app inteiro, como antes.
+     Mesma coisa para os painéis de eletrólito e os cartões de fármaco, que as
+     abas escondem na tela. */
+  section.sec[hidden],#elPainelK[hidden],#elPainelNa[hidden],article.drug[hidden]{display:block!important}
+  #tblFarmacos tbody tr[hidden]{display:table-row!important}
+  .sc-tabs,.drugnav,#tblFarmLegenda{display:none!important}
   .sc-opt input,.seg input{display:none}
   .sc-opt:has(input:checked){background:none}
   .sc-opt:has(input:checked) .pt{background:none;color:inherit;border-color:#999}
@@ -1098,8 +1102,13 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <button type="button" class="btn tocalc noprint" id="elParaCalc">Calculadora de doses →</button>
   </div>
 
-  <div class="card">
-    <h3>Potássio</h3>
+  <div class="sc-tabs noprint" role="tablist" aria-label="Distúrbio" id="elTabs">
+    <button type="button" class="sc-tab on" role="tab" data-painel="elPainelK">Hipocalemia</button>
+    <button type="button" class="sc-tab" role="tab" data-painel="elPainelNa">Hipernatremia</button>
+  </div>
+
+  <div class="card" id="elPainelK">
+    <h3>Potássio — reposição</h3>
     <div class="grid g2">
       <label class="field"><span>Dose (mEq/kg)</span><input type="number" id="elKDose" min="0.1" max="4" step="0.1" value="2" inputmode="decimal"></label>
       <div class="field"><span>Via</span>
@@ -1125,7 +1134,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     </ul>
   </div>
 
-  <div class="card">
+  <div class="card" id="elPainelNa">
     <h3>Sódio — hipernatremia</h3>
     <div class="grid g2">
       <label class="field"><span>Na atual (mEq/L)</span><input type="number" id="elNaAtual" min="120" max="200" step="1" value="158" inputmode="numeric"></label>
@@ -3263,6 +3272,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   /* Preenchido pela IIFE das abas de fármaco, mais abaixo. Declarado aqui porque
      var é içado: quem chamar só executa depois, no clique. */
   var revelarFarmaco = null;
+  var revelarPainelEletrolito = null;
 
   /* Gancho único de quem salta por JavaScript (busca, calculadora, eletrólitos,
      link direto). "Tornar este elemento visível" tem três camadas hoje: a tela,
@@ -3273,6 +3283,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     revelarTela(el);
     var art = el.closest("article.drug[id]");
     if (art && art.hidden && revelarFarmaco) revelarFarmaco(art);
+    if (revelarPainelEletrolito) revelarPainelEletrolito(el);
     var p = el;
     while (p && p !== document.body){
       if (p.tagName === "DETAILS" && !p.open) p.open = true;
@@ -3838,6 +3849,29 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       var e = $(id); if (e) e.addEventListener("input", tudo);
     });
     document.querySelectorAll('input[name="elKVia"], input[name="elKDur"]').forEach(function(r){ r.addEventListener("change", calcK); });
+    /* Abas por distúrbio. Esconder é feito aqui, não na marcação: sem JS os dois
+       painéis aparecem empilhados, que é o comportamento antigo e continua usável. */
+    (function(){
+      var tabs = $("elTabs"); if (!tabs) return;
+      var botoes = [].slice.call(tabs.querySelectorAll(".sc-tab"));
+      var paineis = botoes.map(function(b){ return $(b.getAttribute("data-painel")); });
+      function mostrar(i){
+        paineis.forEach(function(p, j){ if (p) p.hidden = j !== i; });
+        botoes.forEach(function(b, j){
+          b.classList.toggle("on", j === i);
+          b.setAttribute("aria-selected", String(j === i));
+        });
+      }
+      botoes.forEach(function(b, i){ b.addEventListener("click", function(){ mostrar(i); }); });
+      /* Exposto para a busca: um painel escondido precisa voltar antes do salto. */
+      revelarPainelEletrolito = function(el){
+        for (var i = 0; i < paineis.length; i++){
+          if (paineis[i] && paineis[i].contains(el) && paineis[i].hidden) { mostrar(i); return; }
+        }
+      };
+      mostrar(0);
+    })();
+
     function vaiPara(id){
       var s = document.getElementById(id); if (!s) return;
       if (typeof revelarTela === "function") revelarTela(s);
