@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0e5f78">
-<meta name="description" content="PedCrit — seu companheiro no plantão: escalas para marcar, calculadora de doses por peso e condutas de analgossedação em UTI pediátrica, emergência e pronto-socorro">
+<meta name="description" content="PedCrit - seu plantão dominado: escalas para marcar, calculadora de doses por peso e condutas de analgossedação em UTI pediátrica, emergência e pronto-socorro">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="PedCrit">
@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>PedCrit · UTI pediátrica e emergência</title>
+<title>PedCrit - seu plantão dominado</title>
 <style>
 :root{
   --bg:#f5f7fa; --surface:#fff; --surface2:#eef2f6; --ink:#17212b; --muted:#566271; --line:#d9e0e7;
@@ -549,7 +549,7 @@ html.nativo .so-web{display:none!important}
 <header class="topbar">
   <div class="grow">
     <h1>PedCrit</h1>
-    <div class="sub">Seu companheiro no plantão</div>
+    <div class="sub">Seu plantão dominado</div>
   </div>
   <span class="pill-top">Confira doses</span>
   <button type="button" class="topbtn" id="searchBtn" aria-label="Buscar no aplicativo" aria-expanded="false" aria-controls="searchBar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg></button>
@@ -1691,7 +1691,7 @@ html.nativo .so-web{display:none!important}
 
 <script>
 /* Versão do conteúdo: DEVE ser igual a VERSAO em sw.js (há teste que confere). */
-var APP_VERSAO = "2026-09-18b";
+var APP_VERSAO = "2026-09-18c";
 /* Dentro do app das lojas (Capacitor) há ponte nativa; na web, não. */
 var NATIVO = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacitor.Plugins[nome] || null : null; }
@@ -4427,7 +4427,7 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
     else toast(URL_FIXA);
   });
   $("shareBtn").addEventListener("click", function(){
-    if (PLUG("Share")) { PLUG("Share").share({ title: "PedCrit", text: "PedCrit · UTI pediátrica e emergência", url: URL_FIXA, dialogTitle: "Compartilhar o PedCrit" }).catch(function(){}); return; }
+    if (PLUG("Share")) { PLUG("Share").share({ title: "PedCrit", text: "PedCrit - seu plantão dominado", url: URL_FIXA, dialogTitle: "Compartilhar o PedCrit" }).catch(function(){}); return; }
     if (navigator.share) navigator.share({title:"PedCrit", url:URL_FIXA}).catch(function(){});
     else location.hash = "#instalar";
   });

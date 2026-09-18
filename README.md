@@ -1,6 +1,6 @@
-# PedCrit — UTI pediátrica, emergência e pronto-socorro
+# PedCrit - seu plantão dominado
 
-Seu companheiro no plantão. Escalas para marcar, calculadora de doses por peso e condutas de analgossedação em UTI pediátrica, emergência e pronto-socorro.
+Seu plantão dominado. Escalas para marcar, calculadora de doses por peso e condutas de analgossedação em UTI pediátrica, emergência e pronto-socorro.
 
 **Acesso:** https://rvped.github.io/pedcrit/
 
