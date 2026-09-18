@@ -517,7 +517,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   /* O roteador deixa uma tela visível; no papel sai o app inteiro, como antes.
      Mesma coisa para os painéis de eletrólito e os cartões de fármaco, que as
      abas escondem na tela. */
-  section.sec[hidden],#elPainelK[hidden],#elPainelNa[hidden],article.drug[hidden]{display:block!important}
+  section.sec[hidden],#eletrolitos .card[hidden],article.drug[hidden]{display:block!important}
   #tblFarmacos tbody tr[hidden]{display:table-row!important}
   .sc-tabs,.drugnav,#tblFarmLegenda{display:none!important}
   .sc-opt input,.seg input{display:none}
@@ -1093,7 +1093,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 <!-- ================= SITUAÇÕES ESPECIAIS ================= -->
 <section class="sec noprint" id="eletrolitos">
   <div class="sec-head"><span class="n">06</span><h2>Eletrólitos</h2></div>
-  <p class="sec-lead">Correção de sódio e reposição de potássio, com o preparo escrito para quem vai montar o soro.</p>
+  <p class="sec-lead">Hipo e hipercalemia, hipo e hipernatremia — dose por peso, com o preparo escrito para quem vai montar o soro.</p>
 
   <div class="call c-danger"><b>Ferramenta de apoio, não de prescrição</b>Os números saem do peso e dos valores informados. Confira a apresentação disponível na farmácia e mantenha a dupla checagem.</div>
 
@@ -1104,7 +1104,9 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 
   <div class="sc-tabs noprint" role="tablist" aria-label="Distúrbio" id="elTabs">
     <button type="button" class="sc-tab on" role="tab" data-painel="elPainelK">Hipocalemia</button>
+    <button type="button" class="sc-tab" role="tab" data-painel="elPainelHiperK">Hipercalemia</button>
     <button type="button" class="sc-tab" role="tab" data-painel="elPainelNa">Hipernatremia</button>
+    <button type="button" class="sc-tab" role="tab" data-painel="elPainelHipoNa">Hiponatremia</button>
   </div>
 
   <div class="card" id="elPainelK">
@@ -1147,6 +1149,62 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <ul class="fc-notas">
       <li>Queda máxima de <b>0,5 mEq/L/h</b>, ou 10 a 12 mEq/L em 24 h.</li>
       <li>Déficit de água livre = peso × 0,6 × (Na atual ÷ Na alvo − 1).</li>
+    </ul>
+  </div>
+
+  <div class="card" id="elPainelHipoNa">
+    <h3>Sódio — hiponatremia</h3>
+    <div class="grid g2">
+      <label class="field"><span>Na atual (mEq/L)</span><input type="number" id="elHipoNaAtual" min="100" max="140" step="1" value="118" inputmode="numeric"></label>
+      <div class="field"><span>Sintomas neurológicos</span>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="elHipoSint" value="sim" checked>Sim</label>
+          <label><input type="radio" name="elHipoSint" value="nao">Não</label>
+        </div>
+      </div>
+    </div>
+    <div class="field"><span>Bólus de NaCl 3%</span>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="elHipoBolus" value="2">2 mL/kg</label>
+        <label><input type="radio" name="elHipoBolus" value="3" checked>3 mL/kg</label>
+        <label><input type="radio" name="elHipoBolus" value="4">4 mL/kg</label>
+      </div>
+    </div>
+    <div class="rx" id="elHipoRx"></div>
+    <ul class="fc-alertas" id="elHipoAl"></ul>
+    <div class="dil" id="elHipoRec"></div>
+    <ul class="fc-notas">
+      <li><b>Convulsão não espera cálculo.</b> Hiponatremia com convulsão responde mal a anticonvulsivante e bem a sódio.</li>
+      <li>Aqui o risco troca de lado: o perigo é subir <b>rápido demais</b> — desmielinização osmótica, que não volta.</li>
+      <li>Faixas e teto de 8 mEq/L em 24 h: Royal Children's Hospital.<a class="cite" href="#ref-101">101</a> Bólus e a regra de 1 mL/kg: NHS Greater Glasgow &amp; Clyde.<a class="cite" href="#ref-102">102</a></li>
+      <li><span class="tag t-prop">proposta</span> O bólus de 3 mL/kg é o padrão escolhido aqui; há serviço usando 2 e serviço usando 4. Confirme o do seu.</li>
+    </ul>
+  </div>
+
+  <div class="card" id="elPainelHiperK">
+    <h3>Potássio — hipercalemia</h3>
+    <div class="grid g2">
+      <label class="field"><span>K atual (mEq/L)</span><input type="number" id="elHiperKAtual" min="5" max="12" step="0.1" value="7.2" inputmode="decimal"></label>
+      <div class="field"><span>ECG alterado</span>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="elHiperEcg" value="sim" checked>Sim</label>
+          <label><input type="radio" name="elHiperEcg" value="nao">Não</label>
+        </div>
+      </div>
+    </div>
+    <div class="field"><span>Acidose metabólica</span>
+      <div class="seg" role="radiogroup">
+        <label><input type="radio" name="elHiperAcid" value="sim">Sim</label>
+        <label><input type="radio" name="elHiperAcid" value="nao" checked>Não</label>
+      </div>
+    </div>
+    <div class="rx" id="elHiperRx"></div>
+    <ul class="fc-alertas" id="elHiperAl"></ul>
+    <ul class="fc-notas">
+      <li><b>O cálcio não baixa o potássio.</b> Ele protege o coração por cerca de 30 min — é a janela para o resto agir.</li>
+      <li>Insulina e salbutamol <b>empurram o potássio para dentro da célula</b>, de onde ele volta. Só resina, diurético e diálise retiram do corpo.</li>
+      <li>ECG: onda T apiculada → PR longo → P alargando ou sumindo → QRS largo → onda sinusoidal.</li>
+      <li>Doses: Royal Children's Hospital.<a class="cite" href="#ref-103">103</a> Racional da escada: Rubens e Kanaris, 2022.<a class="cite" href="#ref-104">104</a></li>
     </ul>
   </div>
 </section>
@@ -1414,7 +1472,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 <section class="sec" id="refs">
   <div class="sec-head"><span class="n">14</span><h2>Referências</h2></div>
   <div class="card">
-  <details><summary>Mostrar as 100 referências</summary>
+  <details><summary>Mostrar as 104 referências</summary>
   <ol class="refs">
     <li id="ref-1">Smith HAB, Besunder JB, Betters KA, et al. 2022 Society of Critical Care Medicine Clinical Practice Guidelines on Prevention and Management of Pain, Agitation, Neuromuscular Blockade, and Delirium in Critically Ill Pediatric Patients With Consideration of the ICU Environment and Early Mobility (PANDEM). <i>Pediatr Crit Care Med.</i> 2022;23(2):e74-e110. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/35119438/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1097/PCC.0000000000002873" target="_blank" rel="noopener">DOI</a></span></li>
     <li id="ref-2">Emeriaud G, López-Fernández YM, Iyer NP, et al. Executive Summary of the Second International Guidelines for the Diagnosis and Management of Pediatric Acute Respiratory Distress Syndrome (PALICC-2). <i>Pediatr Crit Care Med.</i> 2023;24(2):143-168. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/36661420/" target="_blank" rel="noopener">PubMed</a></span></li>
@@ -1516,6 +1574,10 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <li id="ref-98">Bussotti EA, Guinsburg R, Pedreira MLG. Adaptação cultural para o português do Brasil da escala de avaliação de dor Face, Legs, Activity, Cry, Consolability revised (FLACCr). <i>Rev Latino-Am Enfermagem.</i> 2015;23(4):651-659. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/26444167/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1590/0104-1169.0001.2600" target="_blank" rel="noopener">DOI</a></span></li>
     <li id="ref-99">Silva FC, Thuler LCS. Tradução e adaptação transcultural de duas escalas para avaliação da dor em crianças e adolescentes. <i>J Pediatr (Rio J).</i> 2008;84(4):344-349. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/18688551/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1590/S0021-75572008000400010" target="_blank" rel="noopener">DOI</a></span></li>
     <li id="ref-100">University of Michigan Innovation Partnerships. Face, Legs, Activity, Cry, Consolability observational tool as a measure of pain — condições de licenciamento. Acessado em 15/09/2026. <span class="rl"><a href="https://available-inventions.umich.edu/product/face-legs-activity-cry-consolability-observational-tool-as-a-measure-of-pain" target="_blank" rel="noopener">Univ. Michigan</a></span></li>
+    <li id="ref-101">The Royal Children's Hospital Melbourne. Clinical Practice Guidelines: Hyponatraemia. Acessado em 17/09/2026. <span class="rl"><a href="https://www.rch.org.au/clinicalguide/guideline_index/hyponatraemia/" target="_blank" rel="noopener">RCH</a></span></li>
+    <li id="ref-102">NHS Greater Glasgow and Clyde. Hyponatraemia treatment algorithm, paediatrics (190). Acessado em 17/09/2026. <span class="rl"><a href="https://www.clinicalguidelines.scot.nhs.uk/ggc-paediatric-guidelines/ggc-paediatric-guidelines/biochemistry/hyponatraemia-treatment-algorithm-paediatrics-190/" target="_blank" rel="noopener">NHS GGC</a></span></li>
+    <li id="ref-103">The Royal Children's Hospital Melbourne. Clinical Practice Guidelines: Hyperkalaemia. Acessado em 17/09/2026. <span class="rl"><a href="https://www.rch.org.au/clinicalguide/guideline_index/hyperkalaemia/" target="_blank" rel="noopener">RCH</a></span></li>
+    <li id="ref-104">Rubens M, Kanaris C. Fifteen-minute consultation: Emergency management of children presenting with hyperkalaemia. Arch Dis Child Educ Pract Ed 2022;107(5):344-350. <span class="rl"><a href="https://doi.org/10.1136/archdischild-2021-322080" target="_blank" rel="noopener">DOI</a></span></li>
   </ol>
   </details>
   </div>
@@ -2678,6 +2740,59 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         { rotulo: "SG 10% 250 mL + SF 0,9% 250 mL", nota: "500 mL prontos, sem aditivo nenhum" },
         { rotulo: "SG 5% 500 mL + NaCl 20% 11,2 mL", nota: "mesma solução; exige pipetar volume pequeno" }
       ]
+    },
+    /* ---- Hiponatremia (sentido oposto ao bloco sodio acima, que só BAIXA sódio) ----
+       Faixas e teto de correção: Royal Children's Hospital Melbourne, Hyponatraemia
+       (leve 125-135, moderada 120-125, grave <120; alvo 6-8 mEq/L em 24 h, nunca
+       passar de 8 em criança que não convulsiona).
+       Bólus hipertônico: NHS Greater Glasgow & Clyde, algoritmo pediátrico 190 —
+       3 mL/kg, e 1 mL/kg de NaCl 2,7% sobe o sódio cerca de 0,8 mEq/L. Para o NaCl
+       3% daqui a regra de bolso equivalente é ~1 mEq/L por mL/kg. Repetível
+       enquanto houver sintoma. */
+    hipoNa: {
+      faixas: [
+        { ate: 119, rotulo: "grave", classe: "alerta", texto: "Cefaleia, torpor e convulsão são possíveis." },
+        { ate: 125, rotulo: "moderada", classe: "aviso", texto: "Sintomas inespecíficos: náusea, mal-estar." },
+        { ate: 134, rotulo: "leve", classe: "ok", texto: "Em geral assintomática." }
+      ],
+      subidaMax24h: 8,
+      subidaAlvo24h: 6,
+      bolusMlKgOpcoes: [2, 3, 4],
+      bolusMlKgPadrao: 3,
+      /* NaCl 3% = 30 mg/mL = 0,513 mEq/mL de Na. 1 mL/kg sobe ~1 mEq/L. */
+      subidaPorMlKg: 1,
+      naSeguroParar: 125,
+      /* NaCl 20% = 200 mg/mL; SF 0,9% = 9 mg/mL. Para 100 mL a 30 mg/mL:
+         200x + 9(100-x) = 3000  ->  191x = 2100  ->  x = 11,0 mL. Confere:
+         200x11 + 9x89 = 2200 + 801 = 3001 mg/100 mL = 3,0%. */
+      receitas: [
+        { rotulo: "SF 0,9% 100 mL: retire 11 mL e reponha com NaCl 20% 11 mL", nota: "= 100 mL de NaCl 3%" },
+        { rotulo: "NaCl 20% 15 mL + água destilada 85 mL", nota: "= 100 mL de NaCl 3%, sem bolsa de SF" }
+      ]
+    },
+    /* ---- Hipercalemia ----
+       Faixas e doses: Royal Children's Hospital Melbourne, Hyperkalaemia
+       (leve 5,5-6,0; moderada 6,1-7,0; grave >7,0).
+       Gluconato de cálcio 10%: 0,68 mL/kg, máx 30 mL, IV lento em 2-5 min.
+       Salbutamol nebulizado: 2,5 mg até 25 kg; 5 mg acima.
+       Insulina regular 0,1 U/kg (máx 10 U) com glicose 10% 5 mL/kg.
+       Bicarbonato de sódio 8,4%: 1-2 mEq/kg (1-2 mL/kg), só se houver acidose.
+       Resina de poliestireno: 0,5-1 g/kg a cada 6 h, máx 30 g. */
+    hiperK: {
+      faixas: [
+        { de: 5.5, ate: 6.0, rotulo: "leve", classe: "ok" },
+        { de: 6.1, ate: 7.0, rotulo: "moderada", classe: "aviso" },
+        { de: 7.01, ate: 99, rotulo: "grave", classe: "alerta" }
+      ],
+      calcioMlKg: 0.68, calcioMaxMl: 30,
+      salbutamolPesoCorte: 25, salbutamolMgAbaixo: 2.5, salbutamolMgAcima: 5,
+      insulinaUKg: 0.1, insulinaMaxU: 10,
+      glicose10MlKg: 5,
+      /* Teto que a diretriz pediátrica por quilo não traz e que faz falta: sem ele,
+         1-2 mL/kg num adolescente de 60 kg daria 60 a 120 mEq de bicarbonato num
+         empurrão só, muito além da prática consagrada de 50 mEq (uma ampola). */
+      bicarbMlKgMin: 1, bicarbMlKgMax: 2, bicarbMaxMl: 50,
+      resinaGKgMin: 0.5, resinaGKgMax: 1, resinaMaxG: 30
     }
   };
 
@@ -2928,6 +3043,82 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     /* Déficit de água livre = peso × fração de água corporal × (Na atual ÷ Na alvo − 1).
        A queda segura é de 0,5 mEq/L/h, ou 10 a 12 mEq/L em 24 h: o alvo nunca deve
        exigir queda maior, e a função avisa quando exige. */
+    /* Hiponatremia é o sentido INVERSO do corrigirSodio abaixo, que só sabe baixar
+       sódio e avisa "nada a corrigir" quando o alvo é maior. Aqui o perigo troca de
+       lado: não é o edema cerebral da correção lenta, é a desmielinização osmótica
+       da correção rápida — lesão que não volta. Por isso o teto de 24 h é devolvido
+       sempre, mesmo quando ninguém perguntou. */
+    function corrigirHiponatremia(peso, naAtual, mlKgBolus, sintomatico){
+      var r = { valido: false, alertas: [] };
+      if (!(peso > 0) || !(naAtual > 0)) return r;
+      var H = ELETROLITOS.hipoNa;
+      r.valido = true;
+      r.faixa = null;
+      for (var i = 0; i < H.faixas.length; i++){
+        if (naAtual <= H.faixas[i].ate) { r.faixa = H.faixas[i]; break; }
+      }
+      r.subidaMax24h = H.subidaMax24h;
+      r.alvo24h = naAtual + H.subidaAlvo24h;
+      r.teto24h = naAtual + H.subidaMax24h;
+      r.deficitMEq = peso * ELETROLITOS.sodio.tbwFracao * (r.alvo24h - naAtual);
+      if (!r.faixa){
+        r.alertas.push("Na " + naAtual + " mEq/L não é hiponatremia; nada a corrigir por aqui.");
+        return r;
+      }
+      if (sintomatico){
+        var ml = mlKgBolus > 0 ? mlKgBolus : H.bolusMlKgPadrao;
+        r.bolusMlKg = ml;
+        r.bolusMl = peso * ml;
+        r.subidaEsperada = ml * H.subidaPorMlKg;
+        r.naAposBolus = naAtual + r.subidaEsperada;
+        r.pararEm = H.naSeguroParar;
+      }
+      if (naAtual < 120) r.alertas.push("Hiponatremia grave. Com convulsão ou rebaixamento, o hipertônico não espera cálculo de déficit.");
+      r.alertas.push("Teto de " + H.subidaMax24h + " mEq/L em 24 h (alvo " + H.subidaAlvo24h + "). Subir mais rápido arrisca desmielinização osmótica, que é irreversível.");
+      return r;
+    }
+
+    /* Hipercalemia: escada de tratamento. A ordem importa e o motivo de cada passo
+       importa mais ainda — cálcio protege o coração sem tirar potássio nenhum, e
+       insulina e salbutamol só empurram o potássio para dentro da célula, de onde
+       ele volta. Quem de fato retira é resina, diurético ou diálise. */
+    function tratarHipercalemia(peso, k, ecgAlterado, acidose){
+      var r = { valido: false, alertas: [], passos: [] };
+      if (!(peso > 0) || !(k > 0)) return r;
+      var H = ELETROLITOS.hiperK;
+      r.valido = true;
+      r.faixa = null;
+      for (var i = 0; i < H.faixas.length; i++){
+        if (k >= H.faixas[i].de && k <= H.faixas[i].ate) { r.faixa = H.faixas[i]; break; }
+      }
+      if (!r.faixa){
+        r.alertas.push("K " + k + " mEq/L não é hipercalemia; nada a tratar por aqui.");
+        return r;
+      }
+      r.grave = k > 7 || !!ecgAlterado;
+      if (r.grave){
+        r.passos.push({ titulo: "Gluconato de cálcio 10%", valor: Math.min(peso * H.calcioMlKg, H.calcioMaxMl), unidade: "mL",
+          nota: "IV lento em 2 a 5 min, com monitor. Protege a membrana do miócito e NÃO baixa o potássio. Dura cerca de 30 min — é janela, não tratamento." });
+      }
+      r.passos.push({ titulo: "Salbutamol nebulizado", valor: peso <= H.salbutamolPesoCorte ? H.salbutamolMgAbaixo : H.salbutamolMgAcima, unidade: "mg",
+        nota: "Início em cerca de 30 min, repetível a cada 1 a 2 h. Empurra o potássio para dentro da célula." });
+      r.passos.push({ titulo: "Insulina regular", valor: Math.min(peso * H.insulinaUKg, H.insulinaMaxU), unidade: "U",
+        junto: { titulo: "glicose 10%", valor: peso * H.glicose10MlKg, unidade: "mL" },
+        nota: "Início em cerca de 15 min, pico em 1 h. Glicemia capilar de hora em hora: hipoglicemia é a complicação esperada, não a surpresa." });
+      if (acidose){
+        r.passos.push({ titulo: "Bicarbonato de sódio 8,4%",
+          valor: Math.min(peso * H.bicarbMlKgMin, H.bicarbMaxMl),
+          valorMax: Math.min(peso * H.bicarbMlKgMax, H.bicarbMaxMl), unidade: "mL",
+          nota: "Só com acidose, teto de " + H.bicarbMaxMl + " mL por dose. NÃO infundir na mesma via que o cálcio: precipitam." });
+      }
+      r.passos.push({ titulo: "Resina de troca", valor: Math.min(peso * H.resinaGKgMin, H.resinaMaxG), valorMax: Math.min(peso * H.resinaGKgMax, H.resinaMaxG), unidade: "g",
+        nota: "VO ou retal, a cada 6 h. Junto com diurético e diálise, é o que de fato TIRA potássio do corpo; os passos acima só escondem." });
+      if (r.grave) r.alertas.push("Chame a nefrologia ou a UTI agora: com ECG alterado ou K acima de 7, a diálise entra na mesa junto com o resto.");
+      r.alertas.push("Suspenda toda fonte de potássio: soro com KCl, dieta, espironolactona, IECA, bloqueador de receptor.");
+      r.alertas.push("Confirme numa amostra sem hemólise antes de tratar hipercalemia isolada e assintomática — amostra hemolisada é a causa mais comum de K falsamente alto.");
+      return r;
+    }
+
     function corrigirSodio(peso, naAtual, naAlvo, horas){
       var r = { valido: false, alertas: [] };
       if (!(peso > 0) || !(naAtual > 0) || !(naAlvo > 0) || !(horas > 0)) return r;
@@ -2991,7 +3182,9 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       cronogramaClonidina: cronogramaClonidina, faixaTotal: faixaTotal,
       aplicarAjustes: aplicarAjustes, itensAtivos: itensAtivos, somaEscala: somaEscala,
       pontosVariacao: pontosVariacao, textoProntuario: textoProntuario,
-      corrigirSodio: corrigirSodio, reporPotassio: reporPotassio, ELETROLITOS: ELETROLITOS
+      corrigirSodio: corrigirSodio, reporPotassio: reporPotassio,
+      corrigirHiponatremia: corrigirHiponatremia, tratarHipercalemia: tratarHipercalemia,
+      ELETROLITOS: ELETROLITOS
     };
   })();
   /* ===== CALC-CORE:END ===== */
@@ -3836,7 +4029,51 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       $("elNaRec").textContent = "Glicose 5% com NaCl 0,45% (Na\u207a " + L.sodio.naPorLitro045 + " mEq/L), a partir do estoque b\u00e1sico:\n" + rec;
       $("elNaRec").hidden = false;
     }
-    function tudo(){ calcK(); calcNa(); }
+    function calcHipoNa(){
+      var r = CALC.corrigirHiponatremia(num(elP.value), num($("elHipoNaAtual").value),
+                Number(marcado("elHipoBolus")), marcado("elHipoSint") === "sim");
+      if (!r.valido){ $("elHipoRx").textContent = "Informe peso e sódio atual."; lista($("elHipoAl"), []); $("elHipoRec").hidden = true; return; }
+      var linhas = [];
+      /* Sem faixa, não é hiponatremia. Imprimir alvo e déficit aqui seria pior que
+         inútil: sugeriria repor sódio em criança com sódio normal. */
+      if (!r.faixa){
+        $("elHipoRx").textContent = "";
+        lista($("elHipoAl"), r.alertas);
+        $("elHipoRec").hidden = true;
+        return;
+      }
+      linhas.push("Hiponatremia " + r.faixa.rotulo + " · " + r.faixa.texto);
+      if (r.bolusMl){
+        linhas.push("NaCl 3% " + mL1(r.bolusMl) + " mL (" + CALC.fmtBR(r.bolusMlKg) + " mL/kg) em 10 a 30 min");
+        linhas.push("Sobe cerca de " + CALC.fmtBR(r.subidaEsperada) + " mEq/L → Na ≈ " + CALC.fmtBR(r.naAposBolus) +
+                    ". Repetir enquanto houver sintoma, até parar ou Na " + r.pararEm + ".");
+      }
+      linhas.push("Em 24 h: alvo Na " + CALC.fmtBR(r.alvo24h) + ", teto absoluto " + CALC.fmtBR(r.teto24h) + " mEq/L");
+      linhas.push("Déficit até o alvo: " + CALC.fmtBR(r.deficitMEq) + " mEq de sódio");
+      $("elHipoRx").textContent = linhas.join("\n");
+      lista($("elHipoAl"), r.alertas);
+      var rec = CALC.ELETROLITOS.hipoNa.receitas.map(function(x){ return "• " + x.rotulo + " — " + x.nota; }).join("\n");
+      $("elHipoRec").textContent = "Como obter NaCl 3% com o estoque básico:\n" + rec;
+      $("elHipoRec").hidden = false;
+    }
+    function calcHiperK(){
+      var r = CALC.tratarHipercalemia(num(elP.value), num($("elHiperKAtual").value),
+                marcado("elHiperEcg") === "sim", marcado("elHiperAcid") === "sim");
+      if (!r.valido){ $("elHiperRx").textContent = "Informe peso e potássio atual."; lista($("elHiperAl"), []); return; }
+      var linhas = [];
+      if (r.faixa) linhas.push("Hipercalemia " + r.faixa.rotulo + (r.grave ? " · tratar agora" : ""));
+      r.passos.forEach(function(p, i){
+        /* Quando a faixa bate no teto pelos dois lados, min e max coincidem: mostrar
+           "30 a 30 g" faz o leitor procurar a diferença que não existe. */
+        var faixa = p.valorMax && Math.abs(p.valorMax - p.valor) > 0.05;
+        var d = (faixa ? CALC.fmtBR(p.valor) + " a " + CALC.fmtBR(p.valorMax) : CALC.fmtBR(p.valorMax || p.valor)) + " " + p.unidade;
+        if (p.junto) d += " + " + p.junto.titulo + " " + CALC.fmtBR(p.junto.valor) + " " + p.junto.unidade;
+        linhas.push((i + 1) + ". " + p.titulo + " " + d + "\n   " + p.nota);
+      });
+      $("elHiperRx").textContent = linhas.join("\n");
+      lista($("elHiperAl"), r.alertas);
+    }
+    function tudo(){ calcK(); calcNa(); calcHipoNa(); calcHiperK(); }
     /* o peso e digitado uma vez: os dois campos se acompanham */
     function espelha(de, para){ if (trancado) return; trancado = true; para.value = de.value; trancado = false; }
     var pesoCalc = $("peso");
@@ -3845,10 +4082,12 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       pesoCalc.addEventListener("input", function(){ espelha(pesoCalc, elP); tudo(); });
       elP.addEventListener("input", function(){ espelha(elP, pesoCalc); });
     }
-    ["elPeso","elKDose","elNaAtual","elNaAlvo","elNaHoras"].forEach(function(id){
+    ["elPeso","elKDose","elNaAtual","elNaAlvo","elNaHoras","elHipoNaAtual","elHiperKAtual"].forEach(function(id){
       var e = $(id); if (e) e.addEventListener("input", tudo);
     });
     document.querySelectorAll('input[name="elKVia"], input[name="elKDur"]').forEach(function(r){ r.addEventListener("change", calcK); });
+    document.querySelectorAll('input[name="elHipoSint"], input[name="elHipoBolus"]').forEach(function(r){ r.addEventListener("change", calcHipoNa); });
+    document.querySelectorAll('input[name="elHiperEcg"], input[name="elHiperAcid"]').forEach(function(r){ r.addEventListener("change", calcHiperK); });
     /* Abas por distúrbio. Esconder é feito aqui, não na marcação: sem JS os dois
        painéis aparecem empilhados, que é o comportamento antigo e continua usável. */
     (function(){
