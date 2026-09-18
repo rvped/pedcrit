@@ -526,6 +526,15 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   .sc-opt:has(input:checked) .pt{background:none;color:inherit;border-color:#999}
   .seg label:has(input:checked){background:none;color:inherit;font-weight:normal}
 }
+/* ---- protocolos de emergência: tabela de doses por peso ---- */
+.pesobar{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin:0 0 10px}
+.pesobar .field{margin:0;min-width:140px}
+.pesotab td:first-child{font-weight:700}
+.pesotab .v{font-weight:750;white-space:nowrap}
+.pesotab .ml{display:block;font-size:.84rem;color:var(--muted)}
+.pesotab .lim{display:inline-block;font-size:.72rem;font-weight:700;color:var(--warn);margin-left:4px}
+.pesotab .como{font-size:.86rem}
+.cadin{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px 12px}
 /* ---- app nativo, termo de uso e Sobre ---- */
 html.nativo .so-web{display:none!important}
 .termos{position:fixed;inset:0;z-index:80;background:rgba(8,20,28,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-top:calc(12px + env(safe-area-inset-top))}
@@ -579,6 +588,10 @@ html.nativo .so-web{display:none!important}
   <a href="#delirium">Delirium</a>
   <a href="#checklist">Checklist da visita</a>
   <a href="#casos">Casos rápidos</a>
+  <div class="grp">Emergências</div>
+  <a href="#estadomal">Estado de mal epiléptico</a>
+  <a href="#cad">Cetoacidose diabética</a>
+  <a href="#asma">Crise asmática grave</a>
   <div class="grp">Consulta</div>
   <a href="#fundamentos">Fundamentos</a>
   <a href="#certeza">Grau de certeza</a>
@@ -607,6 +620,9 @@ html.nativo .so-web{display:none!important}
     <a class="atalho" href="#desmame"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5L5 19M9 5a4 4 0 1 1 0 8M15 11a4 4 0 1 1 0 8"/></svg><span class="t">Desmame</span><span class="d">Retirada e abstinência</span></a>
     <a class="atalho" href="#delirium"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a5 5 0 0 0-5 5c0 2 1 3 1 5h8c0-2 1-3 1-5a5 5 0 0 0-5-5zM9 17h6M10 21h4"/></svg><span class="t">Delirium</span><span class="d">CAPD e BRAIN MAPS</span></a>
     <a class="atalho" href="#checklist"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l2 2 3-3M4 13l2 2 3-3M4 20l2 2 3-3M13 7h7M13 14h7M13 21h7"/></svg><span class="t">Checklist</span><span class="d">Visita diária</span></a>
+    <a class="atalho" href="#estadomal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><span class="t">Estado de mal</span><span class="d">Convulsão ≥ 5 min</span></a>
+    <a class="atalho" href="#cad"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/></svg><span class="t">Cetoacidose</span><span class="d">Fluidos, insulina, K</span></a>
+    <a class="atalho" href="#asma"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M12 11c-2 0-7 1-7 7 0 2 1 3 3 3 3 0 4-4 4-10zM12 11c2 0 7 1 7 7 0 2-1 3-3 3-3 0-4-4-4-10z"/></svg><span class="t">Asma grave</span><span class="d">PRAM, magnésio, IV</span></a>
   </div>
 
   <div class="sec-head"><span class="n">00</span><h2>Em 30 segundos</h2></div>
@@ -1229,6 +1245,239 @@ html.nativo .so-web{display:none!important}
   </div>
 </section>
 
+<section class="sec" id="estadomal">
+  <div class="sec-head"><span class="n">E1</span><h2>Estado de mal epiléptico</h2></div>
+  <p class="sec-lead">Crise convulsiva de 5 minutos ou mais, em lactentes (&gt; 1 mês), crianças e adolescentes. Siga o relógio de cima para baixo.</p>
+  <div class="call c-danger"><b>5 minutos de crise já é estado de mal</b>Trate agora.<a class="cite" href="#ref-109">109</a><a class="cite" href="#ref-112">112</a> Conte o tempo desde o início da crise, não desde a chegada, e some os benzodiazepínicos dados antes do hospital.<a class="cite" href="#ref-113">113</a></div>
+  <div class="pesobar"><label class="field"><span>Peso (kg)</span><input type="number" class="peso-emerg" id="malPeso" min="0.4" max="150" step="0.1" value="10" inputmode="decimal"></label><span class="small muted">O peso é o mesmo em todo o app.</span></div>
+  <div data-protocolo="mal"></div>
+  <p class="small muted">Tabela calculada pela apresentação indicada; se a da sua farmácia for outra, refaça o volume. Doses base: RCH 2025<a class="cite" href="#ref-113">113</a>; alternativas da AES 2016<a class="cite" href="#ref-110">110</a> nas notas.</p>
+  <div class="card">
+  <div class="flow">
+    <div class="fstep"><div class="fdot">0</div><div class="fbody">
+      <h4>0–5 min: estabilizar</h4>
+      <ul>
+        <li>Posicionar, aspirar, O₂. Monitor de SpO₂, FC, PA e ECG. Anotar a hora de início.<a class="cite" href="#ref-110">110</a></li>
+        <li><b>Glicemia capilar já.</b> Abaixo de 60 mg/dL, glicose 0,5 g/kg IV (linha 1 da tabela).<a class="cite" href="#ref-110">110</a></li>
+        <li>Não espere o acesso venoso para dar o benzodiazepínico.<a class="cite" href="#ref-110">110</a><a class="cite" href="#ref-114">114</a></li>
+        <li>Colher eletrólitos (com cálcio e magnésio), gasometria, hemograma, toxicológico e nível de anticonvulsivante se usar.<a class="cite" href="#ref-110">110</a><a class="cite" href="#ref-111">111</a></li>
+        <li>Pense na causa: hipoglicemia, distúrbio eletrolítico, meningite ou encefalite, trauma, intoxicação, falta de adesão.<a class="cite" href="#ref-112">112</a><a class="cite" href="#ref-113">113</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">1</div><div class="fbody">
+      <h4>5–20 min: benzodiazepínico</h4>
+      <ul>
+        <li><b>Sem acesso:</b> midazolam IM, bucal ou intranasal. Pelo RAMPART, midazolam IM em dose fixa: 5 mg de 13 a 40 kg e 10 mg acima de 40 kg.<a class="cite" href="#ref-110">110</a><a class="cite" href="#ref-114">114</a></li>
+        <li><b>Com acesso:</b> midazolam IV ou diazepam IV.<a class="cite" href="#ref-110">110</a><a class="cite" href="#ref-113">113</a></li>
+        <li>Repetir <b>uma</b> vez se não parar em 5–10 min. <b>No máximo 2 doses no total</b>, contando as pré-hospitalares.<a class="cite" href="#ref-112">112</a><a class="cite" href="#ref-113">113</a></li>
+        <li>A depressão respiratória é mais comum com a crise não tratada do que com o benzodiazepínico: não subdose.<a class="cite" href="#ref-110">110</a></li>
+        <li>Prepare a 2ª linha <b>enquanto</b> dá a 1ª.</li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">2</div><div class="fbody">
+      <h4>20–40 min: 2ª linha, dose única de UMA droga</h4>
+      <ul>
+        <li>Nenhuma é superior: cada uma para a crise em cerca de metade a dois terços dos casos.<a class="cite" href="#ref-117">117</a><a class="cite" href="#ref-118">118</a><a class="cite" href="#ref-119">119</a><a class="cite" href="#ref-120">120</a></li>
+        <li><b>Levetiracetam</b> é a primeira opção prática: 5–10 min de infusão, sem monitor obrigatório, poucas interações.<a class="cite" href="#ref-112">112</a><a class="cite" href="#ref-113">113</a></li>
+        <li><b>Fenitoína</b> como alternativa: lenta (≈ 20 min), com monitor; contraindicada na síndrome de Dravet.<a class="cite" href="#ref-113">113</a></li>
+        <li><b>Fenobarbital</b> ou <b>valproato</b> se as outras não servirem ou não houver.<a class="cite" href="#ref-110">110</a><a class="cite" href="#ref-113">113</a></li>
+        <li>Se não parar, discuta com especialista uma <b>segunda</b> droga de 2ª linha.<a class="cite" href="#ref-112">112</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">3</div><div class="fbody">
+      <h4>Mais de 40 min: EME refratário, na UTI</h4>
+      <ul>
+        <li>Chame UTI e neurologia. Proteja a via aérea. EEG contínuo em até 1 hora.<a class="cite" href="#ref-111">111</a></li>
+        <li><b>Midazolam contínuo:</b> ataque 0,2 mg/kg e infusão de 0,05 a 2 mg/kg/h. Se escapar, bólus de 0,1–0,2 mg/kg e +0,05–0,1 mg/kg/h a cada 3–4 h.<a class="cite" href="#ref-111">111</a></li>
+        <li><b>Tiopental:</b> ataque 2–7 mg/kg (até 50 mg/min) e infusão de 0,5–5 mg/kg/h. Espere hipotensão: vasopressor pronto.<a class="cite" href="#ref-111">111</a></li>
+        <li><b>Cetamina:</b> só séries de casos; decida com especialista.<a class="cite" href="#ref-121">121</a></li>
+        <li><b>Propofol:</b> evitar em crianças pelo risco de síndrome de infusão.<a class="cite" href="#ref-111">111</a><a class="cite" href="#ref-121">121</a></li>
+        <li>Meta: fim das crises no EEG ou surto-supressão, mantida 24–48 h antes de desmamar devagar.<a class="cite" href="#ref-111">111</a></li>
+      </ul>
+    </div></div>
+  </div>
+  </div>
+  <div class="card">
+    <h3>Situações especiais</h3>
+    <ul>
+      <li>Lactente menor de 6 meses com crise refratária: <b>piridoxina 100 mg IV</b>, com monitor (pode causar apneia).<a class="cite" href="#ref-113">113</a><a class="cite" href="#ref-121">121</a></li>
+      <li>Neonato: use o protocolo neonatal; este cartão não cobre o período neonatal.</li>
+      <li><b>Disponibilidade no Brasil:</b> lorazepam IV e fosfenitoína provavelmente não existem aqui; levetiracetam IV e valproato IV podem faltar. Confira com a sua farmácia antes do plantão.</li>
+    </ul>
+    <details><summary>Por quê: o que os ensaios mostram</summary><div class="dx">
+      <p><b>1ª linha.</b> No RAMPART (893 pacientes pré-hospitalares), o midazolam IM parou mais crises que o lorazepam IV (73,4% × 63,4%), porque foi dado mais cedo.<a class="cite" href="#ref-114">114</a> Em crianças, diazepam IV e lorazepam IV tiveram a mesma eficácia (72,1% × 72,9%).<a class="cite" href="#ref-115">115</a> O midazolam bucal superou o diazepam retal (56% × 27%).<a class="cite" href="#ref-116">116</a></p>
+      <p><b>2ª linha.</b> No ESETT, levetiracetam, fosfenitoína e valproato pararam a crise em 47%, 45% e 46%; nas crianças, 52%, 49% e 52%.<a class="cite" href="#ref-117">117</a><a class="cite" href="#ref-118">118</a> No ConSEPT, fenitoína 60% × levetiracetam 50% (sem diferença significativa).<a class="cite" href="#ref-119">119</a> No EcLiPSE, levetiracetam 70% × fenitoína 64%.<a class="cite" href="#ref-120">120</a> Eficácia equivalente: a escolha é pela praticidade e pela segurança.</p>
+      <p><b>Refratário.</b> Não há ensaio randomizado; todas as opções têm evidência insuficiente e a escolha segue o perfil de efeitos adversos.<a class="cite" href="#ref-121">121</a></p>
+      <p><b>Divergências de dose.</b> Levetiracetam: 60 mg/kg até 4,5 g (AES, ESETT) ou 40 mg/kg (ConSEPT, EcLiPSE, que limitou a 2,5 g); o RCH aceita a faixa de 40–60. Fenobarbital: 15 mg/kg (AES) ou 20 mg/kg (RCH, NCS).<a class="cite" href="#ref-110">110</a><a class="cite" href="#ref-113">113</a><a class="cite" href="#ref-119">119</a><a class="cite" href="#ref-120">120</a></p>
+    </div></details>
+  </div>
+</section>
+
+<section class="sec" id="cad">
+  <div class="sec-head"><span class="n">E2</span><h2>Cetoacidose diabética</h2></div>
+  <p class="sec-lead">Conduta da ISPAD 2022<a class="cite" href="#ref-123">123</a>, com as diferenças do BSPED<a class="cite" href="#ref-124">124</a> apontadas. Fluido e potássio por peso, insulina sem bólus, edema cerebral com dose pronta.</p>
+  <div class="call c-danger"><b>Nunca bólus de insulina</b>Comece a insulina só 1 h depois de iniciar os fluidos. Bicarbonato, não: associou-se a edema cerebral.<a class="cite" href="#ref-123">123</a><a class="cite" href="#ref-127">127</a></div>
+  <div class="card">
+    <h3>Calcular</h3>
+  <div class="pesobar"><label class="field"><span>Peso (kg)</span><input type="number" class="peso-emerg" id="cadPeso" min="0.4" max="150" step="0.1" value="10" inputmode="decimal"></label><span class="small muted">O peso é o mesmo em todo o app.</span></div>
+    <div class="cadin">
+      <label class="field"><span>pH venoso</span><input type="number" id="cadPh" min="6.5" max="7.5" step="0.01" inputmode="decimal" placeholder="7,15"></label>
+      <label class="field"><span>HCO₃ (mEq/L)</span><input type="number" id="cadHco3" min="0" max="40" step="0.1" inputmode="decimal"></label>
+      <label class="field"><span>Glicemia (mg/dL)</span><input type="number" id="cadGlic" min="0" max="3000" step="1" inputmode="numeric"></label>
+      <label class="field"><span>Na (mEq/L)</span><input type="number" id="cadNa" min="100" max="200" step="1" inputmode="numeric"></label>
+      <label class="field"><span>K (mEq/L)</span><input type="number" id="cadK" min="1" max="10" step="0.1" inputmode="decimal"></label>
+    </div>
+    <div class="field"><span>Perfusão</span><div class="seg" role="radiogroup"><label><input type="radio" name="cadPerf" value="normal" checked>Normal</label><label><input type="radio" name="cadPerf" value="ruim">Ruim</label><label><input type="radio" name="cadPerf" value="choque">Choque</label></div></div>
+    <div class="grid g2">
+      <div class="field"><span>Repor o déficit em</span><div class="seg" role="radiogroup"><label><input type="radio" name="cadHoras" value="48" checked>48 h</label><label><input type="radio" name="cadHoras" value="24">24 h</label></div></div>
+      <div class="field"><span>Insulina (U/kg/h)</span><div class="seg" role="radiogroup"><label><input type="radio" name="cadIns" value="auto" checked>Pelo pH</label><label><input type="radio" name="cadIns" value="0.05">0,05</label><label><input type="radio" name="cadIns" value="0.1">0,1</label></div></div>
+    </div>
+    <div class="rx" id="cadRx"></div>
+    <ul class="fc-alertas" id="cadAl"></ul>
+    <p class="small muted">"Pelo pH" usa 0,05 U/kg/h com pH &gt; 7,15 e 0,1 abaixo disso, como sugere a ISPAD. Déficit presumido: 5% (leve), 7% (moderada), 10% (grave); o BSPED usa 5% também na moderada e sempre 48 h.<a class="cite" href="#ref-123">123</a><a class="cite" href="#ref-124">124</a></p>
+  </div>
+  <div class="card">
+  <div class="flow">
+    <div class="fstep"><div class="fdot">1</div><div class="fbody">
+      <h4>Confirmar e classificar</h4>
+      <ul>
+        <li>CAD = glicemia &gt; 200 mg/dL <b>e</b> pH venoso &lt; 7,3 ou HCO₃ &lt; 18 <b>e</b> cetonemia ≥ 3 mmol/L (ou cetonúria moderada a grande).<a class="cite" href="#ref-123">123</a></li>
+        <li>Leve: pH &lt; 7,3 ou HCO₃ &lt; 18. Moderada: pH &lt; 7,2 ou HCO₃ &lt; 10. Grave: pH &lt; 7,1 ou HCO₃ &lt; 5.<a class="cite" href="#ref-123">123</a></li>
+        <li>Glicemia normal não exclui CAD (jejum, inibidor de SGLT2).<a class="cite" href="#ref-123">123</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">2</div><div class="fbody">
+      <h4>Primeira hora</h4>
+      <ul>
+        <li>Pesar. Dois acessos periféricos; evitar cateter central (trombose).<a class="cite" href="#ref-123">123</a></li>
+        <li>SF 0,9% 10 mL/kg em 20–30 min; 20 mL/kg se a perfusão estiver ruim. Em choque, 20 mL/kg o mais rápido possível, reavaliando a cada bolo. Teto de 1 L por bolo.<a class="cite" href="#ref-123">123</a></li>
+        <li>Ainda <b>sem insulina</b>.<a class="cite" href="#ref-123">123</a></li>
+        <li>Risco alto de edema cerebral (pH &lt; 7,1, pCO₂ &lt; 21 mmHg, ureia alta, idade &lt; 5 anos): deixe manitol ou NaCl 3% à beira-leito com a dose calculada.<a class="cite" href="#ref-123">123</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">3</div><div class="fbody">
+      <h4>Horas seguintes: fluido, insulina e potássio</h4>
+      <ul>
+        <li>Soro (NaCl 0,45–0,9% ou balanceado) na taxa calculada: déficit menos o bolo em 24–48 h, mais a manutenção. Não repor diurese.<a class="cite" href="#ref-123">123</a></li>
+        <li>No ensaio FLUID (1.389 episódios), ritmo rápido ou lento e NaCl 0,9% ou 0,45% não mudaram o desfecho neurológico.<a class="cite" href="#ref-125">125</a></li>
+        <li><b>Insulina regular 0,05–0,1 U/kg/h</b>: 50 U em 50 mL de SF (1 U = 1 mL), lavando o equipo antes.<a class="cite" href="#ref-123">123</a></li>
+        <li><b>K &gt; 5,5:</b> soro sem K até haver diurese. <b>K normal:</b> 40 mEq/L no soro, junto com a insulina. <b>K &lt; 3,5:</b> repor K e adiar a insulina. Máximo de 0,5 mEq/kg/h.<a class="cite" href="#ref-123">123</a></li>
+        <li>Glicemia em 250–300 mg/dL: glicose 5% no soro (até 10–12,5% se precisar). Mantenha a insulina em pelo menos 0,05 U/kg/h enquanto houver cetose.<a class="cite" href="#ref-123">123</a></li>
+        <li>Bicarbonato só em hipercalemia com risco de vida ou pH &lt; 6,9 com disfunção miocárdica.<a class="cite" href="#ref-123">123</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">4</div><div class="fbody">
+      <h4>A cada hora</h4>
+      <ul>
+        <li>Sinais vitais, <b>Glasgow e sinais neurológicos</b>, glicemia capilar, insulina infundida e balanço hídrico.<a class="cite" href="#ref-123">123</a> Neurológico a cada 30 min se &lt; 2 anos ou pH &lt; 7,1.<a class="cite" href="#ref-124">124</a></li>
+        <li>Eletrólitos e gasometria a cada 2–4 h. A cetonemia deve cair cerca de 0,5 mmol/L/h; se não cair, reveja preparo, acesso e dose da insulina.<a class="cite" href="#ref-123">123</a></li>
+        <li>Na corrigido = Na + 1,6 × (glicose − 100)/100. Osmolalidade efetiva = 2 × Na + glicose/18.<a class="cite" href="#ref-123">123</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">5</div><div class="fbody">
+      <h4>Edema cerebral: tratar sem esperar tomografia</h4>
+      <p>Critérios de Muir (sinais novos, depois do tratamento): <b>1 diagnóstico, ou 2 maiores, ou 1 maior + 2 menores</b>. Sensibilidade de 92%.<a class="cite" href="#ref-126">126</a></p>
+      <ul>
+        <li><b>Diagnósticos:</b> resposta anormal à dor; decorticação ou descerebração; paralisia de nervo craniano (III, IV, VI); padrão respiratório neurogênico.</li>
+        <li><b>Maiores:</b> consciência alterada ou flutuante; queda sustentada da FC &gt; 20 bpm sem outra causa; incontinência inadequada para a idade.</li>
+        <li><b>Menores:</b> vômitos; cefaleia; letargia; PA diastólica &gt; 90 mmHg; idade &lt; 5 anos.</li>
+        <li><b>Manitol 0,5–1 g/kg em 10–15 min</b> (pode repetir em 30 min) <b>ou NaCl 3% 2,5–5 mL/kg em 10–15 min</b>. Doses prontas na calculadora acima.<a class="cite" href="#ref-123">123</a></li>
+        <li>Reduzir o fluido e evitar hipotensão. Se intubar, não hiperventilar, exceto na herniação.<a class="cite" href="#ref-123">123</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">6</div><div class="fbody">
+      <h4>Saída</h4>
+      <ul>
+        <li>CAD resolvida: pH &gt; 7,30, HCO₃ &gt; 18 e cetonemia &lt; 1 mmol/L.<a class="cite" href="#ref-123">123</a></li>
+        <li>Insulina SC 15–30 min <b>antes</b> de desligar a infusão.<a class="cite" href="#ref-123">123</a></li>
+      </ul>
+    </div></div>
+  </div>
+  </div>
+  <div class="card">
+    <details><summary>Por quê, e onde as diretrizes divergem</summary><div class="dx">
+      <p><b>Fluidos.</b> O FLUID comparou bolo de 20 × 10 mL/kg, déficit de 10% × 5% e NaCl 0,9% × 0,45%: Glasgow &lt; 14 em 3,5% e lesão cerebral em 0,9%, sem diferença entre os grupos.<a class="cite" href="#ref-125">125</a> Por isso a ISPAD aceita toda a faixa: 5–10% de déficit em 24–48 h.<a class="cite" href="#ref-123">123</a></p>
+      <p><b>Insulina.</b> Num ensaio com 50 crianças, 0,05 e 0,1 U/kg/h corrigiram a acidose no mesmo tempo, com menos hipocalemia na dose baixa (20% × 48%).<a class="cite" href="#ref-128">128</a></p>
+      <p><b>Bicarbonato.</b> Foi o único tratamento associado ao edema cerebral (RR 4,2) no estudo caso-controle multicêntrico.<a class="cite" href="#ref-127">127</a></p>
+      <p><b>Manitol ou NaCl 3%.</b> Não há ensaio randomizado. Numa coorte de 43 mil CADs, o NaCl 3% isolado associou-se a mais mortalidade que o manitol isolado (OR 2,7), mas é dado observacional.<a class="cite" href="#ref-129">129</a> A dose da ISPAD para o manitol é maior que a da bula (0,25 g/kg).<a class="cite" href="#ref-130">130</a></p>
+      <p><b>Divergências.</b> O limite de K para adiar a insulina é 3,5 no texto da ISPAD, 3,0 no sumário dela e no BSPED; o app usa 3,5. O BSPED define CAD com HCO₃ &lt; 15, usa déficit de 5% na moderada e repõe sempre em 48 h. A diretriz da SBD (2023) é de adultos.<a class="cite" href="#ref-123">123</a><a class="cite" href="#ref-124">124</a><a class="cite" href="#ref-131">131</a></p>
+    </div></details>
+  </div>
+</section>
+
+<section class="sec" id="asma">
+  <div class="sec-head"><span class="n">E3</span><h2>Crise asmática grave</h2></div>
+  <p class="sec-lead">Da emergência à UTI: avaliar com o PRAM, tratar tudo junto na 1ª hora, escalonar para IV se não responder.</p>
+  <div class="call c-danger"><b>Risco de vida: aja já</b>Sonolência ou confusão, cianose, tórax silencioso, esforço fraco ou exaustão, hipotensão, PRAM 11–12.<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-133">133</a> Chame a UTI.</div>
+  <div class="pesobar"><label class="field"><span>Peso (kg)</span><input type="number" class="peso-emerg" id="asmaPeso" min="0.4" max="150" step="0.1" value="10" inputmode="decimal"></label><span class="small muted">O peso é o mesmo em todo o app.</span></div>
+  <div data-protocolo="asma"></div>
+  <div class="card">
+    <h3>PRAM: gravidade de 0 a 12</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Item</th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+      <tbody>
+        <tr><td>SpO₂</td><td>≥ 95%</td><td>92–94%</td><td>&lt; 92%</td><td>—</td></tr>
+        <tr><td>Tiragem de fúrcula</td><td>ausente</td><td>—</td><td>presente</td><td>—</td></tr>
+        <tr><td>Contração de escalenos</td><td>ausente</td><td>—</td><td>presente</td><td>—</td></tr>
+        <tr><td>Entrada de ar</td><td>normal</td><td>↓ nas bases</td><td>↓ em ápices e bases</td><td>mínima ou ausente</td></tr>
+        <tr><td>Sibilos</td><td>ausentes</td><td>só expiratórios</td><td>inspiratórios (± expiratórios)</td><td>audíveis sem estetoscópio ou tórax silencioso</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small"><b>0–3 leve · 4–7 moderada · 8–12 grave</b>; 11–12 é risco de vida. Uma variação de 3 pontos é clinicamente importante. Validado dos 2 aos 17 anos.<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-136">136</a><a class="cite" href="#ref-137">137</a></p>
+  </div>
+  <div class="card">
+  <div class="flow">
+    <div class="fstep"><div class="fdot">1</div><div class="fbody">
+      <h4>Primeira hora: tudo ao mesmo tempo</h4>
+      <ul>
+        <li>Anafilaxia junto? Adrenalina IM primeiro.<a class="cite" href="#ref-132">132</a></li>
+        <li><b>O₂</b> se SpO₂ &lt; 92%. Alvo: ≥ 92% até 5 anos e 92–95% de 6 a 11 anos (GINA 2026); a BTS/SIGN mantém 94–98%.<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-133">133</a></li>
+        <li><b>Salbutamol</b> a cada 20 min, 3 vezes: espaçador (4–6 jatos até 5 anos; 6–10 acima) ou nebulização (tabela).<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-134">134</a></li>
+        <li><b>Ipratrópio junto</b> nas crises moderadas e graves: 250 mcg nebulizado ou 4 jatos de 20 mcg, 3 doses na 1ª hora. Reduz internação (RR 0,73; NNT 16).<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-138">138</a></li>
+        <li><b>Corticoide sistêmico na 1ª hora</b>, de preferência VO (tabela).<a class="cite" href="#ref-132">132</a></li>
+        <li>Sem sedativo fora do contexto de intubação.<a class="cite" href="#ref-132">132</a></li>
+        <li>Reavaliar com o PRAM ao fim da hora, ou antes se piorar.<a class="cite" href="#ref-132">132</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">2</div><div class="fbody">
+      <h4>Sem resposta: IV e UTI</h4>
+      <ul>
+        <li>Acesso venoso, eletrólitos e gasometria. PaCO₂ normal ou alta numa criança taquipneica é falência.<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-133">133</a></li>
+        <li><b>Sulfato de magnésio IV</b> é a 1ª escolha IV: reduz internação (OR 0,32).<a class="cite" href="#ref-133">133</a><a class="cite" href="#ref-140">140</a></li>
+        <li>Manter salbutamol e ipratrópio a cada 20–30 min, ou salbutamol contínuo a 0,5 mg/kg/h.<a class="cite" href="#ref-133">133</a><a class="cite" href="#ref-134">134</a><a class="cite" href="#ref-145">145</a></li>
+        <li>Magnésio nebulizado não traz benefício clinicamente relevante.<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-141">141</a></li>
+        <li>Taquicardia, tremor, hipocalemia e acidose lática podem ser <b>toxicidade do salbutamol</b>, não piora da asma.<a class="cite" href="#ref-132">132</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">3</div><div class="fbody">
+      <h4>Refratária (UTI)</h4>
+      <ul>
+        <li>Salbutamol IV (bólus e infusão) ou aminofilina: avaliar a resposta antes de somar outra droga.<a class="cite" href="#ref-133">133</a></li>
+        <li>Cânula nasal de alto fluxo ou VNI podem ser tentadas com vigilância contínua, sem sedar para manter; a evidência é muito fraca.<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-146">146</a></li>
+        <li>Cetamina em criança não intubada: o ensaio randomizado não mostrou benefício.<a class="cite" href="#ref-144">144</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">4</div><div class="fbody">
+      <h4>Intubação: decisão clínica, não da gasometria</h4>
+      <ul>
+        <li>Indicações: parada ou pré-parada, rebaixamento de consciência, exaustão, hipoxemia refratária.<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-134">134</a></li>
+        <li>Pelo mais experiente, com cânula com balonete. Cetamina é a indutora habitual (opinião de especialistas).</li>
+        <li>Ventilar com FR baixa e expiração longa, aceitando hipercapnia com pH &gt; 7,20. Hipotensão ou dessaturação súbita: pense em hiperinsuflação dinâmica ou pneumotórax.</li>
+      </ul>
+    </div></div>
+  </div>
+  </div>
+  <div class="card">
+    <details><summary>Por quê, e onde as diretrizes divergem</summary><div class="dx">
+      <p><b>Ipratrópio.</b> Somado ao salbutamol na crise moderada a grave, reduziu internação (RR 0,73; NNT 16).<a class="cite" href="#ref-138">138</a></p>
+      <p><b>Corticoide.</b> A dexametasona em 1–2 dias é tão eficaz quanto 3–5 dias de prednisolona e causa menos vômito.<a class="cite" href="#ref-139">139</a></p>
+      <p><b>Magnésio IV.</b> Na revisão Cochrane, reduziu internação (OR 0,32), com base em só 3 ensaios e 115 crianças: certeza baixa. O nebulizado (MAGNETIC) teve efeito pequeno, sem relevância clínica.<a class="cite" href="#ref-140">140</a><a class="cite" href="#ref-141">141</a></p>
+      <p><b>β₂ IV e aminofilina.</b> No ensaio de Browne (29 crianças), o bólus de salbutamol IV encurtou o tempo até dispensar a nebulização de 30/30 min (4 × 11,5 h).<a class="cite" href="#ref-142">142</a> A aminofilina melhora a função pulmonar, mas triplica o vômito.<a class="cite" href="#ref-143">143</a></p>
+      <p><b>Divergências.</b> Alvo de SpO₂ 92–95% (GINA 2026) × 94–98% (BTS/SIGN). Magnésio 40 mg/kg (SIGN) × 40–50 mg/kg (GINA). A dose de metilprednisolona varia até 4 vezes entre as diretrizes. A dose de terbutalina IV não foi confirmada em fonte primária e ficou fora. O fenoterol, comum no Brasil, não tem estudo na crise aguda pediátrica, e a bula limita o intervalo a 4 h em menores de 6 anos: não é troca direta do salbutamol.<a class="cite" href="#ref-132">132</a><a class="cite" href="#ref-133">133</a><a class="cite" href="#ref-134">134</a><a class="cite" href="#ref-135">135</a></p>
+    </div></details>
+  </div>
+</section>
+
 <section class="sec" id="especiais">
   <div class="sec-head"><span class="n">07</span><h2>Situações especiais</h2></div>
   <p class="sec-lead">Escolha do agente conforme o cenário. Toque na tabela e deslize para os lados no celular.</p>
@@ -1492,7 +1741,7 @@ html.nativo .so-web{display:none!important}
 <section class="sec" id="refs">
   <div class="sec-head"><span class="n">14</span><h2>Referências</h2></div>
   <div class="card">
-  <details><summary>Mostrar as 108 referências</summary>
+  <details><summary>Mostrar as 147 referências</summary>
   <ol class="refs">
     <li id="ref-1">Smith HAB, Besunder JB, Betters KA, et al. 2022 Society of Critical Care Medicine Clinical Practice Guidelines on Prevention and Management of Pain, Agitation, Neuromuscular Blockade, and Delirium in Critically Ill Pediatric Patients With Consideration of the ICU Environment and Early Mobility (PANDEM). <i>Pediatr Crit Care Med.</i> 2022;23(2):e74-e110. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/35119438/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1097/PCC.0000000000002873" target="_blank" rel="noopener">DOI</a></span></li>
     <li id="ref-2">Emeriaud G, López-Fernández YM, Iyer NP, et al. Executive Summary of the Second International Guidelines for the Diagnosis and Management of Pediatric Acute Respiratory Distress Syndrome (PALICC-2). <i>Pediatr Crit Care Med.</i> 2023;24(2):143-168. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/36661420/" target="_blank" rel="noopener">PubMed</a></span></li>
@@ -1602,6 +1851,45 @@ html.nativo .so-web{display:none!important}
     <li id="ref-106">Achinger SG, Ayus JC. Treatment of hyponatremic encephalopathy in the critically ill. Crit Care Med 2017;45(10):1762-1771. <span class="rl"><a href="https://doi.org/10.1097/CCM.0000000000002595" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/28704229/" target="_blank" rel="noopener">PubMed</a></span></li>
     <li id="ref-107">Lee IK, Lee KH, Han HJ, et al. Dexmedetomidine in mechanically ventilated critically ill children: a systematic review and meta-analysis of randomized controlled trials. Yonsei Med J 2025;66(8):473-481. <span class="rl"><a href="https://doi.org/10.3349/ymj.2024.0299" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/40709677/" target="_blank" rel="noopener">PubMed</a></span></li>
     <li id="ref-108">Berens RJ, Meyer MT, Mikhailov TA, et al. A prospective evaluation of opioid weaning in opioid-dependent pediatric critical care patients. Anesth Analg 2006;102(4):1045-1050. <span class="rl"><a href="https://doi.org/10.1213/01.ane.0000202395.94542.3e" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/16551896/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-109">Trinka E, Cock H, Hesdorffer D, et al. A definition and classification of status epilepticus — Report of the ILAE Task Force on Classification of Status Epilepticus. Epilepsia 2015;56(10):1515-1523. <span class="rl"><a href="https://doi.org/10.1111/epi.13121" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/26336950/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-110">Glauser T, Shinnar S, Gloss D, et al. Evidence-based guideline: treatment of convulsive status epilepticus in children and adults. Report of the Guideline Committee of the American Epilepsy Society. Epilepsy Curr 2016;16(1):48-61. <span class="rl"><a href="https://doi.org/10.5698/1535-7597-16.1.48" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/26900382/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-111">Brophy GM, Bell R, Claassen J, et al. Guidelines for the evaluation and management of status epilepticus. Neurocrit Care 2012;17(1):3-23. <span class="rl"><a href="https://doi.org/10.1007/s12028-012-9695-z" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/22528274/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-112">National Institute for Health and Care Excellence. Epilepsies in children, young people and adults (NG217), seção 7.1. 2022, atualizada em jan/2025. <span class="rl"><a href="https://www.nice.org.uk/guidance/ng217" target="_blank" rel="noopener">NICE</a></span></li>
+    <li id="ref-113">The Royal Children's Hospital Melbourne. Clinical Practice Guidelines: Seizures — acute management. Atualizado em jun/2025. Acessado em 18/09/2026. <span class="rl"><a href="https://www.rch.org.au/clinicalguide/guideline_index/Seizures_-_acute_management/" target="_blank" rel="noopener">RCH</a></span></li>
+    <li id="ref-114">Silbergleit R, Durkalski V, Lowenstein D, et al. Intramuscular versus intravenous therapy for prehospital status epilepticus (RAMPART). N Engl J Med 2012;366(7):591-600. <span class="rl"><a href="https://doi.org/10.1056/NEJMoa1107494" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/22335736/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-115">Chamberlain JM, Okada P, Holsti M, et al. Lorazepam vs diazepam for pediatric status epilepticus: a randomized clinical trial. JAMA 2014;311(16):1652-1660. <span class="rl"><a href="https://doi.org/10.1001/jama.2014.2625" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/24756515/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-116">McIntyre J, Robertson S, Norris E, et al. Safety and efficacy of buccal midazolam versus rectal diazepam for emergency treatment of seizures in children: a randomised controlled trial. Lancet 2005;366(9481):205-210. <span class="rl"><a href="https://doi.org/10.1016/S0140-6736(05)66909-7" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/16023510/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-117">Kapur J, Elm J, Chamberlain JM, et al. Randomized trial of three anticonvulsant medications for status epilepticus (ESETT). N Engl J Med 2019;381(22):2103-2113. <span class="rl"><a href="https://doi.org/10.1056/NEJMoa1905795" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/31774955/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-118">Chamberlain JM, Kapur J, Shinnar S, et al. Efficacy of levetiracetam, fosphenytoin, and valproate for established status epilepticus by age group (ESETT). Lancet 2020;395(10231):1217-1224. Errata em 2023. <span class="rl"><a href="https://doi.org/10.1016/S0140-6736(20)30611-5" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/32203691/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-119">Dalziel SR, Borland ML, Furyk J, et al. Levetiracetam versus phenytoin for second-line treatment of convulsive status epilepticus in children (ConSEPT). Lancet 2019;393(10186):2135-2145. <span class="rl"><a href="https://doi.org/10.1016/S0140-6736(19)30722-6" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/31005386/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-120">Lyttle MD, Rainford NEA, Gamble C, et al. Levetiracetam versus phenytoin for second-line treatment of paediatric convulsive status epilepticus (EcLiPSE). Lancet 2019;393(10186):2125-2134. <span class="rl"><a href="https://doi.org/10.1016/S0140-6736(19)30724-X" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/31005385/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-121">Vossler DG, Bainbridge JL, Boggs JG, et al. Treatment of refractory convulsive status epilepticus: a comprehensive review by the American Epilepsy Society Treatments Committee. Epilepsy Curr 2020;20(5):245-264. <span class="rl"><a href="https://doi.org/10.1177/1535759720928269" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/32822230/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-122">U.S. Food and Drug Administration. Valproate sodium injection — prescribing information (DailyMed, versão 15/12/2024). <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=3dfb6da1-f66a-4618-9f74-d2d6c16c0b58" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-123">Glaser N, Fritsch M, Priyambada L, et al. ISPAD Clinical Practice Consensus Guidelines 2022: Diabetic ketoacidosis and hyperglycemic hyperosmolar state. Pediatr Diabetes 2022;23(7):835-856. <span class="rl"><a href="https://doi.org/10.1111/pedi.13406" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/36250645/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-124">British Society for Paediatric Endocrinology and Diabetes. BSPED guideline for the management of children and young people under 18 years with diabetic ketoacidosis (2021; arquivo atualizado em nov/2024). <span class="rl"><a href="https://www.bsped.org.uk/clinical-resources/bsped-dka-guidelines/" target="_blank" rel="noopener">BSPED</a></span></li>
+    <li id="ref-125">Kuppermann N, Ghetti S, Schunk JE, et al. Clinical trial of fluid infusion rates for pediatric diabetic ketoacidosis (PECARN FLUID). N Engl J Med 2018;378(24):2275-2287. <span class="rl"><a href="https://doi.org/10.1056/NEJMoa1716816" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/29897851/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-126">Muir AB, Quisling RG, Yang MC, Rosenbloom AL. Cerebral edema in childhood diabetic ketoacidosis: natural history, radiographic findings, and early identification. Diabetes Care 2004;27(7):1541-1546. <span class="rl"><a href="https://doi.org/10.2337/diacare.27.7.1541" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/15220225/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-127">Glaser N, Barnett P, McCaslin I, et al. Risk factors for cerebral edema in children with diabetic ketoacidosis. N Engl J Med 2001;344(4):264-269. <span class="rl"><a href="https://doi.org/10.1056/NEJM200101253440404" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/11172153/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-128">Nallasamy K, Jayashree M, Singhi S, Bansal A. Low-dose vs standard-dose insulin in pediatric diabetic ketoacidosis: a randomized clinical trial. JAMA Pediatr 2014;168(11):999-1005. <span class="rl"><a href="https://doi.org/10.1001/jamapediatrics.2014.1211" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/25264948/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-129">DeCourcey DD, Steil GM, Wypij D, Agus MS. Increasing use of hypertonic saline over mannitol in the treatment of symptomatic cerebral edema in pediatric diabetic ketoacidosis: an 11-year retrospective analysis of mortality. Pediatr Crit Care Med 2013;14(7):694-700. <span class="rl"><a href="https://doi.org/10.1097/PCC.0b013e3182975cab" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/23863818/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-130">Baxter Healthcare. OSMITROL (mannitol) injection — prescribing information (DailyMed). <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=0d914965-7001-45cb-ba51-d7c5964b05bc" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-131">Santomauro AT, Santomauro Jr AC, Pessanha AB, et al. Diagnóstico e tratamento da cetoacidose diabética. Diretriz Oficial da Sociedade Brasileira de Diabetes (2023). <span class="rl"><a href="https://doi.org/10.29327/5238993.2023-6" target="_blank" rel="noopener">DOI</a> · <a href="https://diretriz.diabetes.org.br/diagnostico-e-tratamento-da-cetoacidose-diabetica/" target="_blank" rel="noopener">SBD</a></span></li>
+    <li id="ref-132">Global Initiative for Asthma. Global Strategy for Asthma Management and Prevention, 2026 update. Capítulos 9 e 12. <span class="rl"><a href="https://ginasthma.org/wp-content/uploads/2026/05/GINA-2026-Strategy-Report-WMS.pdf" target="_blank" rel="noopener">GINA</a></span></li>
+    <li id="ref-133">British Thoracic Society; Scottish Intercollegiate Guidelines Network. SIGN 158: British guideline on the management of asthma. 2019. <span class="rl"><a href="https://www.sign.ac.uk/media/1773/sign158-updated.pdf" target="_blank" rel="noopener">SIGN</a></span></li>
+    <li id="ref-134">National Asthma Education and Prevention Program. Expert Panel Report 3: Guidelines for the Diagnosis and Management of Asthma. NHLBI; 2007. Figura 5-5. <span class="rl"><a href="https://www.nhlbi.nih.gov/sites/default/files/media/docs/EPR-3_Asthma_Full_Report_2007.pdf" target="_blank" rel="noopener">NHLBI</a></span></li>
+    <li id="ref-135">Pastorino AC, Chiabai J, Chong-Silva DC, et al. Guia prático de atualização no tratamento da exacerbação de asma na criança e no adolescente — posicionamento conjunto da ASBAI e SBP. Arq Asma Alerg Imunol 2021;5(4):322-345. <span class="rl"><a href="https://doi.org/10.5935/2526-5393.20210053" target="_blank" rel="noopener">DOI</a></span></li>
+    <li id="ref-136">Chalut DS, Ducharme FM, Davis GM. The Preschool Respiratory Assessment Measure (PRAM): a responsive index of acute asthma severity. J Pediatr 2000;137(6):762-768. <span class="rl"><a href="https://doi.org/10.1067/mpd.2000.110121" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/11113831/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-137">Ducharme FM, Chalut D, Plotnick L, et al. The Pediatric Respiratory Assessment Measure: a valid clinical score for assessing acute asthma severity from toddlers to teenagers. J Pediatr 2008;152(4):476-480. <span class="rl"><a href="https://doi.org/10.1016/j.jpeds.2007.08.034" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/18346499/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-138">Griffiths B, Ducharme FM. Combined inhaled anticholinergics and short-acting beta2-agonists for initial treatment of acute asthma in children. Cochrane Database Syst Rev 2013;(8):CD000060. <span class="rl"><a href="https://doi.org/10.1002/14651858.CD000060.pub2" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/23966133/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-139">Keeney GE, Gray MP, Morrison AK, et al. Dexamethasone for acute asthma exacerbations in children: a meta-analysis. Pediatrics 2014;133(3):493-499. <span class="rl"><a href="https://doi.org/10.1542/peds.2013-2273" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/24515516/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-140">Griffiths B, Kew KM. Intravenous magnesium sulfate for treating children with acute asthma in the emergency department. Cochrane Database Syst Rev 2016;4:CD011050. <span class="rl"><a href="https://doi.org/10.1002/14651858.CD011050.pub2" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/27126744/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-141">Powell C, Kolamunnage-Dona R, Lowe J, et al. Magnesium sulphate in acute severe asthma in children (MAGNETIC): a randomised, placebo-controlled trial. Lancet Respir Med 2013;1(4):301-308. <span class="rl"><a href="https://doi.org/10.1016/S2213-2600(13)70037-7" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/24429155/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-142">Browne GJ, Penna AS, Phung X, Soo M. Randomised trial of intravenous salbutamol in early management of acute severe asthma in children. Lancet 1997;349(9048):301-305. <span class="rl"><a href="https://doi.org/10.1016/S0140-6736(96)06358-1" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/9024371/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-143">Mitra A, Bassler D, Goodman K, et al. Intravenous aminophylline for acute severe asthma in children over two years receiving inhaled bronchodilators. Cochrane Database Syst Rev 2005;(2):CD001276. <span class="rl"><a href="https://doi.org/10.1002/14651858.CD001276.pub2" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/15846615/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-144">Allen JY, Macias CG. The efficacy of ketamine in pediatric emergency department patients who present with acute severe asthma. Ann Emerg Med 2005;46(1):43-50. <span class="rl"><a href="https://doi.org/10.1016/j.annemergmed.2005.02.024" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/15988425/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-145">Camargo CA Jr, Spooner CH, Rowe BH. Continuous versus intermittent beta-agonists in the treatment of acute asthma. Cochrane Database Syst Rev 2003;(4):CD001115. <span class="rl"><a href="https://doi.org/10.1002/14651858.CD001115" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/14583926/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-146">Korang SK, Baker M, Feinberg J, et al. Non-invasive positive pressure ventilation for acute asthma in children. Cochrane Database Syst Rev 2024;10:CD012067. <span class="rl"><a href="https://doi.org/10.1002/14651858.CD012067.pub3" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/39356050/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-147">GlaxoSmithKline Brasil. Aerolin injetável (sulfato de salbutamol 0,5 mg/mL) — bula para o profissional de saúde. <span class="rl"><a href="https://br.gsk.com/media/wnwjucvl/aerolin-iv.pdf" target="_blank" rel="noopener">GSK</a></span></li>
   </ol>
   </details>
   </div>
@@ -1674,6 +1962,9 @@ html.nativo .so-web{display:none!important}
     <div class="grab"></div>
     <a href="#avaliar" data-close>Escore · escalas para pontuar</a>
     <a href="#eletrolitos" data-close>Eletrólitos · sódio e potássio</a>
+    <a href="#estadomal" data-close>Estado de mal epiléptico</a>
+    <a href="#cad" data-close>Cetoacidose diabética</a>
+    <a href="#asma" data-close>Crise asmática grave</a>
     <a href="#agitado" data-close>Paciente agitado</a>
     <a href="#escada" data-close>Escada de escalonamento</a>
     <a href="#especiais" data-close>Situações especiais</a>
@@ -1691,7 +1982,7 @@ html.nativo .so-web{display:none!important}
 
 <script>
 /* Versão do conteúdo: DEVE ser igual a VERSAO em sw.js (há teste que confere). */
-var APP_VERSAO = "2026-09-18c";
+var APP_VERSAO = "2026-09-18d";
 /* Dentro do app das lojas (Capacitor) há ponte nativa; na web, não. */
 var NATIVO = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacitor.Plugins[nome] || null : null; }
@@ -2863,6 +3154,59 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
     }
   };
 
+  /* Protocolos de emergência: doses por peso para as tabelas de EMERGENCIAS.
+     doseKg na unidade da dose; max/min por dose; conc = unidade por mL da apresentação.
+     Estado de mal: RCH Seizures 2025 (ref-113) como base, com AES 2016 (ref-110) e
+     ensaios (ESETT, ConSEPT, EcLiPSE) nas notas. Pesquisa E, 18/09/2026. */
+  var EMERGENCIAS = {
+    mal: [
+      { id: "glic", nome: "Glicose, se glicemia < 60 mg/dL", doseKg: 0.5, unidade: "g", conc: 0.1, apresentacao: "SG 10%",
+        como: "IV em bólus. A AES usa SG 12,5% 4 mL/kg (< 2 anos) ou SG 25% 2 mL/kg (≥ 2 anos): a mesma 0,5 g/kg.", refs: [110] },
+      { id: "mdzIV", nome: "Midazolam IV, IO ou IM", doseKg: 0.15, max: 10, unidade: "mg", conc: 5, apresentacao: "5 mg/mL",
+        como: "Sem acesso, IM já. Repetir 1 vez em 5–10 min se não parar. No máximo 2 doses de benzodiazepínico no total, contando as de casa e do SAMU.", refs: [113, 114] },
+      { id: "mdzBuc", nome: "Midazolam bucal ou intranasal", doseKg: 0.3, max: 10, unidade: "mg", conc: 5, apresentacao: "5 mg/mL",
+        como: "Solução injetável, dividida entre as narinas ou na bochecha. A NCS usa 0,2 mg/kg IN e 0,5 mg/kg bucal.", refs: [113, 111, 116] },
+      { id: "dzpIV", nome: "Diazepam IV ou IO", doseKg: [0.15, 0.3], max: 10, unidade: "mg", conc: 5, apresentacao: "5 mg/mL",
+        como: "Até 5 mg/min. Nunca IM. AES: 0,15–0,2 mg/kg; RCH: 0,3 mg/kg.", refs: [110, 113, 115] },
+      { id: "dzpRet", nome: "Diazepam retal", doseKg: [0.2, 0.5], max: 20, unidade: "mg", conc: 5, apresentacao: "5 mg/mL",
+        como: "Dose única, quando não há acesso nem midazolam.", refs: [110] },
+      { id: "lev", nome: "Levetiracetam (2ª linha)", doseKg: [40, 60], max: 4500, unidade: "mg", conc: 100, apresentacao: "100 mg/mL",
+        como: "IV ou IO em 5–10 min, diluído a 50 mg/mL. Primeira opção prática de 2ª linha: tão eficaz quanto as outras e de manejo simples.", refs: [113, 117, 119, 120] },
+      { id: "pht", nome: "Fenitoína (2ª linha)", doseKg: 20, max: 2000, unidade: "mg", conc: 50, apresentacao: "50 mg/mL",
+        como: "1 mg/kg/min, máx 50 mg/min (≈ 20 min). Só em SF, com monitor cardíaco. Não usar na síndrome de Dravet nem em quem já usa fenitoína.", refs: [113, 120] },
+      { id: "pb", nome: "Fenobarbital (2ª linha)", doseKg: 20, max: 1000, unidade: "mg", conc: 100, apresentacao: "100 mg/mL",
+        como: "Em no mínimo 30 min (máx 1 mg/kg/min), com ventilação pronta. A AES usa 15 mg/kg.", refs: [113, 110] },
+      { id: "vpa", nome: "Valproato IV (2ª linha)", doseKg: [20, 40], max: 3000, unidade: "mg", conc: 100, apresentacao: "100 mg/mL",
+        como: "Em 3–10 min. Evitar abaixo de 2 anos (RCH: 3 anos), na doença mitocondrial (POLG) e na hepatopatia. A bula brasileira indica acima de 10 anos.", refs: [113, 110, 122] },
+      { id: "mdzRef", nome: "Midazolam, ataque no EME refratário", doseKg: 0.2, unidade: "mg", conc: 5, apresentacao: "5 mg/mL",
+        como: "Na UTI, com via aérea protegida. Depois, infusão de 0,05 a 2 mg/kg/h titulada pelo EEG contínuo.", refs: [111] }
+    ],
+    /* Crise asmática grave: GINA 2026 (ref-132), BTS/SIGN 158 (ref-133, conferido no PDF
+       em 18/09/2026) e EPR-3 (ref-134). Pesquisa H, 18/09/2026. */
+    asma: [
+      { id: "salbNeb", nome: "Salbutamol nebulizado", doseKg: 0.15, min: 2.5, max: 5, unidade: "mg", conc: 5, apresentacao: "solução 5 mg/mL",
+        como: "Com O₂ a 6–8 L/min, a cada 20 min, 3 vezes na 1ª hora. O espaçador é preferível: 4–6 jatos de 100 mcg até 5 anos; 6–10 jatos acima.", refs: [134, 132] },
+      { id: "pred", nome: "Prednisolona ou prednisona", doseKg: [1, 2], max: 40, unidade: "mg",
+        como: "VO na 1ª hora, 1 vez ao dia por 3–5 dias. Teto por idade (GINA): 20 mg abaixo de 2 anos, 30 mg de 2 a 5, 40 mg de 6 a 11.", refs: [132, 133] },
+      { id: "dexa", nome: "Dexametasona", doseKg: [0.3, 0.6], max: 12, unidade: "mg",
+        como: "VO, dose única ou 2 dias (não passar de 2). Tão eficaz quanto a prednisolona, com menos vômito.", refs: [132, 139] },
+      { id: "metilpred", nome: "Metilprednisolona", doseKg: [0.5, 1], max: 30, unidade: "mg",
+        como: "IV de 12/12 h (1–2 mg/kg/dia, máx 60 mg/dia; EPR-3), só se não tolera VO. A GINA usa 1 mg/kg de 6/6 h no 1º dia até 5 anos. A via oral é tão eficaz quanto a IV.", refs: [134, 132] },
+      { id: "hidrocort", nome: "Hidrocortisona", doseKg: 4, unidade: "mg",
+        como: "IV de 4/4 h, só se não tolera VO (BTS/SIGN). A fonte não traz teto: acima de 25 kg a dose passa de 100 mg por vez, então confira com a farmácia.", refs: [133] },
+      { id: "mgso4", nome: "Sulfato de magnésio IV", doseKg: [40, 50], max: 2000, unidade: "mg", conc: 500, apresentacao: "MgSO₄ 50%",
+        como: "Dose única em 20 min (60 min se hipotensão), diluído. Com MgSO₄ 10%, o volume é 5 vezes maior. Monitorar PA. 1ª escolha IV.", refs: [133, 132, 140] },
+      { id: "salbIV", nome: "Salbutamol IV (bólus)", doseKg: 15, unidade: "mcg", conc: 500, apresentacao: "0,5 mg/mL",
+        como: "Em 10 min, se não respondeu ao inalatório. Depois 1–2 mcg/kg/min, até 5 na UTI, com ECG, K e lactato. Em criança é uso fora da bula no Brasil.", refs: [133, 142, 147] },
+      { id: "aminof", nome: "Aminofilina (ataque)", doseKg: 5, unidade: "mg",
+        como: "IV em 20 min com ECG; omitir se já usa teofilina. Depois 1 mg/kg/h. A GINA não recomenda; considerar só na crise refratária.", refs: [133, 143] },
+      { id: "terb", nome: "Terbutalina SC", doseKg: 0.01, max: 0.25, unidade: "mg", conc: 0.5, apresentacao: "0,5 mg/mL",
+        como: "A cada 20 min, 3 doses (EPR-3). O teto de 0,25 mg é a dose de adulto.", refs: [134] },
+      { id: "adrIM", nome: "Adrenalina IM, se houver anafilaxia", doseKg: 0.01, max: 0.5, unidade: "mg", conc: 1, apresentacao: "1 mg/mL",
+        como: "Na coxa, ANTES do resto, se a crise vier com anafilaxia.", refs: [132] }
+    ]
+  };
+
   /* ===== DADOS:END ===== */
   /* ===== CALC-CORE:BEGIN ===== */
   var CALC = (function(){
@@ -3265,7 +3609,95 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
       return r;
     }
 
+    /* Dose por peso dos protocolos de emergência (EMERGENCIAS). Um item traz
+       doseKg (número ou [mín, máx]) na unidade da própria dose, teto absoluto por
+       dose (max) e piso (min), e opcionalmente a concentração da apresentação
+       (conc, na mesma unidade por mL) para devolver o volume a aspirar.
+       O teto vale para os dois extremos da faixa. */
+    function dosePorPeso(item, peso){
+      var r = { valido: false };
+      if (!item || !(peso > 0)) return r;
+      var faixa = Array.isArray(item.doseKg) ? item.doseKg : [item.doseKg, item.doseKg];
+      if (!(faixa[0] > 0)) return r;
+      r.valido = true;
+      function ajusta(v){
+        var lim = null;
+        if (item.max != null && v > item.max + EPS) { v = item.max; lim = "teto"; }
+        if (item.min != null && v < item.min - EPS) { v = item.min; lim = "piso"; }
+        return { v: v, lim: lim };
+      }
+      var a = ajusta(faixa[0] * peso), b = ajusta(faixa[1] * peso);
+      r.valor = a.v; r.valorMax = b.v;
+      r.faixa = Math.abs(b.v - a.v) > EPS;
+      r.limitado = a.lim || b.lim;
+      if (item.conc && item.conc > 0){
+        r.mL = arredondarBolus(r.valor / item.conc);
+        r.mLMax = arredondarBolus(r.valorMax / item.conc);
+      }
+      return r;
+    }
+
+    /* Cetoacidose diabética (ISPAD 2022, ref-123; conferido no PDF oficial em 18/09/2026).
+       Entrada: peso, pH, HCO3, glicemia (mg/dL), Na, K, choque, perfusão ruim, horas
+       de reposição do déficit (24 ou 48) e dose de insulina (0,05, 0,1 ou "auto").
+       Tudo o que sai é conta; decidir é de quem prescreve. */
+    function calcCAD(o){
+      var r = { valido: false, alertas: [] };
+      var peso = o && o.peso;
+      if (!(peso > 0)) return r;
+      r.valido = true;
+      var ph = o.ph, hco3 = o.hco3;
+      /* gravidade pelo pior entre pH e HCO3 (ISPAD §4) */
+      if (ph > 0 || hco3 >= 0){
+        if ((ph > 0 && ph < 7.1) || (hco3 >= 0 && hco3 < 5)) r.gravidade = "grave";
+        else if ((ph > 0 && ph < 7.2) || (hco3 >= 0 && hco3 < 10)) r.gravidade = "moderada";
+        else if ((ph > 0 && ph < 7.3) || (hco3 >= 0 && hco3 < 18)) r.gravidade = "leve";
+        else r.gravidade = null;
+      }
+      if (r.gravidade === null) r.alertas.push("pH e bicarbonato fora da faixa de CAD (pH < 7,3 ou HCO₃ < 18): confirme o diagnóstico antes de seguir o protocolo.");
+      r.deficitPct = { leve: 5, moderada: 7, grave: 10 }[r.gravidade || "moderada"];
+      /* bolo inicial: 10 mL/kg; 20 mL/kg se perfusão ruim ou choque; teto 1 L por bolo */
+      r.bolusMlKg = (o.choque || o.perfRuim) ? 20 : 10;
+      r.bolusMl = Math.min(peso * r.bolusMlKg, 1000);
+      if (peso * r.bolusMlKg > 1000 + EPS) r.alertas.push("Bolo limitado a 1.000 mL (teto da ISPAD para obesos e adolescentes grandes).");
+      r.manutDia = peso <= 10 ? 100 * peso : peso <= 20 ? 1000 + 50 * (peso - 10) : 1500 + 20 * (peso - 20);
+      r.deficitMl = r.deficitPct / 100 * peso * 1000;
+      r.horas = o.horas === 24 ? 24 : 48;
+      var taxa = Math.max(0, r.deficitMl - r.bolusMl) / r.horas + r.manutDia / 24;
+      r.taxaLimitada = taxa > 500 + EPS;
+      r.taxaMlH = Math.min(taxa, 500);
+      if (r.taxaLimitada) r.alertas.push("Taxa limitada a 500 mL/h (teto da ISPAD); a conta pedia " + fmtBR(taxa) + " mL/h.");
+      /* insulina: 0,05-0,1 U/kg/h, 1 h depois de iniciar os fluidos, sem bólus */
+      var dose = o.insulina === 0.05 || o.insulina === 0.1 ? o.insulina : (ph > 7.15 ? 0.05 : 0.1);
+      r.insulinaUKgH = dose;
+      r.insulinaUH = dose * peso;          /* 50 U em 50 mL: mL/h = U/h */
+      /* potássio */
+      var k = o.k;
+      if (k > 5.5) r.potassio = "sem";
+      else if (k > 0 && k < 3.5) r.potassio = "baixo";
+      else if (k > 0) r.potassio = "normal";
+      else r.potassio = null;
+      if (r.potassio === "baixo") r.alertas.push("K abaixo de 3,5: adie a insulina e reponha K (no máximo 0,5 mEq/kg/h, com monitor). A ISPAD usa 3,5 no texto e 3,0 no sumário; o BSPED usa 3,0.");
+      r.kMEqH = 40 * r.taxaMlH / 1000;
+      if (r.potassio === "normal" && r.kMEqH / peso > 0.5 + EPS) r.alertas.push("Com 40 mEq/L nesta taxa, o K entra a mais de 0,5 mEq/kg/h: reduza a concentração.");
+      /* glicose, sódio corrigido e osmolalidade efetiva */
+      var g = o.glic, na = o.na;
+      if (g > 0 && g <= 300) r.alertas.push("Glicemia ≤ 300 mg/dL: acrescente glicose 5% ao soro (10–12,5% se continuar caindo). Não baixe a insulina de 0,05 U/kg/h enquanto houver cetose.");
+      if (na > 0 && g > 0){
+        r.naCorrigido = na + 1.6 * (g - 100) / 100;
+        r.osmEfetiva = 2 * na + g / 18;
+        if (g > 600 && r.osmEfetiva > 320 && (!(ph > 0) || ph > 7.25)) r.alertas.push("Glicemia > 600, osmolalidade efetiva > 320 e pH > 7,25: pense em estado hiperglicêmico hiperosmolar, que tem outro tratamento (bolo ≥ 20 mL/kg, insulina tardia).");
+      }
+      /* edema cerebral: doses prontas */
+      r.manitolG = [0.5 * peso, 1 * peso];
+      r.manitol20Ml = [r.manitolG[0] / 0.2, r.manitolG[1] / 0.2];
+      r.nacl3Ml = [2.5 * peso, 5 * peso];
+      return r;
+    }
+
     return {
+      calcCAD: calcCAD,
+      dosePorPeso: dosePorPeso,
       massaFator: massaFator, partesDose: partesDose, arredondarVolume: arredondarVolume,
       arredondarBolus: arredondarBolus, classificar: classificar, diluirIC: diluirIC,
       titulacao: titulacao, fmtBR: fmtBR, textoPrescricaoIC: textoPrescricaoIC,
@@ -4330,6 +4762,93 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
     /* Abre em "Todos" (decisão do autor, 17/09/2026): a lista inteira à vista e o
        fármaco escolhido a um toque. */
     if (todosBtn) { filtrar(null); marcar(todosBtn); }
+  })();
+
+  /* ---------- protocolos de emergência: doses por peso ----------
+     Tabelas geradas de EMERGENCIAS (bloco DADOS). O peso é um só no app inteiro:
+     digitar em qualquer campo de peso atualiza a calculadora, os eletrólitos e
+     todas as tabelas de emergência. Sem JS, o texto dos protocolos continua lá;
+     só a tabela calculada fica vazia. */
+  (function(){
+    if (typeof EMERGENCIAS === "undefined") return;
+    var caixas = [].slice.call(document.querySelectorAll("[data-protocolo]"));
+    var campos = [].slice.call(document.querySelectorAll("input.peso-emerg"));
+    if (!caixas.length) return;
+    function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+    function f(v){ return CALC.fmtBR(v); }
+    function render(){
+      var peso = num((campos[0] || $("peso") || {}).value);
+      caixas.forEach(function(box){
+        var lista = EMERGENCIAS[box.getAttribute("data-protocolo")] || [];
+        var h = '<div class="tbl-wrap"><table class="pesotab"><thead><tr><th>Fármaco</th><th>Dose' + (peso > 0 ? " para " + f(peso) + " kg" : "") + '</th><th>Como</th></tr></thead><tbody>';
+        lista.forEach(function(it){
+          var r = CALC.dosePorPeso(it, peso);
+          var dose = "–", ml = "";
+          if (r.valido){
+            dose = (r.faixa ? f(r.valor) + " a " + f(r.valorMax) : f(r.valor)) + " " + it.unidade;
+            if (r.limitado === "teto") dose += '<span class="lim">teto</span>';
+            if (r.limitado === "piso") dose += '<span class="lim">mínimo</span>';
+            if (r.mL != null) ml = '<span class="ml">' + (r.faixa && r.mLMax !== r.mL ? f(r.mL) + " a " + f(r.mLMax) : f(r.mL)) + " mL" + (it.apresentacao ? " de " + esc(it.apresentacao) : "") + "</span>";
+          }
+          var regra = (Array.isArray(it.doseKg) ? f(it.doseKg[0]) + "–" + f(it.doseKg[1]) : f(it.doseKg)) + " " + it.unidade + "/kg" +
+                      (it.max != null ? ", máx " + f(it.max) + " " + it.unidade : "") + (it.min != null ? ", mín " + f(it.min) + " " + it.unidade : "");
+          var cites = (it.refs || []).map(function(n){ return '<a class="cite" href="#ref-' + n + '">' + n + "</a>"; }).join("");
+          h += "<tr><td>" + esc(it.nome) + '<span class="ml">' + esc(regra) + "</span></td>" +
+               '<td><span class="v">' + dose + "</span>" + ml + "</td>" +
+               '<td class="como">' + esc(it.como || "") + cites + "</td></tr>";
+        });
+        box.innerHTML = h + "</tbody></table></div>";
+      });
+    }
+    var trava = false;
+    document.addEventListener("input", function(e){
+      var t = e.target; if (!t || trava) return;
+      if (t.classList && t.classList.contains("peso-emerg")){
+        trava = true;
+        campos.forEach(function(c){ if (c !== t) c.value = t.value; });
+        var pc = $("peso");
+        if (pc){ pc.value = t.value; pc.dispatchEvent(new Event("input", { bubbles: true })); }
+        trava = false;
+        render();
+      } else if (t.id === "peso" || t.id === "elPeso"){
+        campos.forEach(function(c){ c.value = t.value; });
+        render();
+      }
+    });
+    var pc0 = $("peso"); if (pc0) campos.forEach(function(c){ c.value = pc0.value; });
+    render();
+  })();
+
+  /* ---------- calculadora da cetoacidose (CALC.calcCAD) ---------- */
+  (function(){
+    var saida = $("cadRx"); if (!saida) return;
+    function v(id){ var e = $(id); var x = e ? num(e.value) : NaN; return isFinite(x) ? x : NaN; }
+    function m(nome){ var e = document.querySelector('input[name="' + nome + '"]:checked'); return e ? e.value : null; }
+    function f(x){ return CALC.fmtBR(x); }
+    function calc(){
+      var perf = m("cadPerf"), ins = m("cadIns");
+      var r = CALC.calcCAD({ peso: v("cadPeso"), ph: v("cadPh"), hco3: v("cadHco3"), glic: v("cadGlic"),
+        na: v("cadNa"), k: v("cadK"), choque: perf === "choque", perfRuim: perf === "ruim",
+        horas: Number(m("cadHoras")), insulina: ins === "auto" ? null : Number(ins) });
+      var al = $("cadAl");
+      if (!r.valido){ saida.textContent = "Informe o peso."; if (al) al.innerHTML = ""; return; }
+      var L = [];
+      L.push(r.gravidade ? "CAD " + r.gravidade + " · déficit presumido de " + r.deficitPct + "%" : "Gravidade: informe pH ou HCO₃ (usando déficit de 7%)");
+      L.push("1. Bolo de SF 0,9% " + f(r.bolusMl) + " mL (" + r.bolusMlKg + " mL/kg) " + (perf === "choque" ? "o mais rápido possível; reavaliar a cada bolo" : "em 20 a 30 min"));
+      L.push("2. Depois: " + f(r.taxaMlH) + " mL/h de soro com K (déficit − bolo em " + r.horas + " h + manutenção de " + f(r.manutDia) + " mL/dia)");
+      L.push("3. Insulina regular " + f(r.insulinaUH) + " U/h = " + f(r.insulinaUH) + " mL/h de 50 U em 50 mL (" + f(r.insulinaUKgH) + " U/kg/h), 1 h após o início dos fluidos. Sem bólus.");
+      L.push("4. Potássio: " + (r.potassio === "sem" ? "K > 5,5, soro sem K até haver diurese; K de hora em hora" :
+                              r.potassio === "baixo" ? "K < 3,5, repor K e ADIAR a insulina (máx 0,5 mEq/kg/h)" :
+                              r.potassio === "normal" ? "40 mEq/L no soro (" + f(r.kMEqH) + " mEq/h), junto com a insulina" : "informe o K"));
+      if (r.naCorrigido != null) L.push("Na corrigido " + f(r.naCorrigido) + " · osmolalidade efetiva " + f(r.osmEfetiva) + " mOsm/kg");
+      L.push("Edema cerebral: manitol 20% " + f(r.manitol20Ml[0]) + " a " + f(r.manitol20Ml[1]) + " mL (" + f(r.manitolG[0]) + "–" + f(r.manitolG[1]) + " g) ou NaCl 3% " + f(r.nacl3Ml[0]) + " a " + f(r.nacl3Ml[1]) + " mL, em 10 a 15 min");
+      saida.textContent = L.join("\n");
+      if (al) { al.innerHTML = ""; r.alertas.forEach(function(t){ var li = document.createElement("li"); li.textContent = t; al.appendChild(li); }); }
+    }
+    ["cadPh","cadHco3","cadGlic","cadNa","cadK"].forEach(function(id){ var e = $(id); if (e) e.addEventListener("input", calc); });
+    document.querySelectorAll('input[name="cadPerf"], input[name="cadHoras"], input[name="cadIns"]').forEach(function(r){ r.addEventListener("change", calc); });
+    document.addEventListener("input", function(e){ if (e.target && (e.target.classList.contains("peso-emerg") || e.target.id === "peso" || e.target.id === "elPeso")) setTimeout(calc, 0); });
+    calc();
   })();
 
   /* ---------- versão, termo de uso e ponte nativa ---------- */
