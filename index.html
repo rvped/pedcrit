@@ -2087,7 +2087,7 @@ html.nativo .so-web{display:none!important}
 
 <script>
 /* Versão do conteúdo: DEVE ser igual a VERSAO em sw.js (há teste que confere). */
-var APP_VERSAO = "2026-09-18e";
+var APP_VERSAO = "2026-09-18f";
 /* Dentro do app das lojas (Capacitor) há ponte nativa; na web, não. */
 var NATIVO = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacitor.Plugins[nome] || null : null; }
@@ -3931,7 +3931,24 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
       pris: ["infusao do propofol"],
       bnm: ["bloqueio neuromuscular"],
       retirada: ["abstinencia"],
-      abstinencia: ["retirada", "desmame"]
+      abstinencia: ["retirada", "desmame"],
+      /* módulos de emergência (18/09/2026) */
+      convulsao: ["convulsiva", "epileptico", "estado de mal"],
+      convulsoes: ["convulsiva", "epileptico", "estado de mal"],
+      epilepsia: ["epileptico", "convulsiva"],
+      eme: ["estado de mal"],
+      cad: ["cetoacidose"],
+      diabetes: ["cetoacidose", "insulina"],
+      asma: ["asmatica", "broncoespasmo"],
+      broncoespasmo: ["asma", "asmatica"],
+      pcr: ["parada", "reanimacao"],
+      parada: ["pcr", "reanimacao"],
+      rcp: ["pcr", "compress"],
+      reanimacao: ["pcr", "parada"],
+      intubacao: ["tubo", "sequencia rapida", "via aerea"],
+      iot: ["intubacao", "tubo", "sequencia rapida"],
+      sri: ["sequencia rapida", "intubacao"],
+      hipoglicemia: ["glicose"]
     };
 
     /* O índice tem duas camadas. A primeira são os alvos de navegação (seção,
@@ -3948,9 +3965,17 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
       indice.push({ cat: cat, titulo: titulo, sub: "", alvo: alvo, acao: null,
                     el: el, peso: peso, texto: texto, k: chave(texto) });
     }
+    /* texto sem os números de citação, que grudavam no trecho ("ISPAD 2022123") */
+    function semCite(el){
+      if (!el) return "";
+      if (!el.querySelector || !el.querySelector("a.cite")) return el.textContent || "";
+      var c = el.cloneNode(true);
+      c.querySelectorAll("a.cite").forEach(function(a){ a.remove(); });
+      return c.textContent || "";
+    }
     document.querySelectorAll("section.sec[id]").forEach(function(s){
       var h = s.querySelector(".sec-head h2");
-      if (h) add("Seção", h.textContent.trim(), (s.querySelector(".sec-lead") || {}).textContent || "", "#" + s.id);
+      if (h) add("Seção", h.textContent.trim(), semCite(s.querySelector(".sec-lead")), "#" + s.id);
     });
 
     var SEL_BLOCO = "h3,h4,summary,p,li,td,.dbox,.call,.dil";
@@ -3978,7 +4003,7 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
         /* O nome do fármaco já é entrada de navegação, com as etiquetas dele como
            subtítulo. Indexar o h3 de novo só produziria duas linhas iguais na lista. */
         if (el.tagName === "H3" && el.closest("article.drug")) return;
-        var texto = (el.textContent || "").replace(/\s+/g, " ").trim();
+        var texto = semCite(el).replace(/\s+/g, " ").trim();
         if (texto.length < 4) return;
         var dono = el.closest("article.drug, .sc-item, .rule, .card") || s;
         var tit = tituloDe(el, dono);
