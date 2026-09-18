@@ -308,6 +308,7 @@ td.c{text-align:center}
   #d-mid{animation:drugIn .4s ease .25s both}
 }
 .dil{font-size:.88rem;background:var(--surface2);border-radius:9px;padding:7px 10px;margin-top:8px}
+#elNaRec,#elHipoRec{white-space:pre-line}
 
 details{border-top:1px solid var(--line);margin-top:10px}
 details>summary{cursor:pointer;list-style:none;padding:11px 0 9px;font-weight:650;font-size:.93rem;color:var(--brand);display:flex;align-items:center;gap:8px;min-height:44px}
@@ -525,6 +526,22 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   .sc-opt:has(input:checked) .pt{background:none;color:inherit;border-color:#999}
   .seg label:has(input:checked){background:none;color:inherit;font-weight:normal}
 }
+/* ---- app nativo, termo de uso e Sobre ---- */
+html.nativo .so-web{display:none!important}
+.termos{position:fixed;inset:0;z-index:80;background:rgba(8,20,28,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-top:calc(12px + env(safe-area-inset-top))}
+@media (min-width:640px){.termos{align-items:center}}
+.termos .caixa{background:var(--surface);color:var(--ink);border-radius:18px;max-width:560px;width:100%;max-height:100%;overflow:auto;padding:20px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.termos h2{margin:0 0 6px;font-size:1.25rem}
+.termos ul{padding-left:20px;margin:8px 0}
+.termos li{margin:6px 0}
+.termos label.aceite{display:flex;gap:10px;align-items:flex-start;margin:14px 0;font-weight:650;cursor:pointer}
+.termos label.aceite input{width:22px;height:22px;flex:none;margin-top:1px}
+.termos .acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.termos .btn[disabled]{opacity:.45;cursor:not-allowed}
+.sobre-meta{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.92rem}
+.sobre-meta dt{color:var(--muted);font-weight:600}
+.sobre-meta dd{margin:0}
+@media print{.termos{display:none!important}}
 </style>
 </head>
 <body>
@@ -566,7 +583,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   <a href="#fundamentos">Fundamentos</a>
   <a href="#certeza">Grau de certeza</a>
   <a href="#refs">Referências</a>
-  <a href="#instalar">Instalar e compartilhar</a>
+  <a href="#sobre">Sobre e termos de uso</a>
+  <a href="#instalar" class="so-web">Instalar e compartilhar</a>
 </nav>
 
 <main>
@@ -574,7 +592,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
 <!-- ================= INÍCIO ================= -->
 <section class="sec" id="inicio">
   <div class="hero">
-    <p><b>Como usar.</b> A parte de cima de cada seção é o que se faz à beira-leito. O “porquê” (farmacologia, fisiopatologia e evidência) fica recolhido em <b>Por quê</b> — abra quando precisar. Para usar sem internet, <a href="#instalar">instale no celular ou no computador</a>.</p>
+    <p><b>Como usar.</b> A parte de cima de cada seção é o que se faz à beira-leito. O “porquê” (farmacologia, fisiopatologia e evidência) fica recolhido em <b>Por quê</b> — abra quando precisar.<span class="so-web"> Para usar sem internet, <a href="#instalar">instale no celular ou no computador</a>.</span></p>
     <div class="legend-prop" style="margin-top:6px"><span class="tag t-prop">proposta</span><span class="muted">= acréscimo desta edição, além do texto-base; confira antes de adotar na sua rotina.</span></div>
   </div>
 
@@ -1587,8 +1605,32 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   </div>
 </section>
 
-<section class="sec" id="instalar">
-  <div class="sec-head"><span class="n">15</span><h2>Instalar e compartilhar</h2></div>
+<section class="sec" id="sobre">
+  <div class="sec-head"><span class="n">15</span><h2>Sobre e termos de uso</h2></div>
+  <p class="sec-lead">O que o PedCrit é, de onde vem o conteúdo e o que ele não faz.</p>
+  <div class="call c-danger"><b>Ferramenta de apoio, não de decisão</b>Uso exclusivo por profissionais de saúde habilitados. O PedCrit não substitui o julgamento clínico, a prescrição médica, a dupla checagem de enfermagem e farmácia nem o protocolo da sua instituição. Confira toda dose antes de administrar.</div>
+  <div class="card">
+    <h3>O que é</h3>
+    <p>Consulta rápida para quem atende crianças em UTI pediátrica, emergência e pronto-socorro: escalas de dor, sedação, abstinência e delirium; condutas de analgesia e sedação; calculadora de doses por peso; correção de sódio e potássio.</p>
+    <h3>Como o conteúdo é construído</h3>
+    <ul>
+      <li>Cada dose, teto e conduta traz a fonte numerada, que abre em <a href="#refs">Referências</a>: diretrizes (PANDEM/SCCM 2022, ESPNIC, PALICC-2), bulas e estudos primários.</li>
+      <li>A força de cada recomendação está em <a href="#certeza">Grau de certeza</a>.</li>
+      <li>A etiqueta <span class="tag t-prop">proposta</span> marca o que vai além do texto-base e merece conferência antes de virar rotina.</li>
+      <li>As calculadoras fazem conta, não escolha: a indicação, a dose final e a via são decisão de quem prescreve.</li>
+    </ul>
+    <h3>Privacidade</h3>
+    <p>O PedCrit não pede cadastro, não coleta, não envia e não guarda dados de pacientes. Peso, escores e valores digitados ficam só na tela e somem ao fechar. O único registro salvo no aparelho é o aceite destes termos. Detalhes na <a href="privacidade.html">política de privacidade</a> e nos <a href="termos.html">termos de uso completos</a>.</p>
+    <dl class="sobre-meta">
+      <dt>Versão</dt><dd id="sobreVersao">—</dd>
+      <dt>Contato</dt><dd><a href="https://github.com/rvped/pedcrit/issues" rel="noopener">relatar erro ou sugerir melhoria</a></dd>
+    </dl>
+    <p style="margin-top:12px"><button type="button" class="btn" id="termosRever">Rever termo de uso</button></p>
+  </div>
+</section>
+
+<section class="sec so-web" id="instalar">
+  <div class="sec-head"><span class="n">16</span><h2>Instalar e compartilhar</h2></div>
   <div class="card">
     <div class="qrbox">
       <img src="qr.svg" alt="QR code do endereço do protocolo" width="200" height="200">
@@ -1637,11 +1679,17 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <a href="#fundamentos" data-close>Fundamentos</a>
     <a href="#certeza" data-close>Grau de certeza</a>
     <a href="#refs" data-close>Referências</a>
-    <a href="#instalar" data-close>Instalar e compartilhar</a>
+    <a href="#sobre" data-close>Sobre e termos de uso</a>
+    <a href="#instalar" data-close class="so-web">Instalar e compartilhar</a>
   </div>
 </div>
 
 <script>
+/* Versão do conteúdo: DEVE ser igual a VERSAO em sw.js (há teste que confere). */
+var APP_VERSAO = "2026-09-18a";
+/* Dentro do app das lojas (Capacitor) há ponte nativa; na web, não. */
+var NATIVO = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacitor.Plugins[nome] || null : null; }
 (function(){
   "use strict";
   var $ = function(id){ return document.getElementById(id); };
@@ -3259,6 +3307,18 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     });
 
     var SEL_BLOCO = "h3,h4,summary,p,li,td,.dbox,.call,.dil";
+    /* Título do resultado = o h3/h4/legend mais próximo ANTES do trecho, dentro do
+       mesmo bloco. Pegar só o primeiro título do bloco rotulava errado os cartões
+       com vários subtítulos e as regras de "Em 30 segundos". */
+    function tituloDe(el, dono){
+      if (/^(H3|H4)$/.test(el.tagName)) return el;
+      var cands = dono.querySelectorAll("h3, h4, legend"), achado = null;
+      for (var i = 0; i < cands.length; i++){
+        if (cands[i].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) achado = cands[i];
+        else if (!cands[i].contains(el)) break;
+      }
+      return achado || cands[0] || null;
+    }
     /* Fora: navegação (o texto dela duplica títulos), o cabeçalho da seção (já é
        entrada de navegação) e a própria barra de busca. */
     var SEL_FORA = ".atalhos,.searchbar,.drugnav,.bottomnav,.side,.drawer,.sec-head,.sec-lead";
@@ -3273,8 +3333,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         if (el.tagName === "H3" && el.closest("article.drug")) return;
         var texto = (el.textContent || "").replace(/\s+/g, " ").trim();
         if (texto.length < 4) return;
-        var dono = el.closest("article.drug, .sc-item, .card") || s;
-        var tit = dono.querySelector("h3, legend");
+        var dono = el.closest("article.drug, .sc-item, .rule, .card") || s;
+        var tit = tituloDe(el, dono);
         addBloco(nomeSec, tit ? tit.textContent.trim() : nomeSec, texto,
                  "#" + s.id, PESO_TAG[el.tagName] || 2, el);
       });
@@ -3368,7 +3428,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
         a.appendChild(c); a.appendChild(nm);
         if (it.sub) { var s = document.createElement("span"); s.className = "sub"; s.textContent = it.sub; a.appendChild(s); }
         var tr = it.texto ? trecho(it.texto, ts) : null;
-        if (tr && tr.hit !== it.titulo) {
+        /* sem trecho quando o bloco achado É o próprio título (evita a linha repetida) */
+        if (tr && tr.hit !== it.titulo && it.texto !== it.titulo) {
           var dv = document.createElement("span"); dv.className = "trecho";
           var b = document.createElement("b"); b.textContent = tr.hit;
           dv.appendChild(document.createTextNode(tr.antes));
@@ -4054,7 +4115,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       linhas.push("Déficit até o alvo: " + CALC.fmtBR(r.deficitMEq) + " mEq de sódio");
       $("elHipoRx").textContent = linhas.join("\n");
       lista($("elHipoAl"), r.alertas);
-      var rec = CALC.ELETROLITOS.hipoNa.receitas.map(function(x){ return "• " + x.rotulo + " — " + x.nota; }).join("\n");
+      var rec = CALC.ELETROLITOS.hipoNa.receitas.map(function(x){ return "• " + x.rotulo + " " + x.nota; }).join("\n");
       $("elHipoRec").textContent = "Como obter NaCl 3% com o estoque básico:\n" + rec;
       $("elHipoRec").hidden = false;
     }
@@ -4229,6 +4290,92 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     if (todosBtn) { filtrar(null); marcar(todosBtn); }
   })();
 
+  /* ---------- versão, termo de uso e ponte nativa ---------- */
+  var elVer = $("sobreVersao"); if (elVer) elVer.textContent = APP_VERSAO + (NATIVO ? " · app " + (window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : "") : " · web");
+
+  /* Termo de uso: exigência das lojas para app médico (Apple 1.4.1) e proteção
+     de quem usa. Criado por JavaScript: se o script falhar, o conteúdo continua
+     acessível (a regra de ouro do projeto). O aceite é o ÚNICO dado guardado. */
+  var TERMOS_VERSAO = "1";
+  var CHAVE_TERMOS = "pedcrit.termos";
+  function lerAceite(cb){
+    var v = null; try { v = localStorage.getItem(CHAVE_TERMOS); } catch(e){}
+    if (v === TERMOS_VERSAO || !PLUG("Preferences")) return cb(v);
+    /* no app, o localStorage do WebView pode ser limpo pelo sistema; Preferences não */
+    PLUG("Preferences").get({ key: CHAVE_TERMOS }).then(function(r){ cb(r && r.value); }, function(){ cb(v); });
+  }
+  function gravarAceite(){
+    try { localStorage.setItem(CHAVE_TERMOS, TERMOS_VERSAO); } catch(e){}
+    if (PLUG("Preferences")) PLUG("Preferences").set({ key: CHAVE_TERMOS, value: TERMOS_VERSAO }).catch(function(){});
+  }
+  function abrirTermos(obrigatorio){
+    if (document.querySelector(".termos")) return;
+    var foco = document.activeElement;
+    var t = document.createElement("div");
+    t.className = "termos"; t.setAttribute("role", "dialog"); t.setAttribute("aria-modal", "true"); t.setAttribute("aria-labelledby", "termosTit");
+    t.innerHTML = '<div class="caixa">' +
+      '<h2 id="termosTit">Antes de usar o PedCrit</h2>' +
+      '<p class="small muted" style="margin:0 0 6px">Termo de uso · versão ' + TERMOS_VERSAO + '</p>' +
+      '<ul>' +
+      '<li>É uma ferramenta de <b>apoio</b> para <b>profissionais de saúde</b>. Não substitui o julgamento clínico, a prescrição nem o protocolo da sua instituição.</li>' +
+      '<li><b>Confira toda dose</b> antes de administrar. As calculadoras fazem conta; a decisão é de quem prescreve.</li>' +
+      '<li>O conteúdo segue diretrizes e estudos citados em Referências, que podem mudar. Na dúvida, prevalece a fonte e o protocolo local.</li>' +
+      '<li>Nenhum dado de paciente é coletado ou enviado.</li>' +
+      '</ul>' +
+      '<p class="small"><a href="termos.html">Termos completos</a> · <a href="privacidade.html">Privacidade</a></p>' +
+      (obrigatorio ? '<label class="aceite"><input type="checkbox" id="termosOk"> Sou profissional de saúde e li o termo de uso.</label>' : '') +
+      '<div class="acoes"><button type="button" class="btn fill" id="termosBtn"' + (obrigatorio ? ' disabled' : '') + '>' + (obrigatorio ? 'Aceitar e continuar' : 'Fechar') + '</button></div>' +
+      '</div>';
+    document.body.appendChild(t);
+    var btn = t.querySelector("#termosBtn"), ok = t.querySelector("#termosOk");
+    if (ok) ok.addEventListener("change", function(){ btn.disabled = !ok.checked; });
+    btn.addEventListener("click", function(){
+      if (obrigatorio) gravarAceite();
+      t.remove(); if (foco && foco.focus) foco.focus();
+    });
+    t.addEventListener("keydown", function(e){
+      if (e.key === "Escape" && !obrigatorio) { btn.click(); return; }
+      if (e.key !== "Tab") return;
+      /* prende o foco dentro do termo */
+      var f = [].slice.call(t.querySelectorAll("a, input, button:not([disabled])"));
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    });
+    (ok || btn).focus();
+  }
+  lerAceite(function(v){ if (v !== TERMOS_VERSAO) abrirTermos(true); });
+  var rever = $("termosRever"); if (rever) rever.addEventListener("click", function(){ abrirTermos(false); });
+
+  if (NATIVO) {
+    document.documentElement.classList.add("nativo");
+    /* toque sutil ao marcar item de escala, opção ou checklist */
+    if (PLUG("Haptics")) document.addEventListener("change", function(e){
+      var el = e.target;
+      if (el && (el.type === "radio" || el.type === "checkbox")) PLUG("Haptics").selectionChanged().catch(function(){});
+    });
+    /* barra de status acompanhando o tema claro/escuro */
+    var SB = PLUG("StatusBar");
+    function barra(){
+      if (!SB) return;
+      var escuro = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+      SB.setStyle({ style: "DARK" }).catch(function(){}); /* texto claro sobre o azul do topo */
+      if (window.Capacitor.getPlatform() === "android") SB.setBackgroundColor({ color: escuro ? "#0b3b4a" : "#0e5f78" }).catch(function(){});
+    }
+    barra();
+    if (window.matchMedia) { var mq = matchMedia("(prefers-color-scheme: dark)"); if (mq.addEventListener) mq.addEventListener("change", barra); }
+    /* botão voltar do Android: fecha o que estiver aberto, volta de tela, e só sai do app na tela inicial */
+    var APP = PLUG("App");
+    if (APP) APP.addListener("backButton", function(){
+      var termo = document.querySelector(".termos");
+      if (termo) { if (!termo.querySelector("#termosOk")) termo.remove(); return; }
+      if (drawer.classList.contains("open")) { drawer.classList.remove("open"); drawer.setAttribute("aria-hidden","true"); return; }
+      var busca = $("searchBar"); if (busca && !busca.hidden) { $("searchClose").click(); return; }
+      if (telaAtual && telaAtual !== "inicio") { if (history.length > 1) history.back(); else location.hash = "#inicio"; return; }
+      APP.exitApp();
+    });
+  }
+
   /* ---------- compartilhar / instalar ---------- */
   var URL_FIXA = "https://rvped.github.io/pedcrit/";
   var toastEl = document.createElement("div"); toastEl.className = "toast"; toastEl.setAttribute("role", "status"); document.body.appendChild(toastEl);
@@ -4238,6 +4385,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     else toast(URL_FIXA);
   });
   $("shareBtn").addEventListener("click", function(){
+    if (PLUG("Share")) { PLUG("Share").share({ title: "PedCrit", text: "PedCrit · UTI pediátrica e emergência", url: URL_FIXA, dialogTitle: "Compartilhar o PedCrit" }).catch(function(){}); return; }
     if (navigator.share) navigator.share({title:"PedCrit", url:URL_FIXA}).catch(function(){});
     else location.hash = "#instalar";
   });
@@ -4250,7 +4398,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
   });
 
   /* ---------- offline e aviso de versão nova ---------- */
-  if ("serviceWorker" in navigator && location.protocol === "https:") {
+  if ("serviceWorker" in navigator && location.protocol === "https:" && !NATIVO) {
     navigator.serviceWorker.register("sw.js").then(function(reg){
       function avisar(w){ $("updBar").hidden = false; $("updBtn").onclick = function(){ w.postMessage("atualizar"); }; }
       if (reg.waiting && navigator.serviceWorker.controller) avisar(reg.waiting);

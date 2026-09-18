@@ -1,11 +1,13 @@
 /* Service worker — funciona sem internet e avisa quando há versão nova.
    Troque VERSAO a cada publicação para invalidar o cache. */
-const VERSAO = "2026-09-17f";
+const VERSAO = "2026-09-18a";
 const CACHE = "pedcrit-" + VERSAO;
 const ARQUIVOS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./privacidade.html",
+  "./termos.html",
   "./qr.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
