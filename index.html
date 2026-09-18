@@ -592,6 +592,7 @@ html.nativo .so-web{display:none!important}
   <a href="#estadomal">Estado de mal epiléptico</a>
   <a href="#cad">Cetoacidose diabética</a>
   <a href="#asma">Crise asmática grave</a>
+  <a href="#pcr">PCR e via aérea</a>
   <div class="grp">Consulta</div>
   <a href="#fundamentos">Fundamentos</a>
   <a href="#certeza">Grau de certeza</a>
@@ -623,6 +624,7 @@ html.nativo .so-web{display:none!important}
     <a class="atalho" href="#estadomal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><span class="t">Estado de mal</span><span class="d">Convulsão ≥ 5 min</span></a>
     <a class="atalho" href="#cad"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/></svg><span class="t">Cetoacidose</span><span class="d">Fluidos, insulina, K</span></a>
     <a class="atalho" href="#asma"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M12 11c-2 0-7 1-7 7 0 2 1 3 3 3 3 0 4-4 4-10zM12 11c2 0 7 1 7 7 0 2-1 3-3 3-3 0-4-4-4-10z"/></svg><span class="t">Asma grave</span><span class="d">PRAM, magnésio, IV</span></a>
+    <a class="atalho" href="#pcr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8zM8 12h2l1-2 2 4 1-2h2"/></svg><span class="t">PCR e via aérea</span><span class="d">Choque, drogas, tubo</span></a>
   </div>
 
   <div class="sec-head"><span class="n">00</span><h2>Em 30 segundos</h2></div>
@@ -1478,6 +1480,90 @@ html.nativo .so-web{display:none!important}
   </div>
 </section>
 
+<section class="sec" id="pcr">
+  <div class="sec-head"><span class="n">E4</span><h2>PCR e via aérea</h2></div>
+  <p class="sec-lead">Parada, arritmia com instabilidade e sequência rápida, com doses por peso e tubo pela idade. AHA 2025<a class="cite" href="#ref-55">55</a> com as diferenças do ERC 2025<a class="cite" href="#ref-150">150</a>.</p>
+  <div class="call c-danger"><b>Compressão de qualidade primeiro</b>1/3 do tórax (≈ 4 cm no lactente, 5 cm na criança; nunca mais de 6 cm), 100–120/min, retorno completo, pausas de menos de 10 s. Sem via aérea avançada, 15:2 com 2 socorristas. Com tubo ou máscara laríngea, compressões contínuas e 1 ventilação a cada 2–3 s.<a class="cite" href="#ref-148">148</a><a class="cite" href="#ref-149">149</a><a class="cite" href="#ref-150">150</a></div>
+  <div class="pesobar"><label class="field"><span>Peso (kg)</span><input type="number" class="peso-emerg" id="pcrPeso" min="0.4" max="150" step="0.1" value="10" inputmode="decimal"></label><span class="small muted">O peso é o mesmo em todo o app.</span></div>
+  <h3>Parada e arritmias</h3>
+  <div data-protocolo="pcr"></div>
+  <div class="card">
+  <div class="flow">
+    <div class="fstep"><div class="fdot">1</div><div class="fbody">
+      <h4>Ritmo chocável (FV ou TV sem pulso)</h4>
+      <ul>
+        <li>Choque o quanto antes, depois 2 min de RCP. Adrenalina após o 2º choque; amiodarona ou lidocaína se persistir após os choques.<a class="cite" href="#ref-149">149</a></li>
+        <li>Um choque de cada vez; não empilhar.<a class="cite" href="#ref-55">55</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">2</div><div class="fbody">
+      <h4>Assistolia ou AESP</h4>
+      <ul>
+        <li>Adrenalina o quanto antes, repetindo a cada 3–5 min. Procure causas reversíveis: hipovolemia, hipóxia, acidose, hipoglicemia, hipo ou hipercalemia, hipotermia, pneumotórax hipertensivo, tamponamento, toxinas, trombose.<a class="cite" href="#ref-149">149</a></li>
+        <li>Com linha arterial, mire PA diastólica ≥ 25 mmHg no lactente e ≥ 30 mmHg a partir de 1 ano.<a class="cite" href="#ref-55">55</a></li>
+        <li>PCR intra-hospitalar refratária em centro com programa: considere ECMO (ECPR).<a class="cite" href="#ref-55">55</a><a class="cite" href="#ref-150">150</a></li>
+      </ul>
+    </div></div>
+    <div class="fstep"><div class="fdot">3</div><div class="fbody">
+      <h4>Depois do retorno da circulação</h4>
+      <ul>
+        <li>SpO₂ 94–99%, sem hipóxia nem hiperóxia. PaCO₂ normal (35–45 mmHg) ou a basal do paciente.<a class="cite" href="#ref-55">55</a></li>
+        <li>PAS e PAM acima do percentil 10 para a idade, com PA invasiva se possível.<a class="cite" href="#ref-55">55</a></li>
+        <li>Temperatura central contínua; <b>nunca acima de 37,5 °C</b>. No comatoso, controle de temperatura por 5 dias (32–34 °C e depois 36–37,5 °C, ou 36–37,5 °C direto).<a class="cite" href="#ref-55">55</a><a class="cite" href="#ref-160">160</a></li>
+        <li>EEG contínuo se houver encefalopatia; tratar crises clínicas. Checar a glicemia.<a class="cite" href="#ref-55">55</a><a class="cite" href="#ref-150">150</a></li>
+      </ul>
+    </div></div>
+  </div>
+  </div>
+
+  <h3>Sequência rápida de intubação</h3>
+  <div data-protocolo="sri"></div>
+  <div class="card">
+    <h3>Tubo pela idade</h3>
+    <div class="grid g2">
+      <label class="field"><span>Idade (anos; 0,5 = 6 meses)</span><input type="number" id="tuboIdade" min="0" max="18" step="0.5" value="4" inputmode="decimal"></label>
+    </div>
+    <div class="rx" id="tuboRx"></div>
+    <p class="small muted">Com cuff é o preferido (pressão do cuff abaixo de 20–25 cmH₂O).<a class="cite" href="#ref-55">55</a> Deixe separados tubos 0,5 mm acima e abaixo. A regra de 3 × DI erra a profundidade em 15–25% dos casos: confirme por capnografia e radiografia.<a class="cite" href="#ref-151">151</a><a class="cite" href="#ref-158">158</a></p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Máscara laríngea i-gel</th><th>Peso</th></tr></thead>
+      <tbody><tr><td>1</td><td>2–5 kg</td></tr><tr><td>1,5</td><td>5–12 kg</td></tr><tr><td>2</td><td>10–25 kg</td></tr><tr><td>2,5</td><td>25–35 kg</td></tr><tr><td>3</td><td>30–60 kg</td></tr><tr><td>4</td><td>50–90 kg</td></tr></tbody>
+    </table></div>
+    <p class="small muted">Tamanhos do fabricante (Intersurgical).</p>
+  </div>
+  <div class="card">
+    <h3>Antes e depois de intubar</h3>
+    <ul>
+      <li>Plano B pronto: máscara laríngea e ajuda experiente. Pré-oxigenar com O₂ a 100% e usar O₂ nasal durante a laringoscopia, sobretudo no lactente.<a class="cite" href="#ref-150">150</a><a class="cite" href="#ref-165">165</a></li>
+      <li>Pressão cricoide não é rotina.<a class="cite" href="#ref-55">55</a> Cada tentativa de 30–60 s; parar se bradicardia ou dessaturação. No máximo 4 tentativas.<a class="cite" href="#ref-150">150</a></li>
+      <li>Confirmar o tubo com a curva de capnografia.<a class="cite" href="#ref-55">55</a><a class="cite" href="#ref-165">165</a></li>
+      <li>Analgesia e sedação logo após intubar: veja <a href="#farmacos">Fármacos</a> e a <a href="#calc">calculadora</a>. Com rocurônio, a paralisia dura 30–60 min ou mais; ninguém fica acordado sob bloqueio.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Sinais vitais normais (ERC 2025)</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Idade</th><th>FR</th><th>FC</th><th>PAS p50 / p10 / p5</th><th>PAM p50 / p10 / p5</th></tr></thead>
+      <tbody>
+        <tr><td>1 mês</td><td>25–60</td><td>110–180</td><td>75 / 55 / 50</td><td>55 / 45 / 40</td></tr>
+        <tr><td>1 ano</td><td>20–50</td><td>100–170</td><td>95 / 75 / 70</td><td>70 / 55 / 50</td></tr>
+        <tr><td>2 anos</td><td>18–40</td><td>90–160</td><td>98 / 77 / 73</td><td>73 / 58 / 53</td></tr>
+        <tr><td>5 anos</td><td>17–30</td><td>70–140</td><td>100 / 80 / 75</td><td>75 / 60 / 55</td></tr>
+        <tr><td>10 anos</td><td>14–25</td><td>60–120</td><td>110 / 85 / 80</td><td>75 / 60 / 55</td></tr>
+        <tr><td>18 anos</td><td>12–20</td><td>60–100</td><td>120 / 105 / 90</td><td>75 / 65 / 60</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">Valores aproximados; interpole nas idades intermediárias. O p10 é o alvo após a PCR; o p5 é o mínimo no choque.<a class="cite" href="#ref-150">150</a><a class="cite" href="#ref-161">161</a></p>
+    <details><summary>Por quê, e onde AHA e ERC divergem</summary><div class="dx">
+      <p><b>Energia.</b> A AHA recomenda 2–4 J/kg no 1º choque (2 J/kg para facilitar o ensino) e 4 J/kg ou mais nos seguintes, até 10 J/kg ou a dose de adulto; o ERC usa 4 J/kg desde o início.<a class="cite" href="#ref-55">55</a><a class="cite" href="#ref-150">150</a></p>
+      <p><b>Antiarrítmico.</b> Amiodarona ou lidocaína: num estudo observacional de PCR intra-hospitalar pediátrica, a lidocaína teve mais retorno da circulação, sem diferença de sobrevida na alta; noutro, pareado, não houve diferença.<a class="cite" href="#ref-55">55</a><a class="cite" href="#ref-159">159</a> A amiodarona IV não tem uso pediátrico estabelecido na bula.<a class="cite" href="#ref-163">163</a></p>
+      <p><b>Temperatura.</b> Nos ensaios THAPCA, 33 °C não foi superior a 36,8 °C; por isso a meta atual é evitar febre.<a class="cite" href="#ref-160">160</a></p>
+      <p><b>Glicose.</b> O ERC 2025 usa 0,2 g/kg e glicemia de novo em 5–10 min; a AHA 2010 usava 0,5–1 g/kg. A tabela segue o ERC, mais recente.<a class="cite" href="#ref-150">150</a><a class="cite" href="#ref-151">151</a></p>
+      <p><b>Sequência rápida.</b> AHA e ERC 2025 não dão dose de indutor nem de bloqueador; as doses vêm de bula e de estudos, com usos fora de bula em crianças (cetamina abaixo de 16 anos, etomidato abaixo de 10, rocurônio na sequência rápida).<a class="cite" href="#ref-152">152</a><a class="cite" href="#ref-153">153</a><a class="cite" href="#ref-154">154</a><a class="cite" href="#ref-155">155</a><a class="cite" href="#ref-40">40</a></p>
+    </div></details>
+  </div>
+</section>
+
 <section class="sec" id="especiais">
   <div class="sec-head"><span class="n">07</span><h2>Situações especiais</h2></div>
   <p class="sec-lead">Escolha do agente conforme o cenário. Toque na tabela e deslize para os lados no celular.</p>
@@ -1741,7 +1827,7 @@ html.nativo .so-web{display:none!important}
 <section class="sec" id="refs">
   <div class="sec-head"><span class="n">14</span><h2>Referências</h2></div>
   <div class="card">
-  <details><summary>Mostrar as 147 referências</summary>
+  <details><summary>Mostrar as 165 referências</summary>
   <ol class="refs">
     <li id="ref-1">Smith HAB, Besunder JB, Betters KA, et al. 2022 Society of Critical Care Medicine Clinical Practice Guidelines on Prevention and Management of Pain, Agitation, Neuromuscular Blockade, and Delirium in Critically Ill Pediatric Patients With Consideration of the ICU Environment and Early Mobility (PANDEM). <i>Pediatr Crit Care Med.</i> 2022;23(2):e74-e110. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/35119438/" target="_blank" rel="noopener">PubMed</a> · <a href="https://doi.org/10.1097/PCC.0000000000002873" target="_blank" rel="noopener">DOI</a></span></li>
     <li id="ref-2">Emeriaud G, López-Fernández YM, Iyer NP, et al. Executive Summary of the Second International Guidelines for the Diagnosis and Management of Pediatric Acute Respiratory Distress Syndrome (PALICC-2). <i>Pediatr Crit Care Med.</i> 2023;24(2):143-168. <span class="rl"><a href="https://pubmed.ncbi.nlm.nih.gov/36661420/" target="_blank" rel="noopener">PubMed</a></span></li>
@@ -1890,6 +1976,24 @@ html.nativo .so-web{display:none!important}
     <li id="ref-145">Camargo CA Jr, Spooner CH, Rowe BH. Continuous versus intermittent beta-agonists in the treatment of acute asthma. Cochrane Database Syst Rev 2003;(4):CD001115. <span class="rl"><a href="https://doi.org/10.1002/14651858.CD001115" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/14583926/" target="_blank" rel="noopener">PubMed</a></span></li>
     <li id="ref-146">Korang SK, Baker M, Feinberg J, et al. Non-invasive positive pressure ventilation for acute asthma in children. Cochrane Database Syst Rev 2024;10:CD012067. <span class="rl"><a href="https://doi.org/10.1002/14651858.CD012067.pub3" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/39356050/" target="_blank" rel="noopener">PubMed</a></span></li>
     <li id="ref-147">GlaxoSmithKline Brasil. Aerolin injetável (sulfato de salbutamol 0,5 mg/mL) — bula para o profissional de saúde. <span class="rl"><a href="https://br.gsk.com/media/wnwjucvl/aerolin-iv.pdf" target="_blank" rel="noopener">GSK</a></span></li>
+    <li id="ref-148">Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 American Heart Association and American Academy of Pediatrics Guidelines for CPR and ECC. Circulation 2025;152(16 Suppl 2):S424-S447. <span class="rl"><a href="https://doi.org/10.1161/CIR.0000000000001370" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/41122891/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-149">American Heart Association; American Academy of Pediatrics. Pediatric Cardiac Arrest Algorithm e Pediatric Tachyarrhythmia With a Pulse Algorithm, 2025. Conferido na figura oficial em 18/09/2026. <span class="rl"><a href="https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms" target="_blank" rel="noopener">AHA</a></span></li>
+    <li id="ref-150">Djakow J, Turner NM, Skellett S, et al. European Resuscitation Council Guidelines 2025: Paediatric Life Support. Resuscitation 2025;215 Suppl 1:110767. <span class="rl"><a href="https://doi.org/10.1016/j.resuscitation.2025.110767" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/41117571/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-151">Kleinman ME, Chameides L, Schexnayder SM, et al. Part 14: Pediatric Advanced Life Support: 2010 American Heart Association Guidelines for CPR and ECC. Circulation 2010;122(18 Suppl 3):S876-S908. <span class="rl"><a href="https://doi.org/10.1161/CIRCULATIONAHA.110.971101" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/20956230/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-152">U.S. Food and Drug Administration / DailyMed. Quelicin (succinylcholine chloride) injection, Hospira — prescribing information. <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=fb08161e-7711-406d-e7b3-ea4515c07983" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-153">U.S. Food and Drug Administration / DailyMed. Bridion (sugammadex) injection, Merck — prescribing information (versão de 13/03/2026). <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=5171d883-fe8f-482c-97ab-40b00975b64a" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-154">U.S. Food and Drug Administration / DailyMed. Ketamine hydrochloride injection, Baxter — prescribing information. <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=549d6ed3-3c9b-4ea2-8aaf-f61d43e04602" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-155">U.S. Food and Drug Administration / DailyMed. Amidate (etomidate) injection, Hospira — prescribing information. <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b7ed5bf8-ba75-44dc-8f81-96b4ad5766be" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-156">den Brinker M, Hokken-Koelega AC, Hazelzet JA, et al. One single dose of etomidate negatively influences adrenocortical performance for at least 24h in children with meningococcal sepsis. Intensive Care Med 2008;34(1):163-168. <span class="rl"><a href="https://doi.org/10.1007/s00134-007-0836-3" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/17710382/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-157">Mazurek AJ, Rae B, Hann S, et al. Rocuronium versus succinylcholine: are they equally effective during rapid-sequence induction of anesthesia? Anesth Analg 1998;87(6):1259-1262. <span class="rl"><a href="https://doi.org/10.1097/00000539-199812000-00009" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/9842809/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-158">Phipps LM, Thomas NJ, Gilmore RK, et al. Prospective assessment of guidelines for determining appropriate depth of endotracheal tube placement in children. Pediatr Crit Care Med 2005;6(5):519-522. <span class="rl"><a href="https://doi.org/10.1097/01.pcc.0000165802.32383.9e" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/16148809/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-159">Holmberg MJ, Ross CE, Atkins DL, et al. Lidocaine versus amiodarone for pediatric in-hospital cardiac arrest: an observational study. Resuscitation 2020;149:191-201. <span class="rl"><a href="https://doi.org/10.1016/j.resuscitation.2019.12.033" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/31954741/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-160">Moler FW, Silverstein FS, Holubkov R, et al. Therapeutic hypothermia after out-of-hospital cardiac arrest in children (THAPCA-OH). N Engl J Med 2015;372(20):1898-1908. <span class="rl"><a href="https://doi.org/10.1056/NEJMoa1411480" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/25913022/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-161">Fleming S, Thompson M, Stevens R, et al. Normal ranges of heart rate and respiratory rate in children from birth to 18 years of age: a systematic review of observational studies. Lancet 2011;377(9770):1011-1018. <span class="rl"><a href="https://doi.org/10.1016/S0140-6736(10)62226-X" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/21411136/" target="_blank" rel="noopener">PubMed</a></span></li>
+    <li id="ref-162">U.S. Food and Drug Administration / DailyMed. Naloxone hydrochloride injection — prescribing information. <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=b1303f15-c48b-a44d-b28a-72f370094e02" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-163">U.S. Food and Drug Administration / DailyMed. Nexterone (amiodarone HCl) injection, Baxter — prescribing information. <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=e9108958-b8d7-4fba-87c3-9a32990de551" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-164">U.S. Food and Drug Administration / DailyMed. Fentanyl citrate injection, Hospira — prescribing information. <span class="rl"><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=bfa8018a-4cbc-434b-e09e-782872b0340a" target="_blank" rel="noopener">DailyMed</a></span></li>
+    <li id="ref-165">Disma N, Asai T, Cools E, et al. Airway management in neonates and infants: European Society of Anaesthesiology and Intensive Care and British Journal of Anaesthesia joint guidelines. Eur J Anaesthesiol 2024;41(1):3-23. <span class="rl"><a href="https://doi.org/10.1097/EJA.0000000000001928" target="_blank" rel="noopener">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/38018248/" target="_blank" rel="noopener">PubMed</a></span></li>
   </ol>
   </details>
   </div>
@@ -1965,6 +2069,7 @@ html.nativo .so-web{display:none!important}
     <a href="#estadomal" data-close>Estado de mal epiléptico</a>
     <a href="#cad" data-close>Cetoacidose diabética</a>
     <a href="#asma" data-close>Crise asmática grave</a>
+    <a href="#pcr" data-close>PCR e via aérea</a>
     <a href="#agitado" data-close>Paciente agitado</a>
     <a href="#escada" data-close>Escada de escalonamento</a>
     <a href="#especiais" data-close>Situações especiais</a>
@@ -1982,7 +2087,7 @@ html.nativo .so-web{display:none!important}
 
 <script>
 /* Versão do conteúdo: DEVE ser igual a VERSAO em sw.js (há teste que confere). */
-var APP_VERSAO = "2026-09-18d";
+var APP_VERSAO = "2026-09-18e";
 /* Dentro do app das lojas (Capacitor) há ponte nativa; na web, não. */
 var NATIVO = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacitor.Plugins[nome] || null : null; }
@@ -3204,6 +3309,56 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
         como: "A cada 20 min, 3 doses (EPR-3). O teto de 0,25 mg é a dose de adulto.", refs: [134] },
       { id: "adrIM", nome: "Adrenalina IM, se houver anafilaxia", doseKg: 0.01, max: 0.5, unidade: "mg", conc: 1, apresentacao: "1 mg/mL",
         como: "Na coxa, ANTES do resto, se a crise vier com anafilaxia.", refs: [132] }
+    ],
+    /* PCR e arritmias: AHA 2025 (ref-55, algoritmo ref-149, conferido na figura oficial em
+       18/09/2026), ERC 2025 (ref-150) e AHA 2010 (ref-151) onde 2025 não dá dose. Pesquisa G. */
+    pcr: [
+      { id: "adr", nome: "Adrenalina IV/IO", doseKg: 0.01, max: 1, unidade: "mg", conc: 0.1, apresentacao: "0,1 mg/mL (1 mL de 1 mg/mL + 9 mL de SF)",
+        como: "A cada 3–5 min. Ritmo não chocável: já. Chocável: depois do 2º choque.", refs: [55, 149] },
+      { id: "choque1", nome: "Desfibrilação, 1º choque", doseKg: 2, unidade: "J",
+        como: "Choque único e volta imediata às compressões. A AHA aceita 2–4 J/kg; o ERC usa 4 J/kg desde o 1º.", refs: [55, 150] },
+      { id: "choque2", nome: "Desfibrilação, 2º choque em diante", doseKg: 4, unidade: "J",
+        como: "Nos seguintes, 4 J/kg ou mais.", refs: [55, 149] },
+      { id: "choqueMax", nome: "Teto dos choques seguintes", doseKg: 10, max: 360, unidade: "J",
+        como: "Não passar de 10 J/kg nem da dose de adulto do aparelho.", refs: [55] },
+      { id: "amio", nome: "Amiodarona (FV/TVsp refratária)", doseKg: 5, max: 300, unidade: "mg", conc: 50, apresentacao: "50 mg/mL",
+        como: "Bólus. Pode repetir até 3 doses; da 2ª em diante, no máximo 150 mg. O ERC dá 2 doses, após o 3º e o 5º choque.", refs: [149, 150] },
+      { id: "lido", nome: "Lidocaína (alternativa à amiodarona)", doseKg: 1, unidade: "mg", conc: 20, apresentacao: "2% (20 mg/mL), sem vasoconstritor",
+        como: "Bólus. Nenhuma das duas é superior. Após o RCE, infusão de 20–50 mcg/kg/min (AHA 2010).", refs: [149, 55, 159, 151] },
+      { id: "mgT", nome: "Sulfato de magnésio (torsades)", doseKg: [25, 50], max: 2000, unidade: "mg", conc: 500, apresentacao: "MgSO₄ 50%",
+        como: "IV; em 10–20 min, mais rápido na torsades sem pulso. O ERC usa 50 mg/kg.", refs: [151, 150] },
+      { id: "cardiov", nome: "Cardioversão sincronizada", doseKg: [0.5, 1], unidade: "J",
+        como: "Taquicardia com pulso e instabilidade. Se falhar, 2 J/kg. Sedar, sem atrasar. O ERC começa com 1 J/kg e dobra até 4.", refs: [55, 149, 150] },
+      { id: "glic", nome: "Glicose na hipoglicemia", doseKg: 0.2, unidade: "g", conc: 0.1, apresentacao: "SG 10%",
+        como: "Refazer a glicemia em 5–10 min (ERC 2025). A AHA 2010 usava 0,5–1 g/kg.", refs: [150, 151] },
+      { id: "nalox", nome: "Naloxona (intoxicação por opioide)", doseKg: 0.1, max: 2, unidade: "mg", conc: 0.4, apresentacao: "0,4 mg/mL",
+        como: "Ventile primeiro. Reversão total (AHA 2010). Na depressão por opioide terapêutico, 1–5 mcg/kg, titulando.", refs: [151, 162] },
+      { id: "bic", nome: "Bicarbonato de sódio 8,4%", doseKg: 1, unidade: "mEq", conc: 1, apresentacao: "8,4% (1 mEq/mL)",
+        como: "NÃO é rotina. Só na intoxicação por bloqueador de canal de sódio (tricíclico) ou na hipercalemia.", refs: [55, 151] },
+      { id: "cacl", nome: "Cloreto de cálcio 10%", doseKg: 20, max: 2000, unidade: "mg", conc: 100, apresentacao: "10% (100 mg/mL)",
+        como: "NÃO é rotina. Só na hipocalcemia, na intoxicação por bloqueador de canal de cálcio ou na hipercalemia. Via central de preferência.", refs: [55, 151] },
+      { id: "vol", nome: "Bólus de volume", doseKg: [10, 20], unidade: "mL",
+        como: "Cristaloide isotônico, reavaliando após cada bólus. O ERC usa 10 mL/kg, e 5 mL/kg no choque cardiogênico.", refs: [55, 150] }
+    ],
+    /* Sequência rápida: nem a AHA nem o ERC 2025 dão doses de indutor ou de bloqueador;
+       as doses vêm de bulas FDA e estudos (pesquisa G). Vários usos são fora de bula. */
+    sri: [
+      { id: "atro", nome: "Atropina (pré-medicação opcional)", doseKg: 0.02, max: 0.5, unidade: "mg", conc: 0.25, apresentacao: "0,25 mg/mL",
+        como: "Sem dose mínima (AHA 2025). O ERC não recomenda de rotina. Considerar no lactente, com succinilcolina ou bradicardia prévia.", refs: [55, 150] },
+      { id: "ceta", nome: "Cetamina (indutor)", doseKg: [1, 2], unidade: "mg", conc: 50, apresentacao: "50 mg/mL",
+        como: "Boa escolha no choque e no broncoespasmo. Pela bula FDA, a segurança abaixo de 16 anos não foi estabelecida.", refs: [154] },
+      { id: "etom", nome: "Etomidato (indutor)", doseKg: 0.3, unidade: "mg", conc: 2, apresentacao: "2 mg/mL",
+        como: "Evitar na sepse: uma única dose suprime a adrenal por 24 h ou mais. Fora de bula abaixo de 10 anos.", refs: [155, 156] },
+      { id: "fent", nome: "Fentanil (adjuvante)", doseKg: [1, 2], unidade: "mcg", conc: 50, apresentacao: "50 mcg/mL",
+        como: "Faixa de prática no paciente instável; a bula traz 2–3 mcg/kg para anestesia de 2 a 12 anos.", refs: [164] },
+      { id: "succP", nome: "Succinilcolina, lactente e criança pequena", doseKg: 2, unidade: "mg",
+        como: "IV. Contraindicada em miopatia (Duchenne), hipercalemia ou risco dela (queimadura, trauma extenso, denervação após a fase aguda) e risco de hipertermia maligna. Alerta de parada por rabdomiólise hipercalêmica na bula.", refs: [152] },
+      { id: "succG", nome: "Succinilcolina, criança maior e adolescente", doseKg: 1, unidade: "mg",
+        como: "IV. Mesmas contraindicações. Bradicardia é mais comum na 2ª dose.", refs: [152] },
+      { id: "roc", nome: "Rocurônio (SRI)", doseKg: [1, 1.2], unidade: "mg", conc: 10, apresentacao: "10 mg/mL",
+        como: "Prática corrente, mas a bula não recomenda rocurônio para sequência rápida em crianças. Num ensaio pediátrico pequeno, 1,2 mg/kg igualou a succinilcolina.", refs: [40, 157] },
+      { id: "suga", nome: "Sugamadex (reversão)", doseKg: [2, 4], unidade: "mg", conc: 100, apresentacao: "100 mg/mL",
+        como: "2 mg/kg com T2 presente; 4 mg/kg com 1–2 respostas pós-tetânicas. A bula atual cobre desde o nascimento; 16 mg/kg (reversão imediata) não foi estudado em crianças.", refs: [153] }
     ]
   };
 
@@ -3695,7 +3850,25 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
       return r;
     }
 
+    /* Tubo traqueal pela idade (AHA 2010, ref-151; cuff preferido pela AHA 2025, ref-55).
+       < 1 ano: 3,0 com cuff / 3,5 sem; 1-2 anos: 3,5 / 4,0; > 2 anos: idade/4 + 3,5 / + 4.
+       Profundidade no lábio ≈ 3 × DI (erra em 15-25%: confirmar, ref-158). */
+    function tuboPorIdade(anos){
+      var r = { valido: false };
+      if (!(anos >= 0) || anos > 18) return r;
+      r.valido = true;
+      if (anos < 1){ r.cuff = 3.0; r.semCuff = 3.5; }
+      else if (anos <= 2){ r.cuff = 3.5; r.semCuff = 4.0; }
+      else { r.cuff = anos / 4 + 3.5; r.semCuff = anos / 4 + 4; }
+      /* tubos existem de 0,5 em 0,5 mm: arredonda para baixo o com cuff, como é o hábito */
+      r.cuffArred = Math.floor(r.cuff * 2 + EPS) / 2;
+      r.semCuffArred = Math.round(r.semCuff * 2) / 2;
+      r.profundidadeCm = 3 * r.cuffArred;
+      return r;
+    }
+
     return {
+      tuboPorIdade: tuboPorIdade,
       calcCAD: calcCAD,
       dosePorPeso: dosePorPeso,
       massaFator: massaFator, partesDose: partesDose, arredondarVolume: arredondarVolume,
@@ -4849,6 +5022,20 @@ function PLUG(nome){ return NATIVO && window.Capacitor.Plugins ? window.Capacito
     document.querySelectorAll('input[name="cadPerf"], input[name="cadHoras"], input[name="cadIns"]').forEach(function(r){ r.addEventListener("change", calc); });
     document.addEventListener("input", function(e){ if (e.target && (e.target.classList.contains("peso-emerg") || e.target.id === "peso" || e.target.id === "elPeso")) setTimeout(calc, 0); });
     calc();
+  })();
+
+  /* ---------- tubo traqueal pela idade (CALC.tuboPorIdade) ---------- */
+  (function(){
+    var ent = $("tuboIdade"), out = $("tuboRx"); if (!ent || !out) return;
+    function calc(){
+      var r = CALC.tuboPorIdade(num(ent.value));
+      if (!r.valido){ out.textContent = "Informe a idade (0 a 18 anos)."; return; }
+      var f = CALC.fmtBR;
+      out.textContent = "Com cuff: " + f(r.cuff) + (r.cuffArred !== r.cuff ? " → use " + f(r.cuffArred) : "") + " mm\n" +
+        "Sem cuff: " + f(r.semCuff) + (r.semCuffArred !== r.semCuff ? " → use " + f(r.semCuffArred) : "") + " mm\n" +
+        "Profundidade no lábio ≈ " + f(r.profundidadeCm) + " cm (3 × DI): confirmar";
+    }
+    ent.addEventListener("input", calc); calc();
   })();
 
   /* ---------- versão, termo de uso e ponte nativa ---------- */
