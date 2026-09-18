@@ -1177,7 +1177,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       <li><b>Convulsão não espera cálculo.</b> Hiponatremia com convulsão responde mal a anticonvulsivante e bem a sódio.</li>
       <li>Aqui o risco troca de lado: o perigo é subir <b>rápido demais</b> — desmielinização osmótica, que não volta.</li>
       <li>Faixas e teto de 8 mEq/L em 24 h: Royal Children's Hospital.<a class="cite" href="#ref-101">101</a> Bólus e a regra de 1 mL/kg: NHS Greater Glasgow &amp; Clyde.<a class="cite" href="#ref-102">102</a></li>
-      <li><span class="tag t-prop">proposta</span> O bólus de 3 mL/kg é o padrão escolhido aqui; há serviço usando 2 e serviço usando 4. Confirme o do seu.</li>
+      <li>Bólus padrão de 3 mL/kg, definido pelo autor. Há serviço que usa 2 e serviço que usa 4: ajuste no seletor.</li>
     </ul>
   </div>
 
@@ -1203,6 +1203,7 @@ details .dx{font-size:.92rem;padding-bottom:8px}
     <ul class="fc-notas">
       <li><b>O cálcio não baixa o potássio.</b> Ele protege o coração por cerca de 30 min — é a janela para o resto agir.</li>
       <li>Insulina e salbutamol <b>empurram o potássio para dentro da célula</b>, de onde ele volta. Só resina, diurético e diálise retiram do corpo.</li>
+      <li><b>Fenoterol não é troca direta.</b> As doses acima e a evidência pediátrica em hipercalemia são do salbutamol. Se o serviço só tiver fenoterol, a dose para esta indicação não está validada: siga o protocolo local e a farmácia clínica.</li>
       <li>ECG: onda T apiculada → PR longo → P alargando ou sumindo → QRS largo → onda sinusoidal.</li>
       <li>Doses: Royal Children's Hospital.<a class="cite" href="#ref-103">103</a> Racional da escada: Rubens e Kanaris, 2022.<a class="cite" href="#ref-104">104</a></li>
     </ul>
@@ -2790,7 +2791,8 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       glicose10MlKg: 5,
       /* Teto que a diretriz pediátrica por quilo não traz e que faz falta: sem ele,
          1-2 mL/kg num adolescente de 60 kg daria 60 a 120 mEq de bicarbonato num
-         empurrão só, muito além da prática consagrada de 50 mEq (uma ampola). */
+         empurrão só, muito além da prática consagrada de 50 mEq (uma ampola).
+         Confirmado pelo autor em 17/09/2026. */
       bicarbMlKgMin: 1, bicarbMlKgMax: 2, bicarbMaxMl: 50,
       resinaGKgMin: 0.5, resinaGKgMax: 1, resinaMaxG: 30
     }
@@ -4222,9 +4224,9 @@ details .dx{font-size:.92rem;padding-bottom:8px}
       filtrar(nome);
       marcar(nav.querySelector('a[href="#' + art.id + '"]'));
     };
-    /* Abre no primeiro fármaco em vez de empilhar os seis. */
-    var primeira = nav.querySelector("a[href^='#d-']");
-    if (primeira) { filtrar(nomeDe(document.querySelector(primeira.getAttribute("href")))); marcar(primeira); }
+    /* Abre em "Todos" (decisão do autor, 17/09/2026): a lista inteira à vista e o
+       fármaco escolhido a um toque. */
+    if (todosBtn) { filtrar(null); marcar(todosBtn); }
   })();
 
   /* ---------- compartilhar / instalar ---------- */
